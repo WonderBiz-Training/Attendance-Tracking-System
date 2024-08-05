@@ -12,7 +12,7 @@ namespace ATS.Model
     [Table("Designations")]
     [Index(nameof(DesignationName), IsUnique = true)]
     [Index(nameof(DesignationCode), IsUnique = true)]
-    public class Designation
+    public class Designation : BaseEntity
     {
         [Required(ErrorMessage = "Designation Name is Required!")]
         [StringLength(100)]

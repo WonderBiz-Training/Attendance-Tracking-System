@@ -13,8 +13,9 @@ namespace ATS.Data
     {
         public ATSDbContext(DbContextOptions options) : base(options)
         {
-
         }
         public DbSet<Designation> designations { get; set; }
+        public DbSet<Gender> genders { get; set; }
+        public DbSet<User> users { get; set; }
     }
 }
