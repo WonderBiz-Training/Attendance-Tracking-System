@@ -7,7 +7,7 @@ var configuration = builder.Configuration;
 
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<ATSDbContext>(option => option.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ATSDbContext>(option => option.UseSqlServer(connectionString, b => b.MigrationsAssembly("ATS.API")));
 
 // Add services to the container.
 
