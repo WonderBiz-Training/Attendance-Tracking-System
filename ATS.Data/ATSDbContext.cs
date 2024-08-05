@@ -14,8 +14,11 @@ namespace ATS.Data
         public ATSDbContext(DbContextOptions options) : base(options)
         {
         }
+
+        public DbSet<EmployeeDetail> employeeDetails { get; set; }
         public DbSet<Designation> designations { get; set; }
         public DbSet<Gender> genders { get; set; }
         public DbSet<User> users { get; set; }
+        public DbSet<Log> logs { get; set; }
     }
 }
