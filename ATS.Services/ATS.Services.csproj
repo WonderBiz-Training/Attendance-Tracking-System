@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ATS.DTO\ATS.DTO.csproj" />
     <ProjectReference Include="..\ATS.IRepository\ATS.IRepository.csproj" />
     <ProjectReference Include="..\ATS.IServices\ATS.IServices.csproj" />
   </ItemGroup>
