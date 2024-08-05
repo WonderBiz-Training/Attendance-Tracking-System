@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ATS.IRepository\ATS.IRepository.csproj" />
+    <ProjectReference Include="..\ATS.IServices\ATS.IServices.csproj" />
+  </ItemGroup>
+
 </Project>
