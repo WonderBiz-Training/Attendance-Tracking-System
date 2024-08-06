@@ -4,19 +4,16 @@ using ATS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ATS.API.Migrations
+namespace ATS.Data.Migrations
 {
     [DbContext(typeof(ATSDbContext))]
-    [Migration("20240805110411_AddedTransationTables")]
-    partial class AddedTransationTables
+    partial class ATSDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,6 +21,31 @@ namespace ATS.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ATS.Model.AttendanceLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("CheckType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AttendanceLogs");
+                });
 
             modelBuilder.Entity("ATS.Model.Designation", b =>
                 {
@@ -170,31 +192,6 @@ namespace ATS.API.Migrations
                     b.ToTable("Genders");
                 });
 
-            modelBuilder.Entity("ATS.Model.Log", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("CheckType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Logs");
-                });
-
             modelBuilder.Entity("ATS.Model.User", b =>
                 {
                     b.Property<long>("Id")
@@ -236,6 +233,17 @@ namespace ATS.API.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ATS.Model.AttendanceLog", b =>
+                {
+                    b.HasOne("ATS.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ATS.Model.EmployeeDetail", b =>
                 {
                     b.HasOne("ATS.Model.Designation", "Designation")
@@ -259,17 +267,6 @@ namespace ATS.API.Migrations
                     b.Navigation("Designation");
 
                     b.Navigation("Gender");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ATS.Model.Log", b =>
-                {
-                    b.HasOne("ATS.Model.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });

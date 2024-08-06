@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ATS.API.Migrations
+namespace ATS.Data.Migrations
 {
     [DbContext(typeof(ATSDbContext))]
-    [Migration("20240805104431_AddedMasterTables")]
-    partial class AddedMasterTables
+    [Migration("20240806051837_AddedTables")]
+    partial class AddedTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,31 @@ namespace ATS.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ATS.Model.AttendanceLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("CheckType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AttendanceLogs");
+                });
 
             modelBuilder.Entity("ATS.Model.Designation", b =>
                 {
@@ -66,6 +91,64 @@ namespace ATS.API.Migrations
                         .IsUnique();
 
                     b.ToTable("Designations");
+                });
+
+            modelBuilder.Entity("ATS.Model.EmployeeDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("DesignationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<long>("GenderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ProfilePic")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("UpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DesignationId");
+
+                    b.HasIndex("GenderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EmployeeDetails");
                 });
 
             modelBuilder.Entity("ATS.Model.Gender", b =>
@@ -151,6 +234,44 @@ namespace ATS.API.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ATS.Model.AttendanceLog", b =>
+                {
+                    b.HasOne("ATS.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ATS.Model.EmployeeDetail", b =>
+                {
+                    b.HasOne("ATS.Model.Designation", "Designation")
+                        .WithMany()
+                        .HasForeignKey("DesignationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ATS.Model.Gender", "Gender")
+                        .WithMany()
+                        .HasForeignKey("GenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ATS.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Designation");
+
+                    b.Navigation("Gender");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

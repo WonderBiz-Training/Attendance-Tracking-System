@@ -11,7 +11,7 @@ var configuration = builder.Configuration;
 
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<ATSDbContext>(option => option.UseSqlServer(connectionString, b => b.MigrationsAssembly("ATS.API")));
+builder.Services.AddDbContext<ATSDbContext>(option => option.UseSqlServer(connectionString, b => b.MigrationsAssembly("ATS.Data")));
 
 builder.Services.AddScoped<IDesignationRepository, DesignationRepository>();
 builder.Services.AddScoped<IDesignationServices, DesignationServices>();
