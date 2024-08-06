@@ -35,5 +35,21 @@ namespace ATS.Repository
                 throw;
             }
         }
+
+        public async Task<IEnumerable<AttendanceLog>> GetSummary(DateTime currentDate, string check)
+        {
+            try
+            {
+                var res = await _dbContext.attendanceLogs
+                    .Where(log => log.AttendanceLogTime.Date == currentDate.Date && log.CheckType == check)
+                    .ToListAsync();
+
+                return res;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
