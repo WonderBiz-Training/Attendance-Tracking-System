@@ -27,14 +27,14 @@ namespace ATS.Services
                 var attendanceLog = await _attendanceLogRepository.CreateAsync(new AttendanceLog()
                 {
                     UserId = attedanceLogDto.UserId,
-                    Time = attedanceLogDto.Time,
+                    AttendanceLogTime = attedanceLogDto.AttendanceLogTime,
                     CheckType = attedanceLogDto.CheckType,
                 });
 
                 var res = new GetAttendanceLogDto(
                     attendanceLog.Id,
                     attendanceLog.UserId,
-                    attendanceLog.Time,
+                    attendanceLog.AttendanceLogTime,
                     attendanceLog.CheckType
                 );
 
@@ -76,7 +76,7 @@ namespace ATS.Services
                 var attendanceLogsDto = attendanceLogs.Select(attendanceLog => new GetAttendanceLogDto(
                     attendanceLog.Id,
                     attendanceLog.UserId,
-                    attendanceLog.Time,
+                    attendanceLog.AttendanceLogTime,
                     attendanceLog.CheckType
                 ));
 
@@ -102,11 +102,32 @@ namespace ATS.Services
                 var attendanceLogDto = new GetAttendanceLogDto(
                     attendanceLog.Id,
                     attendanceLog.UserId,
-                    attendanceLog.Time,
+                    attendanceLog.AttendanceLogTime,
                     attendanceLog.CheckType
                 );
 
                 return attendanceLogDto;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<GetAttendanceLogDto>> GetAttendanceLogByUserId(long userId)
+        {
+            try
+            {
+                var attendanceLog = await _attendanceLogRepository.GetAttendanceLogByUserId(userId);
+
+                var attendanceLogDtos = attendanceLog.Select(attendanceLog => new GetAttendanceLogDto(
+                    attendanceLog.Id,
+                    attendanceLog.UserId,
+                    attendanceLog.AttendanceLogTime,
+                    attendanceLog.CheckType
+                ));
+
+                return attendanceLogDtos;
             }
             catch (Exception)
             {
@@ -126,7 +147,7 @@ namespace ATS.Services
                 }
 
                 oldAttendanceLog.UserId = attendanceLogDto.UserId;
-                oldAttendanceLog.Time = attendanceLogDto.Time;
+                oldAttendanceLog.AttendanceLogTime = attendanceLogDto.AttendanceLogTime;
                 oldAttendanceLog.CheckType = attendanceLogDto.CheckType;
 
                 var attendanceLog = await _attendanceLogRepository.UpdateAsync(oldAttendanceLog);
@@ -134,7 +155,7 @@ namespace ATS.Services
                 var newAttendanceLogDto = new GetAttendanceLogDto(
                     attendanceLog.Id,
                     attendanceLog.UserId,
-                    attendanceLog.Time,
+                    attendanceLog.AttendanceLogTime,
                     attendanceLog.CheckType
                 );
 

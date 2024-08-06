@@ -16,10 +16,11 @@ namespace ATS.Model
         public long Id { get; set; }
 
         public virtual User User { get; set; }
+
         [ForeignKey("Users"), Required(ErrorMessage = "User Id is required")]
         public long UserId { get; set; }
 
-        public DateTime Time { get; set; }
+        public DateTime AttendanceLogTime { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "Please Specify Check Type of Log")]
         public string CheckType { get; set; }

@@ -39,7 +39,8 @@ namespace ATS.Services
                     users.Id,
                     users.Email,
                     users.Password,
-                    users.ContactNo  
+                    users.ContactNo,
+                    users.IsActive
                 );
 
                 return createdUser;
@@ -90,7 +91,8 @@ namespace ATS.Services
                     users.Id,
                     users.Email,
                     users.Password,
-                    users.ContactNo
+                    users.ContactNo,
+                    users.IsActive
                 ));
 
                 return usersDto.ToList();
@@ -116,7 +118,8 @@ namespace ATS.Services
                     user.Id,
                     user.Email,
                     user.Password,
-                    user.ContactNo
+                    user.ContactNo,
+                    user.IsActive
                 );
 
                 return userDto;
@@ -141,6 +144,7 @@ namespace ATS.Services
                 oldUser.Email = UserDto.Email;
                 oldUser.Password = UserDto.Password;
                 oldUser.ContactNo = UserDto.ContactNo;
+                oldUser.IsActive = UserDto.IsActive;
                 oldUser.UpdatedBy = UserDto.UpdatedBy;
                 oldUser.UpdatedAt = DateTime.Now;
 
@@ -150,7 +154,8 @@ namespace ATS.Services
                     user.Id,
                     user.Email,
                     user.Password,
-                    user.ContactNo
+                    user.ContactNo,
+                    user.IsActive
                 );
 
                 return newUserDto;
