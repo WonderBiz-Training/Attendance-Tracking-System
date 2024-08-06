@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ATS.Data.Migrations
+namespace ATS.API.Migrations
 {
     /// <inheritdoc />
     public partial class AddedTables : Migration
