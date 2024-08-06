@@ -22,6 +22,31 @@ namespace ATS.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ATS.Model.AttendanceLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("CheckType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AttendanceLogs");
+                });
+
             modelBuilder.Entity("ATS.Model.Designation", b =>
                 {
                     b.Property<long>("Id")
@@ -167,31 +192,6 @@ namespace ATS.API.Migrations
                     b.ToTable("Genders");
                 });
 
-            modelBuilder.Entity("ATS.Model.Log", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("CheckType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Logs");
-                });
-
             modelBuilder.Entity("ATS.Model.User", b =>
                 {
                     b.Property<long>("Id")
@@ -233,6 +233,17 @@ namespace ATS.API.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ATS.Model.AttendanceLog", b =>
+                {
+                    b.HasOne("ATS.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ATS.Model.EmployeeDetail", b =>
                 {
                     b.HasOne("ATS.Model.Designation", "Designation")
@@ -256,17 +267,6 @@ namespace ATS.API.Migrations
                     b.Navigation("Designation");
 
                     b.Navigation("Gender");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ATS.Model.Log", b =>
-                {
-                    b.HasOne("ATS.Model.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });
