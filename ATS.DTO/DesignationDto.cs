@@ -16,6 +16,7 @@ namespace ATS.DTO
         [Required(ErrorMessage = "Designation Name is required")] string DesignationName,
         DateTime CreatedAt,
         DateTime UpdatedAt,
+        
         string DesignationCode = " "
         );
 

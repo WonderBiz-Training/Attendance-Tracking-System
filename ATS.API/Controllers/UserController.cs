@@ -1,5 +1,6 @@
 ﻿using ATS.DTO;
 using ATS.IServices;
+using ATS.Services;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -8,22 +9,23 @@ namespace ATS.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GenderController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly IGenderServices _genderServices;
 
-        public GenderController(IGenderServices genderServices)
+        private readonly IUserServices _userServices;
+
+        public UserController(IUserServices userServices)
         {
-            _genderServices = genderServices;
+            _userServices = userServices;
         }
 
-        // GET: api/<GenderController>
+        // GET: api/<UserController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetGenderDto>>> Get()
+        public async Task<ActionResult<IEnumerable<GetUserDto>>> Get()
         {
             try
             {
-                var res = await _genderServices.GetAllGendersAsync();
+                var res = await _userServices.GetAllUsersAsync();
                 return Ok(res);
             }
             catch (Exception ex)
@@ -32,13 +34,13 @@ namespace ATS.API.Controllers
             }
         }
 
-        // GET api/<GenderController>/5
+        // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetGenderDto>> Get(long id)
+        public async Task<ActionResult<GetUserDto>> Get(long id)
         {
             try
             {
-                var res = await _genderServices.GetGenderAsync(id);
+                var res = await _userServices.GetUserAsync(id);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -47,13 +49,13 @@ namespace ATS.API.Controllers
             }
         }
 
-        // POST api/<GenderController>
+        // POST api/<UserController>
         [HttpPost]
-        public async Task<ActionResult<GetGenderDto>> Post([FromBody] CreateGenderDto genderDto)
+        public async Task<ActionResult<GetUserDto>> Post([FromBody] CreateUserDto createUserDto)
         {
             try
             {
-                var res = await _genderServices.CreateGenderAsync(genderDto);
+                var res = await _userServices.CreateUserAsync(createUserDto);
                 return CreatedAtAction(nameof(Get), new { id = res.Id }, res);
             }
             catch (Exception ex)
@@ -62,13 +64,13 @@ namespace ATS.API.Controllers
             }
         }
 
-        // PUT api/<GenderController>/5
+        // PUT api/<UserController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<GetGenderDto>> Put(long id, [FromBody] UpdateGenderDto genderDto)
+        public async Task<ActionResult<GetUserDto>> Put(long id, [FromBody] UpdateUserDto updateUserDto)
         {
             try
             {
-                var res = await _genderServices.UpdateGenderAsync(id, genderDto);
+                var res = await _userServices.UpdateUserAsync(id, updateUserDto);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -77,13 +79,13 @@ namespace ATS.API.Controllers
             }
         }
 
-        // DELETE api/<GenderController>/5
+        // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(long id)
         {
             try
             {
-                var res = await _genderServices.DeleteGenderAsync(id);
+                var res = await _userServices.DeleteUserAsync(id);
                 return Ok(res);
             }
             catch (Exception ex)
