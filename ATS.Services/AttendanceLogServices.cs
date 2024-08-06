@@ -5,6 +5,7 @@ using ATS.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -137,21 +138,25 @@ namespace ATS.Services
             }
         }
 
-        public async Task<GetAttendanceLogSummaryDto> GetAttendanceLogSummary(DateTime currentDate = default)
+        public async Task<GetAttendanceLogSummaryDto> GetAttendanceLogSummary(DateTime? currentDate = null)
         {
             try
             {
-                /*currentDate = currentDate ?? DateTime.Now.Date;*/
+                string dateString = "1 / 1 / 0001 12:00:00 AM";
+                string format = "M / d / yyyy hh:mm:ss tt";
+                DateTime dateTime = DateTime.ParseExact(dateString, format, CultureInfo.InvariantCulture);
+
+                var date = currentDate == dateTime ? DateTime.Now.Date : dateTime;
 
                 IEnumerable<User> totalData = await _userRepository.GetAllAsync();
 
                 var total = totalData.Count();
 
-                IEnumerable<AttendanceLog> presentData = await _attendanceLogRepository.GetSummary(currentDate, "In");
+                IEnumerable<AttendanceLog> presentData = await _attendanceLogRepository.GetSummary(date, "In");
 
                 var present = presentData.Count();
 
-                IEnumerable<AttendanceLog> wfhData = await _attendanceLogRepository.GetSummary(currentDate, "Wfh");
+                IEnumerable<AttendanceLog> wfhData = await _attendanceLogRepository.GetSummary(date, "Wfh");
 
                 var wfh = wfhData.Count();
 

@@ -2,6 +2,8 @@
 using ATS.IServices;
 using ATS.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -65,11 +67,11 @@ namespace ATS.API.Controllers
 
         // GET api/<AttendanceLogController>/summary
         [HttpGet("summary")]
-        public async Task<ActionResult<GetAttendanceLogSummaryDto>> GetSummary()
+        public async Task<ActionResult<GetAttendanceLogSummaryDto>> GetSummary([FromQuery] DateTime date)
         {
             try
             {
-                var res = await _attendanceLogServices.GetAttendanceLogSummary();
+                var res = await _attendanceLogServices.GetAttendanceLogSummary(date);
                 return Ok(res);
             }
             catch (Exception ex)
