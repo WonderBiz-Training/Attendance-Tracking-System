@@ -16,6 +16,9 @@ builder.Services.AddDbContext<ATSDbContext>(option => option.UseSqlServer(connec
 builder.Services.AddScoped<IDesignationRepository, DesignationRepository>();
 builder.Services.AddScoped<IDesignationServices, DesignationServices>();
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserServices, UserServices>();
+
 // Add services to the container.
 
 

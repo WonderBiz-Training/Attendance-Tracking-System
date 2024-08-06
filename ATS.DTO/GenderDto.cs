@@ -29,5 +29,5 @@ namespace ATS.DTO
         string GenderName,
         string GenderCode,
         bool IsActive
-        );
+    );
 }
