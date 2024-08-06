@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace ATS.Model
 {
-    [Table("Logs")]
-    public class Log
+    [Table("AttendanceLogs")]
+    public class AttendanceLog
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
