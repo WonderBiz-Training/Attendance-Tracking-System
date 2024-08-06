@@ -19,6 +19,6 @@ namespace ATS.Data
         public DbSet<Designation> designations { get; set; }
         public DbSet<Gender> genders { get; set; }
         public DbSet<User> users { get; set; }
-        public DbSet<Log> logs { get; set; }
+        public DbSet<AttendanceLog> attendanceLogs { get; set; }
     }
 }

@@ -16,6 +16,12 @@ builder.Services.AddDbContext<ATSDbContext>(option => option.UseSqlServer(connec
 builder.Services.AddScoped<IDesignationRepository, DesignationRepository>();
 builder.Services.AddScoped<IDesignationServices, DesignationServices>();
 
+builder.Services.AddScoped<IGenderRepository, GenderRepository>();
+builder.Services.AddScoped<IGenderServices, GenderServices>();
+
+builder.Services.AddScoped<IAttendanceLogRepository, AttendanceLogRepository>();
+builder.Services.AddScoped<IAttendanceLogServices, AttendanceLogServices>();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserServices, UserServices>();
 

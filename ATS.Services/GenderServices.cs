@@ -27,7 +27,7 @@ namespace ATS.Services
                 var gender = await _genderRepository.CreateAsync(new Gender()
                 {
                     GenderName = genderDto.GenderName,
-                    GenderCode = genderDto.GenderName.ToUpper().Substring(0, 1),
+                    GenderCode = genderDto.GenderCode,
                     CreatedBy = genderDto.CreatedBy,
                     UpdatedBy = genderDto.CreatedBy,
                     CreatedAt = DateTime.Now,
@@ -138,7 +138,7 @@ namespace ATS.Services
                 }
 
                 oldGender.GenderName = genderDto.GenderName;
-                oldGender.GenderCode = genderDto.GenderName.ToUpper().Substring(0, 1);
+                oldGender.GenderCode = genderDto.GenderCode;
                 oldGender.IsActive = genderDto.IsActive ? genderDto.IsActive : true;
                 oldGender.UpdatedBy = genderDto.UpdatedBy;
                 oldGender.UpdatedAt = DateTime.Now;
