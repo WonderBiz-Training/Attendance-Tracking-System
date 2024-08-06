@@ -41,7 +41,7 @@ namespace ATS.Repository
             try
             {
                 var res = await _dbContext.attendanceLogs
-                    .Where(log => log.AttendanceLogTime.Date == currentDate.Date && log.CheckType == check)
+                    .Where(log => log.AttendanceLogTime.Date == currentDate && log.CheckType == check)
                     .ToListAsync();
 
                 return res;
