@@ -25,6 +25,9 @@ builder.Services.AddScoped<IAttendanceLogServices, AttendanceLogServices>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserServices, UserServices>();
 
+builder.Services.AddScoped<IEmployeeDetailRepository, EmployeeDetailRepository>();
+builder.Services.AddScoped<IEmployeeDetailServices, EmployeeDetailServices>();
+
 // Add services to the container.
 
 
