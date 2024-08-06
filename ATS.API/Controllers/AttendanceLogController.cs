@@ -63,6 +63,21 @@ namespace ATS.API.Controllers
             }
         }
 
+        // GET api/<AttendanceLogController>/summary
+        [HttpGet("summary")]
+        public async Task<ActionResult<GetAttendanceLogSummaryDto>> GetSummary()
+        {
+            try
+            {
+                var res = await _attendanceLogServices.GetAttendanceLogSummary();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         // POST api/<AttendanceLogController>
         [HttpPost]
         public async Task<ActionResult<GetAttendanceLogDto>> Post([FromBody] CreateAttendanceLogDto attendanceLogDto)

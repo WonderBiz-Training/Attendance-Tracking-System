@@ -30,4 +30,6 @@ namespace ATS.DTO
         DateTime AttendanceLogTime,
         string CheckType
         );
+
+    public record GetAttendanceLogSummaryDto(int Total, int Present, int Wfh, int Absent);
 }

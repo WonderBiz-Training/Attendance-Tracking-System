@@ -14,10 +14,12 @@ namespace ATS.Services
     public class AttendanceLogServices : IAttendanceLogServices
     {
         private readonly IAttendanceLogRepository _attendanceLogRepository;
+        private readonly IUserRepository _userRepository;
 
-        public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository)
+        public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository, IUserRepository userRepository)
         {
             _attendanceLogRepository = attendanceLogRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto attedanceLogDto)
@@ -133,6 +135,41 @@ namespace ATS.Services
             {
                 throw;
             }
+        }
+
+        public async Task<GetAttendanceLogSummaryDto> GetAttendanceLogSummary(DateTime currentDate = default)
+        {
+            try
+            {
+                /*currentDate = currentDate ?? DateTime.Now.Date;*/
+
+                IEnumerable<User> totalData = await _userRepository.GetAllAsync();
+
+                var total = totalData.Count();
+
+                IEnumerable<AttendanceLog> presentData = await _attendanceLogRepository.GetSummary(currentDate, "In");
+
+                var present = presentData.Count();
+
+                IEnumerable<AttendanceLog> wfhData = await _attendanceLogRepository.GetSummary(currentDate, "Wfh");
+
+                var wfh = wfhData.Count();
+
+                var absent = total - present;
+
+                GetAttendanceLogSummaryDto summaryDto = new(total, present, wfh, absent);
+
+                return summaryDto;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public Task<GetAttendanceLogSummaryDto> GetAttendanceLogSummary()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<GetAttendanceLogDto> UpdateAttendanceLogAsync(long id, UpdateAttendanceLogDto attendanceLogDto)

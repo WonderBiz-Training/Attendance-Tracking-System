@@ -15,6 +15,8 @@ namespace ATS.IServices
 
         Task<IEnumerable<GetAttendanceLogDto>> GetAttendanceLogByUserId(long userId);
 
+        Task<GetAttendanceLogSummaryDto> GetAttendanceLogSummary(DateTime currentDate = default);
+
         Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto genderDto);
 
         Task<GetAttendanceLogDto> UpdateAttendanceLogAsync(long id, UpdateAttendanceLogDto genderDto);

@@ -10,5 +10,6 @@ namespace ATS.IRepository
     public interface IAttendanceLogRepository : IRepository<AttendanceLog>
     {
         Task<IEnumerable<AttendanceLog>> GetAttendanceLogByUserId(long userId);
+        Task<IEnumerable<AttendanceLog>> GetSummary(DateTime currentDate, string check);
     }
 }
