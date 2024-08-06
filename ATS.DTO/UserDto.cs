@@ -31,6 +31,7 @@ namespace ATS.DTO
         long Id,
         string Email,
         string Password,
-        long ContactNo
+        long ContactNo,
+        bool isActive
         );
 }

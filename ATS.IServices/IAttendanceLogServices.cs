@@ -13,6 +13,8 @@ namespace ATS.IServices
 
         Task<GetAttendanceLogDto> GetAttendanceLogAsync(long id);
 
+        Task<IEnumerable<GetAttendanceLogDto>> GetAttendanceLogByUserId(long userId);
+
         Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto genderDto);
 
         Task<GetAttendanceLogDto> UpdateAttendanceLogAsync(long id, UpdateAttendanceLogDto genderDto);

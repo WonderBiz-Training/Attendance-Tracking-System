@@ -48,6 +48,21 @@ namespace ATS.API.Controllers
             }
         }
 
+        // GET api/<AttendanceLogController>/user/5
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<GetAttendanceLogDto>> GetByUserId(long userId)
+        {
+            try
+            {
+                var res = await _attendanceLogServices.GetAttendanceLogByUserId(userId);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         // POST api/<AttendanceLogController>
         [HttpPost]
         public async Task<ActionResult<GetAttendanceLogDto>> Post([FromBody] CreateAttendanceLogDto attendanceLogDto)

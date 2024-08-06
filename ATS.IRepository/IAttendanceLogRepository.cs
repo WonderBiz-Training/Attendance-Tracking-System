@@ -9,5 +9,6 @@ namespace ATS.IRepository
 {
     public interface IAttendanceLogRepository : IRepository<AttendanceLog>
     {
+        Task<IEnumerable<AttendanceLog>> GetAttendanceLogByUserId(long userId);
     }
 }

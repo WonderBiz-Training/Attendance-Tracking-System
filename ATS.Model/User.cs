@@ -23,5 +23,6 @@ namespace ATS.Model
         [MaxLength(50)]
         public string Password { get; set; } = string.Empty;
         public long ContactNo { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }
