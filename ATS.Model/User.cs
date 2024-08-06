@@ -14,7 +14,9 @@ namespace ATS.Model
 
     public class User : BaseEntity
     {
-        [Required(ErrorMessage = "Email is Required"), MaxLength(50) , EmailAddress]
+        [Required(ErrorMessage = "Email is required")]
+        [MaxLength(50)]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage ="Password is Required")]
