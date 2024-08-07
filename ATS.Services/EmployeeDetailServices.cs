@@ -176,6 +176,41 @@ namespace ATS.Services
             }
         }
 
+        public async Task<IEnumerable<GetEmployeeDetailDto>> GetEmployeeDetailsWithFilter(string? firstName, string? lastName, string? employeeId, long? designationId, long? genderId, int? start, int? pageSize)
+        {
+            try
+            {
+                var fname = firstName ?? string.Empty;
+                var lname = lastName ?? string.Empty;
+                var empId = employeeId ?? string.Empty;
+                var desgnId = designationId == 0 ? 1 : (long) designationId;
+                var genId = genderId == 0 ? 1 : (long) genderId;
+                var begin = start == 0 ? 1 : (int) start;
+                var limit = pageSize == 0 ? 5 : (int) pageSize;
+
+
+                var employeeInfos = await _employeeDetailRepository.GetEmployeeWithFilter(fname, lname, empId, desgnId, genId, begin, limit);
+
+                var employeeInfoDtos = employeeInfos.Select(employeeInfo => new GetEmployeeDetailDto(
+                    employeeInfo.Id,
+                    employeeInfo.User.Email,
+                    employeeInfo.Gender.GenderName,
+                    employeeInfo.Designation.DesignationName,
+                    employeeInfo.EmployeeId,
+                    employeeInfo.FirstName,
+                    employeeInfo.LastName,
+                    employeeInfo.ProfilePic
+                ));
+
+                return employeeInfoDtos;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
         public async Task<GetEmployeeDetailDto> UpdateEmployeeDetailAsync(long id, UpdateEmployeeDetailDto updateEmployeeDetailDto)
         {
             try
