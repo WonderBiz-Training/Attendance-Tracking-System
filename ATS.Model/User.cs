@@ -24,5 +24,10 @@ namespace ATS.Model
         public string Password { get; set; } = string.Empty;
         public long ContactNo { get; set; }
         public bool IsActive { get; set; } = true;
+
+        public virtual EmployeeDetail EmployeeDetail { get; set; }
+
+        [ForeignKey("EmployeeDetails")]
+        public long? EmployeeDetailsId { get; set; } = 0;
     }
 }
