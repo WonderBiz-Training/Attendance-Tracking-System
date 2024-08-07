@@ -42,27 +42,26 @@ namespace ATS.Repository
             try
             {
                 var skip = (start - 1) * pageSize;
-                var employeeInfo = await _dbContext.employeeDetails
+                var query = _dbContext.employeeDetails
                     .Include(li => li.User)
                     .Include(li => li.Gender)
                     .Include(li => li.Designation)
                     .Where(li => li.FirstName.Contains(firstName) && 
                                  li.LastName.Contains(lastName) && 
                                  li.EmployeeId.Contains(employeeId)
-                    )
-                    .Skip(skip)
-                    .Take(pageSize)
-                    .ToListAsync();
+                    );
 
                 if(designationId > 0)
                 {
-                    employeeInfo.Where(li => li.DesignationId == designationId);
+                    query = query.Where(li => li.DesignationId == designationId);
                 }
 
                 if(genderId > 0)
                 {
-                    employeeInfo.Where(li => li.GenderId == genderId);
+                    query = query.Where(li => li.GenderId == genderId);
                 }
+
+                var employeeInfo = await query.Skip(skip).Take(pageSize).ToListAsync();
 
                 return employeeInfo;
             }
