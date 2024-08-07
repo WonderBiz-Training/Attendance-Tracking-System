@@ -142,11 +142,7 @@ namespace ATS.Services
         {
             try
             {
-                string dateString = "1 / 1 / 0001 12:00:00 AM";
-                string format = "M / d / yyyy hh:mm:ss tt";
-                DateTime dateTime = DateTime.ParseExact(dateString, format, CultureInfo.InvariantCulture);
-
-                var date = currentDate == dateTime ? DateTime.Now.Date : dateTime;
+                var date = currentDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime) currentDate;
 
                 IEnumerable<User> totalData = await _userRepository.GetAllAsync();
 

@@ -42,6 +42,8 @@ namespace ATS.Repository
             {
                 var res = await _dbContext.attendanceLogs
                     .Where(log => log.AttendanceLogTime.Date == currentDate && log.CheckType == check)
+                    .GroupBy(log => log.UserId)
+                    .Select(group => group.OrderBy(log => log.AttendanceLogTime).FirstOrDefault())
                     .ToListAsync();
 
                 return res;
