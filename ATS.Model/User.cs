@@ -28,6 +28,6 @@ namespace ATS.Model
         public virtual EmployeeDetail EmployeeDetail { get; set; }
 
         [ForeignKey("EmployeeDetails")]
-        public long? EmployeeDetailsId { get; set; } = 0;
+        public long? EmployeeDetailsId { get; set; }
     }
 }
