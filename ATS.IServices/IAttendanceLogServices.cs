@@ -15,11 +15,11 @@ namespace ATS.IServices
 
         Task<IEnumerable<GetAttendanceLogDto>> GetAttendanceLogByUserId(long userId);
 
-        Task<GetAttendanceLogSummaryDto> GetAttendanceLogSummary(DateTime? currentDate = default);
+        Task<GetAttendanceLogSummaryDto> GetAttendanceLogSummary(DateTime? startDate, DateTime? endDate);
 
-        Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto genderDto);
+        Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto attendanceLogDto);
 
-        Task<GetAttendanceLogDto> UpdateAttendanceLogAsync(long id, UpdateAttendanceLogDto genderDto);
+        Task<GetAttendanceLogDto> UpdateAttendanceLogAsync(long id, UpdateAttendanceLogDto attendanceLogDto);
 
         Task<bool> DeleteAttendanceLogAsync(long id);
     }
