@@ -33,6 +33,21 @@ namespace ATS.API.Controllers
             }
         }
 
+        // GET: api/<EmployeeDetailController>
+        [HttpGet("filters")]
+        public async Task<ActionResult<IEnumerable<GetEmployeeDetailDto>>> GetWithFilter([FromQuery] string? firstName, string? lastName, string? employeeId, long designationId, long genderId, int start, int pageSize)
+        {
+            try
+            {
+                var employeeInfos = await _employeeDetailServices.GetEmployeeDetailsWithFilter(firstName, lastName, employeeId, designationId, genderId, start, pageSize);
+                return Ok(employeeInfos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         // GET api/<EmployeeDetailController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<GetEmployeeDetailDto>>> Get(long id)

@@ -37,14 +37,23 @@ namespace ATS.Repository
             }
         }
 
-        public async Task<IEnumerable<EmployeeDetail>> GetAllAsync()
+        public async Task<IEnumerable<EmployeeDetail>> GetEmployeeWithFilter(string firstName, string lastName, string employeeId, long designationId, long genderId, int start, int pageSize)
         {
             try
             {
+                var skip = (start - 1) * pageSize;
                 var employeeInfo = await _dbContext.employeeDetails
                     .Include(li => li.User)
                     .Include(li => li.Gender)
                     .Include(li => li.Designation)
+                    .Where(li => li.FirstName.Contains(firstName) && 
+                                 li.LastName.Contains(lastName) && 
+                                 li.EmployeeId.Contains(employeeId) && 
+                                 li.DesignationId == designationId &&
+                                 li.GenderId == genderId
+                    )
+                    .Skip(skip)
+                    .Take(pageSize)
                     .ToListAsync();
 
                 return employeeInfo;
@@ -72,5 +81,24 @@ namespace ATS.Repository
                 throw;
             }
         }
+
+        public async Task<IEnumerable<EmployeeDetail>> GetAllAsync()
+        {
+            try
+            {
+                var employeeInfo = await _dbContext.employeeDetails
+                    .Include(li => li.User)
+                    .Include(li => li.Gender)
+                    .Include(li => li.Designation)
+                    .ToListAsync();
+
+                return employeeInfo;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }
