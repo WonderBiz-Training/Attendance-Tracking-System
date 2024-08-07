@@ -44,4 +44,9 @@ namespace ATS.DTO
         [MaxLength(50)] string LastName,
         string ProfilePic
     );
+
+    public record GetSearchDto(
+        int Count,
+        IEnumerable<GetEmployeeDetailDto> Employees
+    );
 }
