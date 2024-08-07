@@ -48,13 +48,21 @@ namespace ATS.Repository
                     .Include(li => li.Designation)
                     .Where(li => li.FirstName.Contains(firstName) && 
                                  li.LastName.Contains(lastName) && 
-                                 li.EmployeeId.Contains(employeeId) && 
-                                 li.DesignationId == designationId &&
-                                 li.GenderId == genderId
+                                 li.EmployeeId.Contains(employeeId)
                     )
                     .Skip(skip)
                     .Take(pageSize)
                     .ToListAsync();
+
+                if(designationId > 0)
+                {
+                    employeeInfo.Where(li => li.DesignationId == designationId);
+                }
+
+                if(genderId > 0)
+                {
+                    employeeInfo.Where(li => li.GenderId == genderId);
+                }
 
                 return employeeInfo;
             }

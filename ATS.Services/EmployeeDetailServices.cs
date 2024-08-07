@@ -176,15 +176,15 @@ namespace ATS.Services
             }
         }
 
-        public async Task<IEnumerable<GetEmployeeDetailDto>> GetEmployeeDetailsWithFilter(string? firstName, string? lastName, string? employeeId, long? designationId, long? genderId, int? start, int? pageSize)
+        public async Task<GetSearchDto> GetEmployeeDetailsWithFilter(string? firstName, string? lastName, string? employeeId, long? designationId, long? genderId, int? start, int? pageSize)
         {
             try
             {
                 var fname = firstName ?? string.Empty;
                 var lname = lastName ?? string.Empty;
                 var empId = employeeId ?? string.Empty;
-                var desgnId = designationId == 0 ? 1 : (long) designationId;
-                var genId = genderId == 0 ? 1 : (long) genderId;
+                var desgnId = designationId ?? 0;
+                var genId = genderId ?? 0;
                 var begin = start == 0 ? 1 : (int) start;
                 var limit = pageSize == 0 ? 5 : (int) pageSize;
 
@@ -200,9 +200,16 @@ namespace ATS.Services
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
                     employeeInfo.ProfilePic
+                   
                 ));
 
-                return employeeInfoDtos;
+
+                var res = new GetSearchDto(
+                    employeeInfoDtos.Count(),
+                    employeeInfoDtos
+                );
+
+                return res;
             }
             catch (Exception)
             {
