@@ -36,12 +36,12 @@ namespace ATS.Repository
             }
         }
 
-        public async Task<IEnumerable<AttendanceLog>> GetSummary(DateTime currentDate, string check)
+        public async Task<IEnumerable<AttendanceLog>> GetSummaryReport(DateTime startDate, DateTime endDate, string check)
         {
             try
             {
                 var res = await _dbContext.attendanceLogs
-                    .Where(log => log.AttendanceLogTime.Date == currentDate && log.CheckType == check)
+                    .Where(log => log.AttendanceLogTime.Date >= startDate && log.AttendanceLogTime.Date <= endDate && log.CheckType == check)
                     .GroupBy(log => log.UserId)
                     .Select(group => group.OrderBy(log => log.AttendanceLogTime).FirstOrDefault())
                     .ToListAsync();
