@@ -36,6 +36,24 @@ namespace ATS.Repository
             }
         }
 
+        public async Task<IEnumerable<AttendanceLog>> GetAttendanceReport(DateTime date)
+        {
+            try
+            {
+                var res = await _dbContext.attendanceLogs
+                    .Where(log => log.AttendanceLogTime.Date >= date)
+                    .GroupBy(log => log.UserId)
+                    .Select(group => group.OrderBy(log => log.AttendanceLogTime).FirstOrDefault())
+                    .ToListAsync();
+
+                return res;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<AttendanceLog>> GetSummaryReport(DateTime startDate, DateTime endDate, string check)
         {
             try
