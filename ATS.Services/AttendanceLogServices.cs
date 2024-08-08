@@ -358,7 +358,7 @@ namespace ATS.Services
                 totalHours.Add(result);
 
             }
-            return totalHours.OrderByDescending(o => o.TotalHours);
+            return totalHours;
         }
     }
 }
