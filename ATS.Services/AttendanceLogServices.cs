@@ -169,6 +169,37 @@ namespace ATS.Services
             }
         }
 
+        /*public async Task<GetAttendanceLogSummaryDto> GetAttendanceReport(DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                var start = startDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)startDate;
+                var end = endDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)endDate;
+
+                IEnumerable<User> totalData = await _userRepository.GetAllAsync();
+
+                var total = totalData.Count();
+
+                IEnumerable<AttendanceLog> presentData = await _attendanceLogRepository.GetSummaryReport(start, end, "IN");
+
+                var present = presentData.Count();
+
+                IEnumerable<AttendanceLog> wfhData = await _attendanceLogRepository.GetSummaryReport(start, end, "WFH");
+
+                var wfh = wfhData.Count();
+
+                var absent = total - present;
+
+                GetAttendanceLogSummaryDto summaryDto = new(total, present, wfh, absent);
+
+                return summaryDto;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }*/
+
         public async Task<GetAttendanceLogDto> UpdateAttendanceLogAsync(long id, UpdateAttendanceLogDto attendanceLogDto)
         {
             try

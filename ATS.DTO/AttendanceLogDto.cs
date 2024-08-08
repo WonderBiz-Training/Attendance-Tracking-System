@@ -32,4 +32,11 @@ namespace ATS.DTO
         );
 
     public record GetAttendanceLogSummaryDto(int Total, int Present, int Wfh, int Absent);
+
+    public record GetAttendanceReportDto(
+        string FirstName, 
+        string LastName, 
+        string Status, 
+        DateTime InTime
+        );
 }

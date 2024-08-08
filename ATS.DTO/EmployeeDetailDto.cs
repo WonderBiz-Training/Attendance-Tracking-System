@@ -23,13 +23,14 @@ namespace ATS.DTO
     );
 
     public record UpdateEmployeeDetailDto(
-        [Required(ErrorMessage = "User Id is Required")] long UserId,
-        [Required(ErrorMessage = "Gender Id is Required")] long GenderId,
-        [Required(ErrorMessage = "Designation Id is Required")] long DesignationId,
+        long UserId,
+        long GenderId,
+        long DesignationId,
         string EmployeeId,
-        [Required(ErrorMessage = "First Name is required"), MaxLength(50)] string FirstName,
+        [MaxLength(50)] string FirstName,
         [MaxLength(50)] string LastName,
-        [Required(ErrorMessage = "Profile Pic is Required")] string ProfilePic,
+        byte[] FaceEncoding,
+        string ProfilePic,
         bool IsActive,
         long UpdatedBy
     );
