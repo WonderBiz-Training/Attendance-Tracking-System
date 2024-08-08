@@ -80,6 +80,21 @@ namespace ATS.API.Controllers
             }
         }
 
+        /*// GET api/<AttendanceLogController>/report
+        [HttpGet("report")]
+        public async Task<ActionResult<GetAttendanceReportDto>> GetReport([FromQuery] DateTime date)
+        {
+            try
+            {
+                var res = await _attendanceLogServices.GetAttendanceReport(date);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }*/
+
         // POST api/<AttendanceLogController>
         [HttpPost]
         public async Task<ActionResult<GetAttendanceLogDto>> Post([FromBody] CreateAttendanceLogDto attendanceLogDto)

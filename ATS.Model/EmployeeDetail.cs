@@ -33,5 +33,7 @@ namespace ATS.Model
 
         [Required(ErrorMessage ="Profile Pic is Required")]
         public string ProfilePic { get; set; } = string.Empty;
+
+        public byte[] FaceEncoding { get; set; }
     }
 }
