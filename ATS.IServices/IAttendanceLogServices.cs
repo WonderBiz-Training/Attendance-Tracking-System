@@ -24,5 +24,8 @@ namespace ATS.IServices
         Task<GetAttendanceLogDto> UpdateAttendanceLogAsync(long id, UpdateAttendanceLogDto attendanceLogDto);
 
         Task<bool> DeleteAttendanceLogAsync(long id);
+
+        Task<GetTotalHours> GetTotalHoursOfEmployee(long userId, DateTime? startDate, DateTime? endDate);
+
     }
 }

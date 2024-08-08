@@ -80,6 +80,20 @@ namespace ATS.API.Controllers
             }
         }
 
+        [HttpGet("totalhours")]
+        public async Task<ActionResult<GetTotalHours>> GetUserToalHour([FromQuery] long userId, DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                var res = await _attendanceLogServices.GetTotalHoursOfEmployee(userId,startDate, endDate);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
 
         /*// GET api/<AttendanceLogController>/activity-record
         [HttpGet("activity-record")]
