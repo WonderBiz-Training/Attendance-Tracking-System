@@ -41,10 +41,9 @@ namespace ATS.DTO
         );
 
     public record GetActivityRecordDto(
-        IEnumerable<GetAttendanceLogDto> Employees,
-        DateTime TotalHours,
-        DateTime TotalInHours,
-        DateTime TotalOutHours
+        DateTime InTime,
+        DateTime OutTime,
+        TimeSpan InHours
     );
 
     public record GetTotalHours(

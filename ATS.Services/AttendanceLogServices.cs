@@ -25,6 +25,15 @@ namespace ATS.Services
             _employeeDetailRepository = employeeDetailRepository;
         }
 
+
+
+        public class TimePeriod
+        {
+            public DateTime InTime { get; set; }
+            public DateTime OutTime { get; set; }
+            public TimeSpan InHours { get; set; }
+        }
+
         public async Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto attedanceLogDto)
         {
             try
@@ -72,87 +81,68 @@ namespace ATS.Services
             }
         }
 
-        //public async Task<GetActivityRecordDto> GetActivityRecord(long userId, DateTime? startDate, DateTime? endDate)
-        //{
-        //    try
-        //    {
-        //        var start = startDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)startDate;
-        //        var end = endDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)endDate;
+        public async Task<IEnumerable<GetActivityRecordDto>> GetActivityRecord(long userId, DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                var start = startDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)startDate;
+                var end = endDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)endDate;
 
-        //        IEnumerable<AttendanceLog> logs = await _attendanceLogRepository.GetActivityReport(userId, start, end);
+                IEnumerable<AttendanceLog> logs = await _attendanceLogRepository.GetActivityReport(userId, start, end);
 
-        //        var periods = new List<List<AttendanceLog>>();
-        //        List<AttendanceLog> currentPeriod = null;
+                var periods = new List<List<AttendanceLog>>();
+                List<AttendanceLog> currentPeriod = null;
 
-        //        foreach (var log in logs)
-        //        {
-        //            if (currentPeriod == null || log.CheckType != currentPeriod.Last().CheckType)
-        //            {
-        //                if (currentPeriod != null)
-        //                {
-        //                    periods.Add(currentPeriod);
-        //                }
-        //                currentPeriod = new List<AttendanceLog> { log };
-        //            }
-        //            else
-        //            {
-        //                currentPeriod.Add(log);
-        //            }
-        //        }
+                foreach (var log in logs)
+                {
+                    if (currentPeriod == null || log.CheckType != currentPeriod.Last().CheckType)
+                    {
+                        if (currentPeriod != null)
+                        {
+                            periods.Add(currentPeriod);
+                        }
+                        currentPeriod = new List<AttendanceLog> { log };
+                    }
+                    else
+                    {
+                        currentPeriod.Add(log);
+                    }
+                }
 
-        //        if (currentPeriod != null)
-        //        {
-        //            periods.Add(currentPeriod);
-        //        }
+                if (currentPeriod != null)
+                {
+                    periods.Add(currentPeriod);
+                }
 
-        //        var totalInSeconds = periods
-        //            .Select((period, index) => new { period, index })
-        //            .Where(p => p.index < periods.Count - 1)
-        //            .Select(p => new
-        //            {
-        //                CurrentPeriod = p.period,
-        //                NextPeriod = periods[p.index + 1]
-        //            })
-        //            .Where(p => p.CurrentPeriod.Last().CheckType == "IN" && p.NextPeriod.Last().CheckType == "OUT")
-        //            .Sum(p => (p.NextPeriod.Last().AttendanceLogTime - p.CurrentPeriod.Last().AttendanceLogTime).TotalSeconds);
+                var indRec = periods
+                    .Select((period, index) => new { period, index })
+                    .Where(p => p.index < periods.Count - 1)
+                    .Select(p => new
+                    {
+                        CurrentPeriod = p.period,
+                        NextPeriod = periods[p.index + 1]
+                    })
+                    .Where(p => p.CurrentPeriod.Last().CheckType == "IN" && p.NextPeriod.Last().CheckType == "OUT")
+                    .Select(p => new TimePeriod
+                    {
+                        InTime = p.CurrentPeriod.Last().AttendanceLogTime,
+                        OutTime = p.NextPeriod.Last().AttendanceLogTime,
+                        InHours = p.NextPeriod.Last().AttendanceLogTime - p.CurrentPeriod.Last().AttendanceLogTime
+                    });
 
-        //        var totalInHours = TimeSpan.FromSeconds(totalInSeconds).ToString(@"hh\:mm\:ss");
+                var reportDto = indRec.Select(rec => new GetActivityRecordDto(
+                    rec.InTime,
+                    rec.OutTime,
+                    rec.InHours
+                )).ToList();
 
-        //        var totalOutSeconds = periods
-        //            .Select((period, index) => new { period, index })
-        //            .Where(p => p.index < periods.Count - 1)
-        //            .Select(p => new
-        //            {
-        //                CurrentPeriod = p.period,
-        //                NextPeriod = periods[p.index + 1]
-        //            })
-        //            .Where(p => p.CurrentPeriod.Last().CheckType == "IN" && p.NextPeriod.Last().CheckType == "OUT")
-        //            .Sum(p => (p.NextPeriod.Last().AttendanceLogTime - p.CurrentPeriod.Last().AttendanceLogTime).TotalSeconds);
-
-        //        var totalOutHours = TimeSpan.FromSeconds(totalOutSeconds).ToString(@"hh\:mm\:ss");
-
-        //        var totalSeconds = periods
-        //            .Select((period, index) => new { period, index })
-        //            .Where(p => p.index < periods.Count - 1)
-        //            .Select(p => new
-        //            {
-        //                CurrentPeriod = p.period,
-        //                NextPeriod = periods[p.index + 1]
-        //            })
-        //            .Where(p => p.CurrentPeriod.Last().CheckType == "IN" && p.NextPeriod.Last().CheckType == "OUT")
-        //            .Sum(p => (p.NextPeriod.Last().AttendanceLogTime - p.CurrentPeriod.Last().AttendanceLogTime).TotalSeconds);
-
-        //        var totalHours = TimeSpan.FromSeconds(totalSeconds).ToString(@"hh\:mm\:ss");
-
-        //        GetActivityRecordDto reportDto = new(total, totalHours, totalInHours, totalOutHours);
-
-        //        return reportDto;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
+                return reportDto;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task<IEnumerable<GetAttendanceLogDto>> GetAllAttendanceLogsAsync()
         {
@@ -324,7 +314,6 @@ namespace ATS.Services
             var currentDate = startDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)startDate;
             var lastDate = endDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)endDate;
 
-            // Fetch logs and specific employee details
             var logs = await _attendanceLogRepository.GetActivityReport(userId, currentDate, lastDate);
             var employee = await _employeeDetailRepository.GetEmployeeDetailByUserId(userId);
             var employeeDetail = employee.First();
@@ -352,12 +341,7 @@ namespace ATS.Services
                 .DefaultIfEmpty()
                 .Max();
 
-            //var diff = (lastCheckoutTime - lastCheckInTime).TotalSeconds;
-
-            //var totalHours = DateTime.Parse(DateTime.MinValue.Add(TimeSpan.FromSeconds(diff)).ToString("HH:mm:ss"));
             TimeSpan totalTimeSpan = lastCheckoutTime - lastCheckInTime;
-
-            //string totalHours = totalTimeSpan.ToString("HH:mm:ss");
 
             var result = new GetTotalHours(
                employeeDetail.ProfilePic,
