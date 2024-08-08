@@ -18,5 +18,6 @@ namespace ATS.IServices
         Task<GetUserDto> UpdateUserAsync(long id, UpdateUserDto UserDto);
 
         Task<bool> DeleteUserAsync(long id);
+
     }
 }
