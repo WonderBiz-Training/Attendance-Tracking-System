@@ -95,20 +95,20 @@ namespace ATS.API.Controllers
         }
 
 
-        /*// GET api/<AttendanceLogController>/activity-record
+        // GET api/<AttendanceLogController>/activity-record
         [HttpGet("activity-record")]
-        public async Task<ActionResult<GetActivityRecordDto>> GetActivityRecord([FromQuery] DateTime startDate, DateTime endDate)
+        public async Task<ActionResult<GetActivityRecordDto>> GetActivityRecord([FromQuery] long userId, DateTime startDate, DateTime endDate)
         {
             try
             {
-                var res = await _attendanceLogServices.GetActivityRecord(startDate, endDate);
+                var res = await _attendanceLogServices.GetActivityRecord(userId, startDate, endDate);
                 return Ok(res);
             }
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
-        }*/
+        }
 
         /*// GET api/<AttendanceLogController>/report
         [HttpGet("report")]
