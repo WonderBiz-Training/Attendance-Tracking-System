@@ -4,6 +4,7 @@ using ATS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ATS.API.Migrations
 {
     [DbContext(typeof(ATSDbContext))]
-    partial class ATSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240808063942_AllowedNullToFaceEncoding")]
+    partial class AllowedNullToFaceEncoding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,9 +114,9 @@ namespace ATS.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FaceEncoding")
+                    b.Property<byte[]>("FaceEncoding")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()

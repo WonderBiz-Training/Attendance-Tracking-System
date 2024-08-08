@@ -39,4 +39,11 @@ namespace ATS.DTO
         string Status, 
         DateTime InTime
         );
+
+    public record GetActivityRecordDto(
+        IEnumerable<GetAttendanceLogDto> Employees,
+        DateTime TotalHours,
+        DateTime TotalInHours,
+        DateTime TotalOutHours
+    );
 }
