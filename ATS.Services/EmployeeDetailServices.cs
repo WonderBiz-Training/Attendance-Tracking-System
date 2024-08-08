@@ -43,6 +43,11 @@ namespace ATS.Services
                     UpdatedAt = DateTime.Now
                 });
 
+                var userDetail = await _userRepository.GetAsync(employeeInfo.UserId);
+                userDetail.EmployeeDetailsId = employeeInfo.Id;
+
+                await _userRepository.UpdateAsync(userDetail);
+
                 var user = await _userRepository.GetAsync(employeeInfo.UserId);
                 var gender = await _genderRepository.GetAsync(employeeInfo.GenderId);
                 var designation = await _designationRepository.GetAsync(employeeInfo.DesignationId);
