@@ -46,4 +46,11 @@ namespace ATS.DTO
         DateTime TotalInHours,
         DateTime TotalOutHours
     );
+
+    public record GetTotalHours(
+        string ProfilePic,
+        string FirstName,
+        string LastName,
+        TimeSpan TotalHours
+    );
 }
