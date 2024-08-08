@@ -4,6 +4,7 @@ using ATS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ATS.API.Migrations
 {
     [DbContext(typeof(ATSDbContext))]
-    partial class ATSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240808064744_AllowedNullToFaceEncoding1")]
+    partial class AllowedNullToFaceEncoding1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

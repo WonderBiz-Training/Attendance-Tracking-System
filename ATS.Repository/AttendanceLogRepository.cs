@@ -71,5 +71,22 @@ namespace ATS.Repository
                 throw;
             }
         }
+
+        public async Task<IEnumerable<AttendanceLog>> GetActivityReport(long userId, DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                var res = await _dbContext.attendanceLogs
+                    .Where(log => log.AttendanceLogTime.Date >= startDate && log.AttendanceLogTime.Date <= endDate && log.UserId == userId)
+                    .OrderBy(log => log.AttendanceLogTime)
+                    .ToListAsync();
+
+                return res;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

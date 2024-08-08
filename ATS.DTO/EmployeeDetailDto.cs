@@ -29,7 +29,7 @@ namespace ATS.DTO
         string EmployeeId,
         [MaxLength(50)] string FirstName,
         [MaxLength(50)] string LastName,
-        byte[] FaceEncoding,
+        byte?[] FaceEncoding,
         string ProfilePic,
         bool IsActive,
         long UpdatedBy
