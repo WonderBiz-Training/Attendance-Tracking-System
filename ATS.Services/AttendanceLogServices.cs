@@ -309,48 +309,56 @@ namespace ATS.Services
             }
         }
 
-        public async Task<GetTotalHours> GetTotalHoursOfEmployee(long userId, DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<GetTotalHours>> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate)
         {
             var currentDate = startDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)startDate;
             var lastDate = endDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)endDate;
 
-            var logs = await _attendanceLogRepository.GetActivityReport(userId, currentDate, lastDate);
-            var employee = await _employeeDetailRepository.GetEmployeeDetailByUserId(userId);
-            var employeeDetail = employee.First();
+            var users = await _userRepository.GetAllAsync();
 
-            if (employeeDetail == null)
+            List<GetTotalHours> totalHours = new List<GetTotalHours>();
+            foreach (var user in users)
             {
-                throw new Exception("Employee not found");
+                var logs = await _attendanceLogRepository.GetActivityReport(user.Id, currentDate, lastDate);
+                var employee = await _employeeDetailRepository.GetEmployeeDetailByUserId(user.Id);
+                var employeeDetail = employee.First();
+
+                if (employeeDetail == null)
+                {
+                    throw new Exception("Employee not found");
+                }
+
+                var firstCheckoutTime = logs
+                    .Where(log => log.CheckType == "OUT")
+                    .Select(log => log.AttendanceLogTime)
+                    .DefaultIfEmpty()
+                    .Min();
+
+                var lastCheckInTime = logs
+                    .Where(log => log.CheckType == "IN" && log.AttendanceLogTime < firstCheckoutTime)
+                    .Select(log => log.AttendanceLogTime)
+                    .DefaultIfEmpty()
+                    .Max();
+
+                var lastCheckoutTime = logs
+                    .Where(log => log.CheckType == "OUT")
+                    .Select(log => log.AttendanceLogTime)
+                    .DefaultIfEmpty()
+                    .Max();
+
+                TimeSpan totalTimeSpan = lastCheckoutTime - lastCheckInTime;
+
+                var result = new GetTotalHours(
+                   employeeDetail.ProfilePic,
+                   employeeDetail.FirstName,
+                   employeeDetail.LastName,
+                   totalTimeSpan
+                );
+
+                totalHours.Add(result);
+
             }
-
-            var firstCheckoutTime = logs
-                .Where(log => log.CheckType == "OUT")
-                .Select(log => log.AttendanceLogTime)
-                .DefaultIfEmpty()
-                .Min();
-
-            var lastCheckInTime = logs
-                .Where(log => log.CheckType == "IN" && log.AttendanceLogTime < firstCheckoutTime)
-                .Select(log => log.AttendanceLogTime)
-                .DefaultIfEmpty()
-                .Max();
-
-            var lastCheckoutTime = logs
-                .Where(log => log.CheckType == "OUT")
-                .Select(log => log.AttendanceLogTime)
-                .DefaultIfEmpty()
-                .Max();
-
-            TimeSpan totalTimeSpan = lastCheckoutTime - lastCheckInTime;
-
-            var result = new GetTotalHours(
-               employeeDetail.ProfilePic,
-               employeeDetail.FirstName,
-               employeeDetail.LastName,
-               totalTimeSpan
-            );
-
-            return result;
+            return totalHours.OrderByDescending(o => o.TotalHours);
         }
     }
 }

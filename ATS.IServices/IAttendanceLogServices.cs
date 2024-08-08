@@ -25,7 +25,7 @@ namespace ATS.IServices
 
         Task<bool> DeleteAttendanceLogAsync(long id);
 
-        Task<GetTotalHours> GetTotalHoursOfEmployee(long userId, DateTime? startDate, DateTime? endDate);
+        Task<IEnumerable<GetTotalHours>> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate);
 
     }
 }
