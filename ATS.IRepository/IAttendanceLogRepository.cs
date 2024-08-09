@@ -11,7 +11,7 @@ namespace ATS.IRepository
     {
         Task<IEnumerable<AttendanceLog>> GetAttendanceLogByUserId(long userId);
         Task<IEnumerable<AttendanceLog>> GetSummaryReport(DateTime startDate, DateTime endDate, string check);
-        Task<IEnumerable<AttendanceLog>> GetActivityReport(long userId, DateTime startDate, DateTime endDate);
+        Task<IEnumerable<AttendanceLog>> GetActivityReport(DateTime startDate, DateTime endDate);
         Task<IEnumerable<AttendanceLog>> GetAttendanceReport(DateTime date);
 
     }

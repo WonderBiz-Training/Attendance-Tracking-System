@@ -67,7 +67,7 @@ namespace ATS.API.Controllers
 
         // GET api/<AttendanceLogController>/summary
         [HttpGet("summary")]
-        public async Task<ActionResult<GetAttendanceLogSummaryDto>> GetSummary([FromQuery] DateTime startDate, DateTime endDate)
+        public async Task<ActionResult<GetAttendanceLogSummaryDto>> GetSummary([FromQuery] DateTime? startDate, DateTime? endDate)
         {
             try
             {
