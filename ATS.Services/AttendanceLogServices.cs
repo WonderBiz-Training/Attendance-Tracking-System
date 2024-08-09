@@ -88,7 +88,7 @@ namespace ATS.Services
                 var start = startDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)startDate;
                 var end = endDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)endDate;
 
-                IEnumerable<AttendanceLog> logs = await _attendanceLogRepository.GetActivityReport(userId, start, end);
+                IEnumerable<AttendanceLog> logs = await _attendanceLogRepository.GetActivityReport(start, end);
 
                 var periods = new List<List<AttendanceLog>>();
                 List<AttendanceLog> currentPeriod = null;
@@ -216,8 +216,8 @@ namespace ATS.Services
         {
             try
             {
-                var start = startDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime) startDate;
-                var end = endDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime) endDate;
+                var start = startDate == null ? DateTime.Now.Date : (DateTime) startDate;
+                var end = endDate == null ? DateTime.Now.Date : (DateTime) endDate;
 
                 IEnumerable<User> totalData = await _userRepository.GetAllAsync();
 
@@ -319,7 +319,7 @@ namespace ATS.Services
             List<GetTotalHours> totalHours = new List<GetTotalHours>();
             foreach (var user in users)
             {
-                var logs = await _attendanceLogRepository.GetActivityReport(user.Id, currentDate, lastDate);
+                var logs = await _attendanceLogRepository.GetActivityReport(currentDate, lastDate);
                 var employee = await _employeeDetailRepository.GetEmployeeDetailByUserId(user.Id);
                 var employeeDetail = employee.First();
 
