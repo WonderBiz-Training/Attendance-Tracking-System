@@ -222,7 +222,6 @@ namespace ATS.Services
             }
         }
 
-
         public async Task<GetEmployeeDetailDto> UpdateEmployeeDetailAsync(long id, UpdateEmployeeDetailDto updateEmployeeDetailDto)
         {
             try

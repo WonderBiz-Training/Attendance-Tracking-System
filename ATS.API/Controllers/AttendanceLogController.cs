@@ -81,11 +81,11 @@ namespace ATS.API.Controllers
         }
 
         [HttpGet("totalhours")]
-        public async Task<ActionResult<GetTotalHours>> GetUserToalHour([FromQuery] DateTime startDate, DateTime endDate)
+        public  ActionResult<ATS.DTO.GetTotalHours> GetUserToalHour([FromQuery] DateTime startDate, DateTime endDate)
         {
             try
             {
-                var res = await _attendanceLogServices.GetTotalHoursOfEmployee(startDate, endDate);
+                var res =  _attendanceLogServices.GetTotalHoursOfEmployee(startDate, endDate);
                 return Ok(res);
             }
             catch (Exception ex)

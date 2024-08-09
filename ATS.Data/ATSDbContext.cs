@@ -15,6 +15,15 @@ namespace ATS.Data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GetTotalHours>(entity =>
+            {
+                entity.HasNoKey(); // Indicate that this entity does not have a key
+                entity.ToView(null); // Optional: specify that this entity does not map to a database view
+            });
+        }
+
         public DbSet<EmployeeDetail> employeeDetails { get; set; }
         public DbSet<AttendanceLog> attendanceLogs { get; set; }
         public DbSet<Designation> designations { get; set; }

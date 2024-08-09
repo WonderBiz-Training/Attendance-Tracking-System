@@ -1,8 +1,11 @@
-﻿using ATS.DTO;
+﻿using ATS.Data;
+using ATS.DTO;
 using ATS.IRepository;
 using ATS.IServices;
 using ATS.Model;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,23 +20,21 @@ namespace ATS.Services
         private readonly IAttendanceLogRepository _attendanceLogRepository;
         private readonly IUserRepository _userRepository;
         private readonly IEmployeeDetailRepository _employeeDetailRepository;
+        private readonly ATSDbContext _dbContext;
 
-        public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository, IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository)
+        public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository, IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository, ATSDbContext dbcontext)
         {
             _attendanceLogRepository = attendanceLogRepository;
             _userRepository = userRepository;
             _employeeDetailRepository = employeeDetailRepository;
+            _dbContext = dbcontext;
         }
-
-
-
         public class TimePeriod
         {
             public DateTime InTime { get; set; }
             public DateTime OutTime { get; set; }
             public TimeSpan InHours { get; set; }
         }
-
         public async Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto attedanceLogDto)
         {
             try
@@ -59,7 +60,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<bool> DeleteAttendanceLogAsync(long id)
         {
             try
@@ -80,7 +80,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetActivityRecordDto>> GetActivityRecord(long userId, DateTime? startDate, DateTime? endDate)
         {
             try
@@ -143,7 +142,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetAttendanceLogDto>> GetAllAttendanceLogsAsync()
         {
             try
@@ -164,7 +162,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<GetAttendanceLogDto> GetAttendanceLogAsync(long id)
         {
             try
@@ -190,7 +187,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetAttendanceLogDto>> GetAttendanceLogByUserId(long userId)
         {
             try
@@ -211,7 +207,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<GetAttendanceLogSummaryDto> GetAttendanceLogSummary(DateTime? startDate, DateTime? endDate)
         {
             try
@@ -242,9 +237,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
-   
-
 
         /*public async Task<GetAttendanceLogSummaryDto> GetAttendanceReport(DateTime? startDate, DateTime? endDate)
         {
@@ -309,56 +301,110 @@ namespace ATS.Services
             }
         }
 
-        public async Task<IEnumerable<GetTotalHours>> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate)
+
+
+        public IEnumerable<ATS.DTO.GetTotalHours> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate)
         {
-            var currentDate = startDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)startDate;
-            var lastDate = endDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)endDate;
+            // Define parameters
+            var startDateParameter = new SqlParameter("@StartDate", startDate.HasValue ? (object)startDate.Value : DBNull.Value);
+            var endDateParameter = new SqlParameter("@EndDate", endDate.HasValue ? (object)endDate.Value : DBNull.Value);
 
-            var users = await _userRepository.GetAllAsync();
+            // Execute stored procedure and map results to the DTO
+            var results = _dbContext.Set<ATS.Model.GetTotalHours>()
+                .FromSqlRaw("EXECUTE dbo.GetTotalHoursOfUsers @StartDate, @EndDate", startDateParameter, endDateParameter)
+                .ToList();
 
-            List<GetTotalHours> totalHours = new List<GetTotalHours>();
-            foreach (var user in users)
-            {
-                var logs = await _attendanceLogRepository.GetActivityReport(currentDate, lastDate);
-                var employee = await _employeeDetailRepository.GetEmployeeDetailByUserId(user.Id);
-                var employeeDetail = employee.First();
+            // Map the results to the DTO
+            var dtoList = results.Select(model => new ATS.DTO.GetTotalHours(
 
-                if (employeeDetail == null)
-                {
-                    throw new Exception("Employee not found");
-                }
+                model.LogDate,  // Ensure this is correct; should probably be a URL or path if it's an image
+                model.LastCheckInTime, // Ensure the correct format
+                model.LastCheckoutTime,// Ensure the correct format
+                (model.LastCheckoutTime - model.LastCheckInTime).ToString(@"hh\:mm\:ss") // Correct format for total hours
+            ));
 
-                var firstCheckoutTime = logs
-                    .Where(log => log.CheckType == "OUT")
-                    .Select(log => log.AttendanceLogTime)
-                    .DefaultIfEmpty()
-                    .Min();
-
-                var lastCheckInTime = logs
-                    .Where(log => log.CheckType == "IN" && log.AttendanceLogTime < firstCheckoutTime)
-                    .Select(log => log.AttendanceLogTime)
-                    .DefaultIfEmpty()
-                    .Max();
-
-                var lastCheckoutTime = logs
-                    .Where(log => log.CheckType == "OUT")
-                    .Select(log => log.AttendanceLogTime)
-                    .DefaultIfEmpty()
-                    .Max();
-
-                TimeSpan totalTimeSpan = lastCheckoutTime - lastCheckInTime;
-
-                var result = new GetTotalHours(
-                   employeeDetail.ProfilePic,
-                   employeeDetail.FirstName,
-                   employeeDetail.LastName,
-                   totalTimeSpan
-                );
-
-                totalHours.Add(result);
-
-            }
-            return totalHours;
+            return dtoList;
         }
+
+
+
+        //public async Task<IEnumerable<GetTotalHours>> GetTotalHoursOfEmployee2(DateTime? startDate, DateTime? endDate)
+        //{
+        //    // Define the date range, defaulting to the current date if not provided
+        //    var currentDate = startDate ?? DateTime.Now.Date;
+        //    var lastDate = endDate ?? DateTime.Now.Date;
+
+        //    var myList = new List<GetTotalHours>();
+        //    // Fetch all users
+        //    var users = await _userRepository.GetAllAsync();
+        //    foreach(var user in users)
+        //    {
+        //        var parameters = new[]
+        //            {
+        //                new SqlParameter("@StartDate", currentDate),
+        //                new SqlParameter("@EndDate", lastDate)
+        //            };
+
+        //        // Call the stored procedure and get the result
+        //      //  var res = await _dbContext.Database.SqlQueryRaw($"EXECUTE GetTotalHoursOfUsers EXEC GetTotalHoursOfUsers @StartDate, @EndDate", parameters);
+        //       // var result = await _dbContext.Set<AttendanceLog>().FromSqlRaw("EXEC GetTotalHoursOfUsers @StartDate, @EndDate", parameters)
+        //            //.ToListAsync();
+
+        //        // Assuming the result has a single entry and mapping it to GetTotalHours
+        //        var totalHours = res.Select(row => new GetTotalHours(
+        //            row.User.EmployeeDetail.ProfilePic,
+        //            row.User.EmployeeDetail.FirstName,
+        //            row.User.EmployeeDetail.LastName,
+        //            row.User.EmployeeDetail.EmployeeId
+        //        )).FirstOrDefault();
+        //        myList.Add(totalHours);
+        //    }
+        // Process each user to get their total hours
+        /*var totalHoursTasks = users.Select(async (user) =>
+        {
+
+            try
+            {
+
+
+                // Define parameters for the stored procedure
+                var parameters = new[]
+                {
+                    new SqlParameter("@StartDate", currentDate),
+                    new SqlParameter("@EndDate", lastDate)
+                };
+
+                // Call the stored procedure and get the result
+                var result = await _dbContext.Set<AttendanceLog>().FromSqlRaw("EXEC GetTotalHoursOfUsers @StartDate, @EndDate", parameters)
+                    .ToListAsync();
+
+                // Assuming the result has a single entry and mapping it to GetTotalHours
+                var totalHours = result.Select(row => new GetTotalHours(
+                    row.User.EmployeeDetail.ProfilePic,
+                    row.User.EmployeeDetail.FirstName,
+                    row.User.EmployeeDetail.LastName,
+                    row.User.EmployeeDetail.EmployeeId
+                )).FirstOrDefault();
+                myList.Add(totalHours);
+                //return result;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception for debugging
+                Console.WriteLine($"Error processing user {user.Id}: {ex.Message}");
+                return null;
+            }
+        });
+        */
+        // Await all tasks and filter out null results
+        // var results = await Task.WhenAll(totalHoursTasks);
+        //return results.Where(result => result != null);
+        // return myList;
+        // }
+
+
+
+
+
     }
 }

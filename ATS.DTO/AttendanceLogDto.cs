@@ -31,7 +31,12 @@ namespace ATS.DTO
         string CheckType
         );
 
-    public record GetAttendanceLogSummaryDto(int Total, int Present, int Wfh, int Absent);
+    public record GetAttendanceLogSummaryDto(
+        int Total, 
+        int Present, 
+        int Wfh, 
+        int Absent
+        );
 
     public record GetAttendanceReportDto(
         string FirstName, 
@@ -47,9 +52,9 @@ namespace ATS.DTO
     );
 
     public record GetTotalHours(
-        string ProfilePic,
-        string FirstName,
-        string LastName,
-        TimeSpan TotalHours
+        DateTime ProfilePic,
+        DateTime FirstName,
+        DateTime LastName,
+        string TotalHours
     );
 }
