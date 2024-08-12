@@ -1,10 +1,14 @@
-﻿using ATS.DTO;
+﻿using ATS.Data;
+using ATS.DTO;
 using ATS.IRepository;
 using ATS.IServices;
 using ATS.Model;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -17,23 +21,21 @@ namespace ATS.Services
         private readonly IAttendanceLogRepository _attendanceLogRepository;
         private readonly IUserRepository _userRepository;
         private readonly IEmployeeDetailRepository _employeeDetailRepository;
+        private readonly ATSDbContext _dbContext;
 
-        public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository, IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository)
+        public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository, IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository, ATSDbContext dbcontext)
         {
             _attendanceLogRepository = attendanceLogRepository;
             _userRepository = userRepository;
             _employeeDetailRepository = employeeDetailRepository;
+            _dbContext = dbcontext;
         }
-
-
-
         public class TimePeriod
         {
             public DateTime InTime { get; set; }
             public DateTime OutTime { get; set; }
             public TimeSpan InHours { get; set; }
         }
-
         public async Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto attedanceLogDto)
         {
             try
@@ -59,7 +61,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<bool> DeleteAttendanceLogAsync(long id)
         {
             try
@@ -80,65 +81,37 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetActivityRecordDto>> GetActivityRecord(long userId, DateTime? startDate, DateTime? endDate)
         {
             try
             {
-                var start = startDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)startDate;
-                var end = endDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)endDate;
-
-                IEnumerable<AttendanceLog> logs = await _attendanceLogRepository.GetActivityReport(start, end);
-
-                var periods = new List<List<AttendanceLog>>();
-                List<AttendanceLog> currentPeriod = null;
-
-                foreach (var log in logs)
+                var startDateParameter = new SqlParameter("@StartDate", SqlDbType.Date)
                 {
-                    if (currentPeriod == null || log.CheckType != currentPeriod.Last().CheckType)
-                    {
-                        if (currentPeriod != null)
-                        {
-                            periods.Add(currentPeriod);
-                        }
-                        currentPeriod = new List<AttendanceLog> { log };
-                    }
-                    else
-                    {
-                        currentPeriod.Add(log);
-                    }
-                }
-
-                if (currentPeriod != null)
+                    Value = startDate.HasValue ? (object)startDate.Value : (object)DateTime.Now.Date
+                };
+                var endDateParameter = new SqlParameter("@EndDate", SqlDbType.Date)
                 {
-                    periods.Add(currentPeriod);
-                }
+                    Value = endDate.HasValue ? (object)endDate.Value : (object)DateTime.Now.Date
+                };
 
-                var indRec = periods
-                    .Select((period, index) => new { period, index })
-                    .Where(p => p.index < periods.Count - 1)
-                    .Select(p => new
-                    {
-                        CurrentPeriod = p.period,
-                        NextPeriod = periods[p.index + 1]
-                    })
-                    .Where(p => p.CurrentPeriod.Last().CheckType == "IN" && p.NextPeriod.Last().CheckType == "OUT")
-                    .Select(p => new TimePeriod
-                    {
-                        InTime = p.CurrentPeriod.Last().AttendanceLogTime,
-                        OutTime = p.NextPeriod.Last().AttendanceLogTime,
-                        InHours = p.NextPeriod.Last().AttendanceLogTime - p.CurrentPeriod.Last().AttendanceLogTime
-                    });
+                var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
+                {
+                    Value = userId
+                };
 
-                var reportDto = indRec.Select(rec => new GetActivityRecordDto(
-                    rec.InTime,
-                    rec.OutTime,
-                    rec.InHours
-                )).ToList();
+                var results = await _dbContext.Set<GetTotalInHours>()
+                    .FromSqlRaw("EXECUTE dbo.GetAttendanceTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
+                    .ToListAsync();
 
-                return reportDto;
+                var dtoList = results.Select(model => new GetActivityRecordDto(
+                    model.InTime,
+                    model.OutTime,
+                    model.TotalInHours
+                ));
+
+                return dtoList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -164,7 +137,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<GetAttendanceLogDto> GetAttendanceLogAsync(long id)
         {
             try
@@ -190,7 +162,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetAttendanceLogDto>> GetAttendanceLogByUserId(long userId)
         {
             try
@@ -211,13 +182,12 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<GetAttendanceLogSummaryDto> GetAttendanceLogSummary(DateTime? startDate, DateTime? endDate)
         {
             try
             {
-                var start = startDate == null ? DateTime.Now.Date : (DateTime) startDate;
-                var end = endDate == null ? DateTime.Now.Date : (DateTime) endDate;
+                var start = startDate == null ? DateTime.Now.Date : (DateTime)startDate;
+                var end = endDate == null ? DateTime.Now.Date : (DateTime)endDate;
 
                 IEnumerable<User> totalData = await _userRepository.GetAllAsync();
 
@@ -242,41 +212,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
-   
-
-
-        /*public async Task<GetAttendanceLogSummaryDto> GetAttendanceReport(DateTime? startDate, DateTime? endDate)
-        {
-            try
-            {
-                var start = startDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)startDate;
-                var end = endDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)endDate;
-
-                IEnumerable<User> totalData = await _userRepository.GetAllAsync();
-
-                var total = totalData.Count();
-
-                IEnumerable<AttendanceLog> presentData = await _attendanceLogRepository.GetSummaryReport(start, end, "IN");
-
-                var present = presentData.Count();
-
-                IEnumerable<AttendanceLog> wfhData = await _attendanceLogRepository.GetSummaryReport(start, end, "WFH");
-
-                var wfh = wfhData.Count();
-
-                var absent = total - present;
-
-                GetAttendanceLogSummaryDto summaryDto = new(total, present, wfh, absent);
-
-                return summaryDto;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }*/
-
         public async Task<GetAttendanceLogDto> UpdateAttendanceLogAsync(long id, UpdateAttendanceLogDto attendanceLogDto)
         {
             try
@@ -308,57 +243,70 @@ namespace ATS.Services
                 throw;
             }
         }
-
-        public async Task<IEnumerable<GetTotalHours>> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate)
+        public IEnumerable<ATS.DTO.GetTotalHours> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate)
         {
-            var currentDate = startDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)startDate;
-            var lastDate = endDate == DateTime.MinValue ? DateTime.Now.Date : (DateTime)endDate;
-
-            var users = await _userRepository.GetAllAsync();
-
-            List<GetTotalHours> totalHours = new List<GetTotalHours>();
-            foreach (var user in users)
+            // Define parameters
+            var startDateParameter = new SqlParameter("@StartDate", SqlDbType.Date)
             {
-                var logs = await _attendanceLogRepository.GetActivityReport(currentDate, lastDate);
-                var employee = await _employeeDetailRepository.GetEmployeeDetailByUserId(user.Id);
-                var employeeDetail = employee.First();
+                Value = startDate.HasValue ? (object)startDate.Value : DateTime.Now.Date
+            };
+            var endDateParameter = new SqlParameter("@EndDate", SqlDbType.Date)
+            {
+                Value = endDate.HasValue ? (object)endDate.Value : DateTime.Now.Date
+            };
 
-                if (employeeDetail == null)
+            // Execute stored procedure and map results to the DTO
+            var results = _dbContext.Set<ATS.Model.GetTotalHours>()
+                .FromSqlRaw("EXECUTE dbo.GetTotalHour_Employee @StartDate, @EndDate", startDateParameter, endDateParameter)
+
+                .ToList();
+
+            // Map the results to the DTO
+            var dtoList = results.Select(model => new ATS.DTO.GetTotalHours(
+                model.LogDate,
+                model.ProfilePic,
+                model.FirstName,
+                model.LastName,
+                (model.LastCheckoutTime - model.LastCheckInTime).ToString(@"hh\:mm\:ss")
+            ));
+
+            return dtoList;
+        }
+
+        public async Task<IEnumerable<GetActivityRecordOutHoursDto>> GetActivityRecordOutHours(long userId, DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                var startDateParameter = new SqlParameter("@StartDate", SqlDbType.Date)
                 {
-                    throw new Exception("Employee not found");
-                }
+                    Value = startDate.HasValue ? (object)startDate.Value : (object)DateTime.Now.Date
+                };
+                var endDateParameter = new SqlParameter("@EndDate", SqlDbType.Date)
+                {
+                    Value = endDate.HasValue ? (object)endDate.Value : (object)DateTime.Now.Date
+                };
 
-                var firstCheckoutTime = logs
-                    .Where(log => log.CheckType == "OUT")
-                    .Select(log => log.AttendanceLogTime)
-                    .DefaultIfEmpty()
-                    .Min();
+                var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
+                {
+                    Value = userId
+                };
 
-                var lastCheckInTime = logs
-                    .Where(log => log.CheckType == "IN" && log.AttendanceLogTime < firstCheckoutTime)
-                    .Select(log => log.AttendanceLogTime)
-                    .DefaultIfEmpty()
-                    .Max();
+                var results = await _dbContext.Set<GetTotalOutHours>()
+                    .FromSqlRaw("EXECUTE dbo.GetAttendanceOutTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
+                    .ToListAsync();
 
-                var lastCheckoutTime = logs
-                    .Where(log => log.CheckType == "OUT")
-                    .Select(log => log.AttendanceLogTime)
-                    .DefaultIfEmpty()
-                    .Max();
+                var dtoList = results.Select(model => new GetActivityRecordOutHoursDto(
+                    model.InTime,
+                    model.OutTime,
+                    model.TotalOutHours
+                ));
 
-                TimeSpan totalTimeSpan = lastCheckoutTime - lastCheckInTime;
-
-                var result = new GetTotalHours(
-                   employeeDetail.ProfilePic,
-                   employeeDetail.FirstName,
-                   employeeDetail.LastName,
-                   totalTimeSpan
-                );
-
-                totalHours.Add(result);
-
+                return dtoList;
             }
-            return totalHours;
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,13 +20,16 @@ namespace ATS.IServices
 
         Task<IEnumerable<GetActivityRecordDto>> GetActivityRecord(long userId, DateTime? startDate, DateTime? endDate);
 
+        Task<IEnumerable<GetActivityRecordOutHoursDto>> GetActivityRecordOutHours(long userId, DateTime? startDate, DateTime? endDate);
+
         Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto attendanceLogDto);
 
         Task<GetAttendanceLogDto> UpdateAttendanceLogAsync(long id, UpdateAttendanceLogDto attendanceLogDto);
 
         Task<bool> DeleteAttendanceLogAsync(long id);
 
-        Task<IEnumerable<GetTotalHours>> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate);
+        // Task<IEnumerable<GetTotalHours>> GetTotalHoursOfEmployee2(DateTime? startDate, DateTime? endDate);
+        IEnumerable<GetTotalHours> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate);
 
     }
 }

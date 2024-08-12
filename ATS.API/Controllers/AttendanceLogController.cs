@@ -81,11 +81,13 @@ namespace ATS.API.Controllers
         }
 
         [HttpGet("totalhours")]
-        public async Task<ActionResult<GetTotalHours>> GetUserToalHour([FromQuery] DateTime startDate, DateTime endDate)
+        public  ActionResult<ATS.DTO.GetTotalHours> GetUserToalHour([FromQuery] DateTime startDate, DateTime endDate)
         {
+            /*var start = startDate == DateTime.MinValue ? DateTime.Now : (DateTime)startDate;
+            var end = endDate == DateTime.MinValue ? DateTime.Now : (DateTime)endDate;*/
             try
             {
-                var res = await _attendanceLogServices.GetTotalHoursOfEmployee(startDate, endDate);
+                var res =  _attendanceLogServices.GetTotalHoursOfEmployee(startDate, endDate);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -102,6 +104,20 @@ namespace ATS.API.Controllers
             try
             {
                 var res = await _attendanceLogServices.GetActivityRecord(userId, startDate, endDate);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("activity-record/out")]
+        public async Task<ActionResult<GetActivityRecordOutHoursDto>> GetActivityRecordOutHour([FromQuery] long userId, DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                var res = await _attendanceLogServices.GetActivityRecordOutHours(userId, startDate, endDate);
                 return Ok(res);
             }
             catch (Exception ex)
