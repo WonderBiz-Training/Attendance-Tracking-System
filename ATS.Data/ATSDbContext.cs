@@ -22,6 +22,18 @@ namespace ATS.Data
                 entity.HasNoKey(); // Indicate that this entity does not have a key
                 entity.ToView(null); // Optional: specify that this entity does not map to a database view
             });
+
+            modelBuilder.Entity<GetTotalOutHours>(entity =>
+            {
+                entity.HasNoKey(); // Indicate that this entity does not have a key
+                entity.ToView(null); // Optional: specify that this entity does not map to a database view
+            });
+
+            modelBuilder.Entity<GetTotalInHours>(entity =>
+            {
+                entity.HasNoKey(); // Indicate that this entity does not have a key
+                entity.ToView(null); // Optional: specify that this entity does not map to a database view
+            });
         }
 
         public DbSet<EmployeeDetail> employeeDetails { get; set; }

@@ -51,10 +51,17 @@ namespace ATS.DTO
         TimeSpan InHours
     );
 
+    public record GetActivityRecordOutHoursDto(
+        DateTime InTime,
+        DateTime OutTime,
+        Double OutHours
+    );
+
     public record GetTotalHours(
-        DateTime ProfilePic,
-        DateTime FirstName,
-        DateTime LastName,
+        DateTime LogDate,
+        string ProfilePic,
+        string FirstName,
+        string LastName,
         string TotalHours
     );
 }
