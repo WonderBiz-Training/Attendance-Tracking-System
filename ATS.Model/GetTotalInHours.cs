@@ -11,6 +11,6 @@ namespace ATS.Model
     {
         public DateTime InTime { get; set; }
         public DateTime OutTime { get; set; }
-        public TimeSpan TotalInHours { get; set; }
+        public string TotalInHours { get; set; }
     }
 }

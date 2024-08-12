@@ -103,10 +103,10 @@ namespace ATS.Services
                     .FromSqlRaw("EXECUTE dbo.GetAttendanceTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
                     .ToListAsync();
 
-                var dtoList = results.Select(model => new GetActivityRecordDto(
-                    model.InTime,
-                    model.OutTime,
-                    model.TotalInHours
+                var dtoList = results.Select(li => new GetActivityRecordDto(
+                    li.InTime,
+                    li.OutTime,
+                    li.TotalInHours
                 ));
 
                 return dtoList;
@@ -115,6 +115,7 @@ namespace ATS.Services
             {
                 throw;
             }
+       
         }
 
         public async Task<IEnumerable<GetAttendanceLogDto>> GetAllAttendanceLogsAsync()
