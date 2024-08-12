@@ -48,7 +48,7 @@ namespace ATS.DTO
     public record GetActivityRecordDto(
         DateTime InTime,
         DateTime OutTime,
-        TimeSpan InHours
+        string InHours
     );
 
     public record GetActivityRecordOutHoursDto(
