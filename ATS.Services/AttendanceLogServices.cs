@@ -107,7 +107,7 @@ namespace ATS.Services
                 };
 
                 var results = await _dbContext.Set<GetTotalInHours>()
-                    .FromSqlRaw("EXECUTE dbo.GetAttendanceTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
+                    .FromSqlRaw("EXECUTE dbo.GetAttendanceInTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
                     .ToListAsync();
 
                 var dtoList = results.Select(li => new GetActivityRecordDto(

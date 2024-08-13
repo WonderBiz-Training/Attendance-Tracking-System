@@ -54,7 +54,7 @@ namespace ATS.DTO
     public record GetActivityRecordOutHoursDto(
         DateTime InTime,
         DateTime OutTime,
-        Double OutHours
+        string OutHours
     );
 
     public record GetTotalHours(
