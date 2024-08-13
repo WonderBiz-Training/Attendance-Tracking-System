@@ -4,6 +4,7 @@ using ATS.IServices;
 using ATS.Repository;
 using ATS.Services;
 using Microsoft.EntityFrameworkCore;
+using MyProject.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<ATSDbContext>(option => option.UseSqlServer(connectionString, b => b.MigrationsAssembly("ATS.API")));
+
+builder.Services.AddSignalR();
 
 builder.Services.AddScoped<IDesignationRepository, DesignationRepository>();
 builder.Services.AddScoped<IDesignationServices, DesignationServices>();
@@ -51,5 +54,13 @@ app.UseAuthorization();
 app.UseCors("AllowMyAngularApp");
 
 app.MapControllers();
+
+app.UseRouting();
+
+app.UseEndpoints(endpoint =>
+{
+    endpoint.MapControllers();
+    endpoint.MapHub<AtsHub>("/atsHub");
+});
 
 app.Run();
