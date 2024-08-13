@@ -88,18 +88,15 @@ namespace ATS.Services
                 throw;
             }
         }
-        public async Task<IEnumerable<GetInActivityRecordDto>> GetInActivityRecord(long userId, DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<GetInActivityRecordDto>> GetInActivityRecord(long? userId, DateTime? startDate, DateTime? endDate)
         {
             try
             {
-                var startDateParameter = new SqlParameter("@StartDate", SqlDbType.Date)
-                {
-                    Value = startDate.HasValue ? (object)startDate.Value : (object)DateTime.Now.Date
-                };
-                var endDateParameter = new SqlParameter("@EndDate", SqlDbType.Date)
-                {
-                    Value = endDate.HasValue ? (object)endDate.Value : (object)DateTime.Now.Date
-                };
+                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
+                var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : endDate;
+
+                var startDateParameter = new SqlParameter("@StartDate", start);
+                var endDateParameter = new SqlParameter("@EndDate", end);
 
                 var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
                 {
@@ -111,9 +108,9 @@ namespace ATS.Services
                     .ToListAsync();
 
                 var dtoList = results.Select(li => new GetInActivityRecordDto(
-                    li.InTime,
-                    li.OutTime,
-                    li.TotalInHours
+                    li.InTime.TimeOfDay,
+                    li.OutTime.TimeOfDay,
+                    TimeSpan.Parse(li.TotalInHours)
                 ));
 
                 return dtoList;
@@ -253,46 +250,41 @@ namespace ATS.Services
         }
         public IEnumerable<ATS.DTO.GetTotalHours> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate)
         {
-            // Define parameters
-            var startDateParameter = new SqlParameter("@StartDate", SqlDbType.Date)
-            {
-                Value = startDate.HasValue ? (object)startDate.Value : DateTime.Now.Date
-            };
-            var endDateParameter = new SqlParameter("@EndDate", SqlDbType.Date)
-            {
-                Value = endDate.HasValue ? (object)endDate.Value : DateTime.Now.Date
-            };
+            var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
+            var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : endDate;
+
+            var startDateParameter = new SqlParameter("@StartDate", start);
+            var endDateParameter = new SqlParameter("@EndDate", end);
 
             // Execute stored procedure and map results to the DTO
             var results = _dbContext.Set<ATS.Model.GetTotalHours>()
                 .FromSqlRaw("EXECUTE dbo.GetTotalHour_Employee @StartDate, @EndDate", startDateParameter, endDateParameter)
-
                 .ToList();
 
             // Map the results to the DTO
             var dtoList = results.Select(model => new ATS.DTO.GetTotalHours(
-                model.LogDate,
+                model.UserId,
                 model.ProfilePic,
                 model.FirstName,
                 model.LastName,
-                (model.LastCheckoutTime - model.LastCheckInTime).ToString(@"hh\:mm\:ss")
+                model.LogDate,
+                model.LastCheckInTime.TimeOfDay,
+                model.LastCheckoutTime.TimeOfDay,
+                TimeSpan.Parse(model.TotalTimeSpanFormatted)
             ));
 
             return dtoList;
         }
 
-        public async Task<IEnumerable<GetOutActivityRecordDto>> GetOutActivityRecord(long userId, DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<GetOutActivityRecordDto>> GetOutActivityRecord(long? userId, DateTime? startDate, DateTime? endDate)
         {
             try
             {
-                var startDateParameter = new SqlParameter("@StartDate", SqlDbType.Date)
-                {
-                    Value = startDate.HasValue ? (object)startDate.Value : (object)DateTime.Now.Date
-                };
-                var endDateParameter = new SqlParameter("@EndDate", SqlDbType.Date)
-                {
-                    Value = endDate.HasValue ? (object)endDate.Value : (object)DateTime.Now.Date
-                };
+                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
+                var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : endDate;
+
+                var startDateParameter = new SqlParameter("@StartDate", start);
+                var endDateParameter = new SqlParameter("@EndDate", end);
 
                 var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
                 {
@@ -304,9 +296,9 @@ namespace ATS.Services
                     .ToListAsync();
 
                 var dtoList = results.Select(model => new GetOutActivityRecordDto(
-                    model.InTime,
-                    model.OutTime,
-                    model.TotalOutHours
+                    model.InTime.TimeOfDay,
+                    model.OutTime.TimeOfDay,
+                    TimeSpan.Parse(model.TotalOutHours)
                 ));
 
                 return dtoList;

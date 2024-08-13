@@ -16,12 +16,12 @@ namespace ATS.Model
 
         [ForeignKey("Users"), Required(ErrorMessage = "User ID is required")]
         public long UserId { get; set; }
-        public string EmployeeId { get; set; } = string.Empty;
+        public string EmployeeCode { get; set; } = string.Empty;
 
-        [Required(ErrorMessage ="First Name is Required") ,MaxLength(50)]
+        [Required(ErrorMessage ="First Name is Required"), MaxLength(50)]
         public string FirstName { get; set; } = string.Empty ;
 
-        [MaxLength(50)]
+        [Required(ErrorMessage = "Last Name is Required"), MaxLength(50)]
         public string LastName { get; set; } = string.Empty;
         public virtual Designation Designation { get; set; }
 
@@ -32,7 +32,6 @@ namespace ATS.Model
         [ForeignKey("Genders"), Required(ErrorMessage = "Gender ID is required")]
         public long GenderId { get; set; }
 
-        [Required(ErrorMessage ="Profile Pic is Required")]
         public string ProfilePic { get; set; } = string.Empty;
 
         public byte[] FaceEncoding { get; set; } = [];

@@ -18,9 +18,9 @@ namespace ATS.IServices
 
         Task<GetAttendanceLogSummaryDto> GetAttendanceLogSummary(DateTime? startDate, DateTime? endDate);
 
-        Task<IEnumerable<GetInActivityRecordDto>> GetInActivityRecord(long userId, DateTime? startDate, DateTime? endDate);
+        Task<IEnumerable<GetInActivityRecordDto>> GetInActivityRecord(long? userId, DateTime? startDate, DateTime? endDate);
 
-        Task<IEnumerable<GetOutActivityRecordDto>> GetOutActivityRecord(long userId, DateTime? startDate, DateTime? endDate);
+        Task<IEnumerable<GetOutActivityRecordDto>> GetOutActivityRecord(long? userId, DateTime? startDate, DateTime? endDate);
 
         Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto attendanceLogDto);
 

@@ -15,14 +15,14 @@ namespace ATS.DTO
     public record CreateUserDto(
         [Required(ErrorMessage = "Email is required"), MaxLength(50), EmailAddress] string Email,
         [Required(ErrorMessage = "Password is required"), MaxLength (50)] string Password,
-        long ContactNo,
+        string ContactNo,
         long CreatedBy
         );
 
     public record UpdateUserDto(
         [MaxLength(50)] string Email,
         [MaxLength(50)] string Password,
-        long ContactNo,
+        string ContactNo,
         bool IsActive,
         long UpdatedBy
         );
@@ -31,7 +31,7 @@ namespace ATS.DTO
         long Id,
         string Email,
         string Password,
-        long ContactNo,
+        string ContactNo,
         bool isActive
         );
 }

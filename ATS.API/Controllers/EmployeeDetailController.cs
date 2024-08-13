@@ -35,11 +35,11 @@ namespace ATS.API.Controllers
 
         // GET: api/<EmployeeDetailController>
         [HttpGet("filters")]
-        public async Task<ActionResult<IEnumerable<GetEmployeeDetailDto>>> GetWithFilter([FromQuery] string? firstName, string? lastName, string? employeeId, long designationId, long genderId, int start, int pageSize)
+        public async Task<ActionResult<IEnumerable<GetEmployeeDetailDto>>> GetWithFilter([FromQuery] string? firstName, string? lastName, string? employeeCode, long designationId, long genderId, int start, int pageSize)
         {
             try
             {
-                var employeeInfos = await _employeeDetailServices.GetEmployeeDetailsWithFilter(firstName, lastName, employeeId, designationId, genderId, start, pageSize);
+                var employeeInfos = await _employeeDetailServices.GetEmployeeDetailsWithFilter(firstName, lastName, employeeCode, designationId, genderId, start, pageSize);
                 return Ok(employeeInfos);
             }
             catch (Exception ex)
