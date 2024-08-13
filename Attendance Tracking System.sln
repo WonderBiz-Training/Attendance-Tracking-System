@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATS.Services", "ATS.Service
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATS.DTO", "ATS.DTO\ATS.DTO.csproj", "{4A66914A-2FAE-4682-88F4-1E4F59498C1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATS.Hub", "ATS.Hub\ATS.Hub.csproj", "{76FCAAD2-32D0-46AB-A6EA-9C4E09CD97DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATS.Hubs", "ATS.Hubs\ATS.Hubs.csproj", "{4FF86521-01CC-4D0E-A71C-02886ACD25EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,10 +59,10 @@ Global
 		{4A66914A-2FAE-4682-88F4-1E4F59498C1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A66914A-2FAE-4682-88F4-1E4F59498C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A66914A-2FAE-4682-88F4-1E4F59498C1F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{76FCAAD2-32D0-46AB-A6EA-9C4E09CD97DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76FCAAD2-32D0-46AB-A6EA-9C4E09CD97DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76FCAAD2-32D0-46AB-A6EA-9C4E09CD97DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76FCAAD2-32D0-46AB-A6EA-9C4E09CD97DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FF86521-01CC-4D0E-A71C-02886ACD25EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FF86521-01CC-4D0E-A71C-02886ACD25EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FF86521-01CC-4D0E-A71C-02886ACD25EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FF86521-01CC-4D0E-A71C-02886ACD25EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

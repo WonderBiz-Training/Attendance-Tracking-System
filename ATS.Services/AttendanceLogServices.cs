@@ -1,5 +1,6 @@
 ﻿using ATS.Data;
 using ATS.DTO;
+using ATS.Hubs;
 using ATS.IRepository;
 using ATS.IServices;
 using ATS.Model;
@@ -7,7 +8,6 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using MyProject.Hubs;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,9 +24,9 @@ namespace ATS.Services
         private readonly IUserRepository _userRepository;
         private readonly IEmployeeDetailRepository _employeeDetailRepository;
         private readonly ATSDbContext _dbContext;
-        private readonly IHubContext<AtsHub> _hubContext;
+        private readonly IHubContext<AtsHubs> _hubContext;
 
-        public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository, IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository, IHubContext<AtsHub> hubContext, ATSDbContext dbContext)
+        public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository, IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository, IHubContext<AtsHubs> hubContext, ATSDbContext dbContext)
         {
             _attendanceLogRepository = attendanceLogRepository;
             _userRepository = userRepository;
