@@ -14,15 +14,14 @@ namespace ATS.Model
 
     public class User : BaseEntity
     {
-        [Required(ErrorMessage = "Email is required")]
-        [MaxLength(50)]
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [Required(ErrorMessage = "Email is required"), MaxLength(50), EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; } = string.Empty;
 
-        [Required(ErrorMessage ="Password is Required")]
-        [MaxLength(50)]
+        [Required(ErrorMessage ="Password is Required"), MaxLength(50)]
         public string Password { get; set; } = string.Empty;
-        public long ContactNo { get; set; }
+
+        [MaxLength(10), MinLength(10)]
+        public string ContactNo { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
 
         public virtual EmployeeDetail EmployeeDetail { get; set; }

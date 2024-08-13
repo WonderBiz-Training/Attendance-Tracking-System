@@ -11,7 +11,7 @@ namespace ATS.IRepository
     {
         Task<IEnumerable<EmployeeDetail>> GetEmployeeDetailByUserId(long userId);
 
-        Task<IEnumerable<EmployeeDetail>> GetEmployeeWithFilter(string firstName, string lastName, string employeeId, long designationId, long genderId, int start, int pageSize);
+        Task<IEnumerable<EmployeeDetail>> GetEmployeeWithFilter(string firstName, string lastName, string employeeCode, long designationId, long genderId, int start, int pageSize);
 
     }
 }

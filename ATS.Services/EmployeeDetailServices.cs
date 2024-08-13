@@ -33,7 +33,7 @@ namespace ATS.Services
                     UserId = createEmployeeDetailDto.UserId,
                     GenderId = createEmployeeDetailDto.GenderId,
                     DesignationId = createEmployeeDetailDto.DesignationId,
-                    EmployeeId = createEmployeeDetailDto.EmployeeId,
+                    EmployeeCode = createEmployeeDetailDto.EmployeeCode,
                     FirstName = createEmployeeDetailDto.FirstName,
                     LastName = createEmployeeDetailDto.LastName,
                     ProfilePic = createEmployeeDetailDto.ProfilePic,
@@ -60,7 +60,7 @@ namespace ATS.Services
                         user.Email,
                         gender.GenderName,
                         designation.DesignationName,
-                        employeeInfo.EmployeeId,
+                        employeeInfo.EmployeeCode,
                         employeeInfo.FirstName,
                         employeeInfo.LastName,
                         employeeInfo.ProfilePic
@@ -116,7 +116,7 @@ namespace ATS.Services
                     employeeInfo.User.Email,
                     employeeInfo.Gender.GenderName,
                     employeeInfo.Designation.DesignationName,
-                    employeeInfo.EmployeeId,
+                    employeeInfo.EmployeeCode,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
                     employeeInfo.ProfilePic
@@ -142,7 +142,7 @@ namespace ATS.Services
                     employeeInfo.User.Email,
                     employeeInfo.Gender.GenderName,
                     employeeInfo.Designation.DesignationName,
-                    employeeInfo.EmployeeId,
+                    employeeInfo.EmployeeCode,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
                     employeeInfo.ProfilePic
@@ -167,7 +167,7 @@ namespace ATS.Services
                     employeeInfo.User.Email,
                     employeeInfo.Gender.GenderName,
                     employeeInfo.Designation.DesignationName,
-                    employeeInfo.EmployeeId,
+                    employeeInfo.EmployeeCode,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
                     employeeInfo.ProfilePic
@@ -181,27 +181,27 @@ namespace ATS.Services
             }
         }
 
-        public async Task<GetSearchDto> GetEmployeeDetailsWithFilter(string? firstName, string? lastName, string? employeeId, long? designationId, long? genderId, int? start, int? pageSize)
+        public async Task<GetSearchDto> GetEmployeeDetailsWithFilter(string? firstName, string? lastName, string? employeeCode, long? designationId, long? genderId, int? start, int? pageSize)
         {
             try
             {
                 var fname = firstName ?? string.Empty;
                 var lname = lastName ?? string.Empty;
-                var empId = employeeId ?? string.Empty;
+                var empCode = employeeCode ?? string.Empty;
                 var desgnId = designationId ?? 0;
                 var genId = genderId ?? 0;
                 var begin = start == 0 ? 1 : (int) start;
                 var limit = pageSize == 0 ? 5 : (int) pageSize;
 
 
-                var employeeInfos = await _employeeDetailRepository.GetEmployeeWithFilter(fname, lname, empId, desgnId, genId, begin, limit);
+                var employeeInfos = await _employeeDetailRepository.GetEmployeeWithFilter(fname, lname, empCode, desgnId, genId, begin, limit);
 
                 var employeeInfoDtos = employeeInfos.Select(employeeInfo => new GetEmployeeDetailDto(
                     employeeInfo.Id,
                     employeeInfo.User.Email,
                     employeeInfo.Gender.GenderName,
                     employeeInfo.Designation.DesignationName,
-                    employeeInfo.EmployeeId,
+                    employeeInfo.EmployeeCode,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
                     employeeInfo.ProfilePic
@@ -235,7 +235,7 @@ namespace ATS.Services
                 oldemployeeInfo.UserId = updateEmployeeDetailDto.UserId;
                 oldemployeeInfo.GenderId = updateEmployeeDetailDto.GenderId;
                 oldemployeeInfo.DesignationId = updateEmployeeDetailDto.DesignationId;
-                oldemployeeInfo.EmployeeId = updateEmployeeDetailDto.EmployeeId;
+                oldemployeeInfo.EmployeeCode = updateEmployeeDetailDto.EmployeeCode;
                 oldemployeeInfo.FirstName = updateEmployeeDetailDto.FirstName;
                 oldemployeeInfo.LastName = updateEmployeeDetailDto.LastName;
                 oldemployeeInfo.ProfilePic = updateEmployeeDetailDto.ProfilePic;
@@ -256,7 +256,7 @@ namespace ATS.Services
                         user.Email,
                         gender.GenderName,
                         designation.DesignationName,
-                        oldemployeeInfo.EmployeeId,
+                        oldemployeeInfo.EmployeeCode,
                         oldemployeeInfo.FirstName,
                         oldemployeeInfo.LastName,
                         oldemployeeInfo.ProfilePic

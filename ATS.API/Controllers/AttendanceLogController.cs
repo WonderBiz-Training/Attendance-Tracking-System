@@ -81,10 +81,8 @@ namespace ATS.API.Controllers
         }
 
         [HttpGet("totalhours")]
-        public  ActionResult<ATS.DTO.GetTotalHours> GetUserToalHour([FromQuery] DateTime startDate, DateTime endDate)
+        public  ActionResult<ATS.DTO.GetTotalHours> GetUserTotalHour([FromQuery] DateTime? startDate, DateTime? endDate)
         {
-            /*var start = startDate == DateTime.MinValue ? DateTime.Now : (DateTime)startDate;
-            var end = endDate == DateTime.MinValue ? DateTime.Now : (DateTime)endDate;*/
             try
             {
                 var res =  _attendanceLogServices.GetTotalHoursOfEmployee(startDate, endDate);
@@ -99,7 +97,7 @@ namespace ATS.API.Controllers
 
         // GET api/<AttendanceLogController>/activity-record
         [HttpGet("activity-record/in")]
-        public async Task<ActionResult<GetInActivityRecordDto>> GetInActivityRecord([FromQuery] long userId, DateTime startDate, DateTime endDate)
+        public async Task<ActionResult<GetInActivityRecordDto>> GetInActivityRecord([FromQuery] long? userId, DateTime? startDate, DateTime? endDate)
         {
             try
             {
@@ -113,7 +111,7 @@ namespace ATS.API.Controllers
         }
 
         [HttpGet("activity-record/out")]
-        public async Task<ActionResult<GetOutActivityRecordDto>> GetActivityRecordOutHour([FromQuery] long userId, DateTime startDate, DateTime endDate)
+        public async Task<ActionResult<GetOutActivityRecordDto>> GetActivityRecordOutHour([FromQuery] long? userId, DateTime? startDate, DateTime? endDate)
         {
             try
             {

@@ -46,22 +46,25 @@ namespace ATS.DTO
         );
 
     public record GetInActivityRecordDto(
-        DateTime InTime,
-        DateTime OutTime,
-        string InHours
+        TimeSpan InTime,
+        TimeSpan OutTime,
+        TimeSpan InHours
     );
 
     public record GetOutActivityRecordDto(
-        DateTime InTime,
-        DateTime OutTime,
-        string OutHours
+        TimeSpan InTime,
+        TimeSpan OutTime,
+        TimeSpan OutHours
     );
 
     public record GetTotalHours(
-        DateTime LogDate,
+        long UserId,
         string ProfilePic,
         string FirstName,
         string LastName,
-        string TotalHours
+        DateOnly LogDate,
+        TimeSpan LastCheckInTime,
+        TimeSpan LastCheckOutTime,
+        TimeSpan TotalHours
     );
 }

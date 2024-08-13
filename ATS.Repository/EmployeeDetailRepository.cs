@@ -37,7 +37,7 @@ namespace ATS.Repository
             }
         }
 
-        public async Task<IEnumerable<EmployeeDetail>> GetEmployeeWithFilter(string firstName, string lastName, string employeeId, long designationId, long genderId, int start, int pageSize)
+        public async Task<IEnumerable<EmployeeDetail>> GetEmployeeWithFilter(string firstName, string lastName, string employeeCode, long designationId, long genderId, int start, int pageSize)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace ATS.Repository
                     .Include(li => li.Designation)
                     .Where(li => li.FirstName.Contains(firstName) && 
                                  li.LastName.Contains(lastName) && 
-                                 li.EmployeeId.Contains(employeeId)
+                                 li.EmployeeCode.Contains(employeeCode)
                     );
 
                 if(designationId > 0)
