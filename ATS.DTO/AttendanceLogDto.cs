@@ -45,13 +45,13 @@ namespace ATS.DTO
         DateTime InTime
         );
 
-    public record GetActivityRecordDto(
+    public record GetInActivityRecordDto(
         DateTime InTime,
         DateTime OutTime,
         string InHours
     );
 
-    public record GetActivityRecordOutHoursDto(
+    public record GetOutActivityRecordDto(
         DateTime InTime,
         DateTime OutTime,
         Double OutHours

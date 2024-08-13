@@ -81,7 +81,7 @@ namespace ATS.Services
                 throw;
             }
         }
-        public async Task<IEnumerable<GetActivityRecordDto>> GetActivityRecord(long userId, DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<GetInActivityRecordDto>> GetInActivityRecord(long userId, DateTime? startDate, DateTime? endDate)
         {
             try
             {
@@ -100,10 +100,10 @@ namespace ATS.Services
                 };
 
                 var results = await _dbContext.Set<GetTotalInHours>()
-                    .FromSqlRaw("EXECUTE dbo.GetAttendanceTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
+                    .FromSqlRaw("EXECUTE dbo.GetAttendanceInTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
                     .ToListAsync();
 
-                var dtoList = results.Select(li => new GetActivityRecordDto(
+                var dtoList = results.Select(li => new GetInActivityRecordDto(
                     li.InTime,
                     li.OutTime,
                     li.TotalInHours
@@ -274,7 +274,7 @@ namespace ATS.Services
             return dtoList;
         }
 
-        public async Task<IEnumerable<GetActivityRecordOutHoursDto>> GetActivityRecordOutHours(long userId, DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<GetOutActivityRecordDto>> GetOutActivityRecord(long userId, DateTime? startDate, DateTime? endDate)
         {
             try
             {
@@ -296,7 +296,7 @@ namespace ATS.Services
                     .FromSqlRaw("EXECUTE dbo.GetAttendanceOutTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
                     .ToListAsync();
 
-                var dtoList = results.Select(model => new GetActivityRecordOutHoursDto(
+                var dtoList = results.Select(model => new GetOutActivityRecordDto(
                     model.InTime,
                     model.OutTime,
                     model.TotalOutHours

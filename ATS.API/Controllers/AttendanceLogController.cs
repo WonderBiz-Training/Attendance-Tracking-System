@@ -98,12 +98,12 @@ namespace ATS.API.Controllers
 
 
         // GET api/<AttendanceLogController>/activity-record
-        [HttpGet("activity-record")]
-        public async Task<ActionResult<GetActivityRecordDto>> GetActivityRecord([FromQuery] long userId, DateTime startDate, DateTime endDate)
+        [HttpGet("activity-record/in")]
+        public async Task<ActionResult<GetInActivityRecordDto>> GetInActivityRecord([FromQuery] long userId, DateTime startDate, DateTime endDate)
         {
             try
             {
-                var res = await _attendanceLogServices.GetActivityRecord(userId, startDate, endDate);
+                var res = await _attendanceLogServices.GetInActivityRecord(userId, startDate, endDate);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -113,11 +113,11 @@ namespace ATS.API.Controllers
         }
 
         [HttpGet("activity-record/out")]
-        public async Task<ActionResult<GetActivityRecordOutHoursDto>> GetActivityRecordOutHour([FromQuery] long userId, DateTime startDate, DateTime endDate)
+        public async Task<ActionResult<GetOutActivityRecordDto>> GetActivityRecordOutHour([FromQuery] long userId, DateTime startDate, DateTime endDate)
         {
             try
             {
-                var res = await _attendanceLogServices.GetActivityRecordOutHours(userId, startDate, endDate);
+                var res = await _attendanceLogServices.GetOutActivityRecord(userId, startDate, endDate);
                 return Ok(res);
             }
             catch (Exception ex)
