@@ -14,7 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ATS.Data\ATS.Data.csproj" />
     <ProjectReference Include="..\ATS.DTO\ATS.DTO.csproj" />
-    <ProjectReference Include="..\ATS.Hub\ATS.Hub.csproj" />
+    <ProjectReference Include="..\ATS.Hubs\ATS.Hubs.csproj" />
     <ProjectReference Include="..\ATS.IRepository\ATS.IRepository.csproj" />
     <ProjectReference Include="..\ATS.IServices\ATS.IServices.csproj" />
   </ItemGroup>
