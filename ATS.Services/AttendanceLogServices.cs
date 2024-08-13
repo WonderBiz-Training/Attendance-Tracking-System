@@ -3,9 +3,11 @@ using ATS.DTO;
 using ATS.IRepository;
 using ATS.IServices;
 using ATS.Model;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using MyProject.Hubs;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,13 +24,15 @@ namespace ATS.Services
         private readonly IUserRepository _userRepository;
         private readonly IEmployeeDetailRepository _employeeDetailRepository;
         private readonly ATSDbContext _dbContext;
+        private readonly IHubContext<AtsHub> _hubContext;
 
-        public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository, IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository, ATSDbContext dbcontext)
+        public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository, IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository, IHubContext<AtsHub> hubContext, ATSDbContext dbContext)
         {
             _attendanceLogRepository = attendanceLogRepository;
             _userRepository = userRepository;
             _employeeDetailRepository = employeeDetailRepository;
-            _dbContext = dbcontext;
+            _hubContext = hubContext;
+            _dbContext = dbContext;
         }
         public class TimePeriod
         {
@@ -50,9 +54,12 @@ namespace ATS.Services
                 var res = new GetAttendanceLogDto(
                     attendanceLog.Id,
                     attendanceLog.UserId,
+                 
                     attendanceLog.AttendanceLogTime,
                     attendanceLog.CheckType
                 );
+
+                await _hubContext.Clients.All.SendAsync("ReceiveItemUpdate", attendanceLog.UserId, attendanceLog.AttendanceLogTime, attendanceLog.CheckType);
 
                 return res;
             }

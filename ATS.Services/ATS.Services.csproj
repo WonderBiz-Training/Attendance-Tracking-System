@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ATS.Data\ATS.Data.csproj" />
     <ProjectReference Include="..\ATS.DTO\ATS.DTO.csproj" />
+    <ProjectReference Include="..\ATS.Hub\ATS.Hub.csproj" />
     <ProjectReference Include="..\ATS.IRepository\ATS.IRepository.csproj" />
     <ProjectReference Include="..\ATS.IServices\ATS.IServices.csproj" />
   </ItemGroup>
