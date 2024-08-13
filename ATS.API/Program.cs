@@ -1,10 +1,10 @@
 using ATS.Data;
+using ATS.Hubs;
 using ATS.IRepository;
 using ATS.IServices;
 using ATS.Repository;
 using ATS.Services;
 using Microsoft.EntityFrameworkCore;
-using MyProject.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,13 +31,16 @@ builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IEmployeeDetailRepository, EmployeeDetailRepository>();
 builder.Services.AddScoped<IEmployeeDetailServices, EmployeeDetailServices>();
 
-// Add services to the container.
+// Configure CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "AllowMyAngularApp",
         policy =>
         {
-            policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            policy.WithOrigins("http://localhost:4200") // Replace with your Angular app URL
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials(); // Allow credentials (cookies, authorization headers, etc.)
         });
 });
 
@@ -59,8 +62,7 @@ app.UseRouting();
 
 app.UseEndpoints(endpoint =>
 {
-    endpoint.MapControllers();
-    endpoint.MapHub<AtsHub>("/atsHub");
+    endpoint.MapHub<AtsHubs>("/atsHub");
 });
 
 app.Run();
