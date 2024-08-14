@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,10 +15,12 @@ namespace ATS.Services
     public class UserServices : IUserServices
     {
         private readonly IUserRepository _userRepository;
+        private readonly IEmployeeDetailRepository _employeeDetailRepository;
 
-        public UserServices(IUserRepository userRepository)
+        public UserServices(IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository)
         {
             _userRepository = userRepository;
+            _employeeDetailRepository = employeeDetailRepository;
         }
 
         public async Task<GetUserDto> CreateUserAsync(CreateUserDto UserDto)
@@ -126,6 +129,60 @@ namespace ATS.Services
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
+
+        public async Task<GetSignUpDto> SignUpUserAsync(SignUpDto signUpDto)
+        {
+
+            try
+            {
+                var users = await _userRepository.CreateAsync(new User
+                {
+                    Email = signUpDto.Email,
+                    Password = signUpDto.Password,
+                    ContactNo = signUpDto.ContactNo, 
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                });
+
+                var createdUser = new GetUserDto(
+                    users.Id,
+                    users.Email,
+                    users.Password,
+                    users.ContactNo,
+                    users.IsActive
+                );
+
+
+                var employeeInfo = await _employeeDetailRepository.CreateAsync(new EmployeeDetail()
+                {
+                    UserId = createdUser.Id,
+                    FirstName = signUpDto.FirstName,
+                    LastName = signUpDto.LastName,
+                    ProfilePic = signUpDto.ProfilePic,
+                    CreatedBy = createdUser.Id,
+                    UpdatedBy = createdUser.Id,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                });
+
+                var createEmployee = new GetSignUpDto(
+                        createdUser.Id,
+                        employeeInfo.FirstName,
+                        employeeInfo.LastName,
+                        createdUser.Email,
+                        createdUser.ContactNo,
+                        createdUser.Password,
+                        employeeInfo.ProfilePic
+                    );
+
+                return createEmployee;
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }
