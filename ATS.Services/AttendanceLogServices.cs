@@ -95,17 +95,7 @@ namespace ATS.Services
                 var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
                 var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : endDate;
 
-                var startDateParameter = new SqlParameter("@StartDate", start);
-                var endDateParameter = new SqlParameter("@EndDate", end);
-
-                var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
-                {
-                    Value = userId
-                };
-
-                var results = await _dbContext.Set<GetTotalInHours>()
-                    .FromSqlRaw("EXECUTE dbo.GetAttendanceInTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
-                    .ToListAsync();
+                var results = await _attendanceLogRepository.GetTotalInHours(userId, start, end);
 
                 var dtoList = results.Select(li => new GetInActivityRecordDto(
                     li.InTime.TimeOfDay,
@@ -123,6 +113,7 @@ namespace ATS.Services
         }
 
         public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetAllAttendanceLogsAsync()
+        public async Task<IEnumerable<GetAttendanceLogDto>> GetAllAttendanceLogsAsync()
         {
             try
             {
@@ -279,7 +270,6 @@ namespace ATS.Services
 
             return dtoList;
         }
-
         public async Task<IEnumerable<GetOutActivityRecordDto>> GetOutActivityRecord(long? userId, DateTime? startDate, DateTime? endDate)
         {
             try
@@ -287,17 +277,7 @@ namespace ATS.Services
                 var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
                 var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : endDate;
 
-                var startDateParameter = new SqlParameter("@StartDate", start);
-                var endDateParameter = new SqlParameter("@EndDate", end);
-
-                var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
-                {
-                    Value = userId
-                };
-
-                var results = await _dbContext.Set<GetTotalOutHours>()
-                    .FromSqlRaw("EXECUTE dbo.GetAttendanceOutTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
-                    .ToListAsync();
+               var results = await _attendanceLogRepository.GetTotalOutHours(userId, start, end);
 
                 var dtoList = results.Select(model => new GetOutActivityRecordDto(
                     model.InTime.TimeOfDay,
@@ -312,7 +292,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetStatusOfAttendanceLogDto>> GetStatusOfAttendanceLog(string? FirstName)
         {
             try
@@ -323,16 +302,11 @@ namespace ATS.Services
 
                 if (string.IsNullOrEmpty(Name))
                 {
-                    data = await _dbContext.Set<GetStatusOfAttendanceLog>()
-                        .FromSqlRaw("EXECUTE dbo.GetEmployeeAttendanceSummary")
-                        .ToListAsync();
+                    data = await _attendanceLogRepository.GetAllStatusOfAttendanceLog();
                 }
                 else
                 {
-                    var firstNameParameter = new SqlParameter("@FirstName", Name);
-                    data = await _dbContext.Set<GetStatusOfAttendanceLog>()
-                        .FromSqlRaw("EXECUTE dbo.GetPacificStatus @FirstName", firstNameParameter)
-                        .ToListAsync();
+                    data = await _attendanceLogRepository.GetPacificStatusOfAttendanceLog(FirstName);
                 }
 
                 var dtoList = data.Select(model => new GetStatusOfAttendanceLogDto(
@@ -349,6 +323,5 @@ namespace ATS.Services
                 throw;
             }
         }
-
     }
 }

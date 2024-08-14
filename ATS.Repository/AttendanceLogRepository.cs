@@ -1,12 +1,16 @@
 ﻿using ATS.Data;
 using ATS.IRepository;
 using ATS.Model;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ATS.Repository
 {
@@ -19,6 +23,37 @@ namespace ATS.Repository
             _dbContext = dbcontext;
         }
 
+        public async Task<IEnumerable<GetStatusOfAttendanceLog>> GetAllStatusOfAttendanceLog()
+        {
+            try
+            {
+                var data = await _dbContext.Set<GetStatusOfAttendanceLog>()
+                               .FromSqlRaw("EXECUTE dbo.GetEmployeeAttendanceSummary")
+                               .ToListAsync();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<IEnumerable<GetStatusOfAttendanceLog>> GetPacificStatusOfAttendanceLog(string firstName)
+        {
+            try
+            {
+                var firstNameParameter = new SqlParameter("@FirstName", firstName);
+                var data = await _dbContext.Set<GetStatusOfAttendanceLog>()
+                    .FromSqlRaw("EXECUTE dbo.GetPacificStatus @FirstName", firstNameParameter)
+                    .ToListAsync();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         public async Task<IEnumerable<AttendanceLog>> GetAttendanceLogByUserId(long userId)
         {
             try
@@ -101,6 +136,54 @@ namespace ATS.Repository
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
+        public async Task<IEnumerable<GetTotalInHours>> GetTotalInHours(long? userId, DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                var startDateParameter = new SqlParameter("@StartDate", startDate);
+                var endDateParameter = new SqlParameter("@EndDate", endDate);
+
+                var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
+                {
+                    Value = userId
+                };
+
+                var results = await _dbContext.Set<GetTotalInHours>()
+                            .FromSqlRaw("EXECUTE dbo.GetAttendanceInTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
+                            .ToListAsync();
+                return results;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<GetTotalOutHours>> GetTotalOutHours(long? userId, DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                var startDateParameter = new SqlParameter("@StartDate", startDate);
+                var endDateParameter = new SqlParameter("@EndDate", endDate);
+
+                var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
+                {
+                    Value = userId
+                };
+
+                var results = await _dbContext.Set<GetTotalOutHours>()
+                    .FromSqlRaw("EXECUTE dbo.GetAttendanceOutTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
+                    .ToListAsync();
+
+                return results;
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }
