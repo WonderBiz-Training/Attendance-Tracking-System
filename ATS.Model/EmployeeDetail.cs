@@ -26,11 +26,11 @@ namespace ATS.Model
         public virtual Designation Designation { get; set; }
 
         [ForeignKey("Designations")]
-        public long DesignationId { get; set; }
+        public long DesignationId { get; set; } = 1;
         public virtual Gender Gender { get; set; }
 
         [ForeignKey("Genders")]
-        public long GenderId { get; set; }
+        public long GenderId { get; set; } = 1;
 
         public string ProfilePic { get; set; } = string.Empty;
 
