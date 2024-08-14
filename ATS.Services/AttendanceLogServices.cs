@@ -122,15 +122,18 @@ namespace ATS.Services
        
         }
 
-        public async Task<IEnumerable<GetAttendanceLogDto>> GetAllAttendanceLogsAsync()
+        public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetAllAttendanceLogsAsync()
         {
             try
             {
                 var attendanceLogs = await _attendanceLogRepository.GetAllAsync();
 
-                var attendanceLogsDto = attendanceLogs.Select(attendanceLog => new GetAttendanceLogDto(
+                var attendanceLogsDto = attendanceLogs.Select(attendanceLog => new GetAttendanceLogsWithDetailsDto(
                     attendanceLog.Id,
                     attendanceLog.UserId,
+                    attendanceLog.User.EmployeeDetail.ProfilePic,
+                    attendanceLog.User.EmployeeDetail.FirstName,
+                    attendanceLog.User.EmployeeDetail.LastName,
                     attendanceLog.AttendanceLogTime,
                     attendanceLog.CheckType
                 ));
@@ -336,7 +339,7 @@ namespace ATS.Services
                     model.FirstName,
                     model.LastName,
                     model.Status,
-                    model.InTime
+                    model.InTime?.TimeOfDay
                 ));
 
                 return dtoList;

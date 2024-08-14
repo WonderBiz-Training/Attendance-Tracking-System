@@ -32,6 +32,16 @@ namespace ATS.DTO
         string CheckType
         );
 
+    public record GetAttendanceLogsWithDetailsDto(
+        long Id,
+        long UserId,
+        string ProfilePic,
+        string FirstName,
+        string LastName,
+        DateTime AttendanceLogTime,
+        string CheckType
+        );
+
     public record GetAttendanceLogSummaryDto(
         int Total, 
         int Present, 
@@ -72,6 +82,6 @@ namespace ATS.DTO
         string FirstName,
         string LastName,
         string Status,
-        DateTime? InTime
+        TimeSpan? InTime
     );
 }

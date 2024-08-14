@@ -36,6 +36,22 @@ namespace ATS.Repository
             }
         }
 
+        public async Task<IEnumerable<AttendanceLog>> GetAllAttendanceLogs()
+        {
+            try
+            {
+                var attendanceLogs = await _dbContext.attendanceLogs
+                    .Include(li => li.User).ThenInclude(li => li.EmployeeDetail)
+                    .ToListAsync();
+
+                return attendanceLogs;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<AttendanceLog>> GetAttendanceReport(DateTime date)
         {
             try

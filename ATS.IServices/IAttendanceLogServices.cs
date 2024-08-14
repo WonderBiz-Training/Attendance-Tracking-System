@@ -10,7 +10,7 @@ namespace ATS.IServices
 {
     public interface IAttendanceLogServices
     {
-        Task<IEnumerable<GetAttendanceLogDto>> GetAllAttendanceLogsAsync();
+        Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetAllAttendanceLogsAsync();
 
         Task<GetAttendanceLogDto> GetAttendanceLogAsync(long id);
 
