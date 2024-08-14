@@ -93,5 +93,22 @@ namespace ATS.API.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        // POST api/<UserController>
+        [HttpPost("signup")]
+        public async Task<ActionResult<GetSignUpDto>> Post([FromBody] SignUpDto signUpDto)
+        {
+            try
+            {
+                var res = await _userServices.SignUpUserAsync(signUpDto);
+                return res;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
     }
 }
