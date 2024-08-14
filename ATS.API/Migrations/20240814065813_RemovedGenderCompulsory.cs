@@ -5,7 +5,7 @@
 namespace ATS.API.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedUserDetailsIdToUserTable1 : Migration
+    public partial class RemovedGenderCompulsory : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

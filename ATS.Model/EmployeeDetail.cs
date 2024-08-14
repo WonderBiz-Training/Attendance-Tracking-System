@@ -25,11 +25,11 @@ namespace ATS.Model
         public string LastName { get; set; } = string.Empty;
         public virtual Designation Designation { get; set; }
 
-        [ForeignKey("Designations"), Required(ErrorMessage = "Designation ID is required")]
+        [ForeignKey("Designations")]
         public long DesignationId { get; set; }
         public virtual Gender Gender { get; set; }
 
-        [ForeignKey("Genders"), Required(ErrorMessage = "Gender ID is required")]
+        [ForeignKey("Genders")]
         public long GenderId { get; set; }
 
         public string ProfilePic { get; set; } = string.Empty;

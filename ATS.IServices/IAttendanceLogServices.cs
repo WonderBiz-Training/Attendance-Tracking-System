@@ -30,7 +30,7 @@ namespace ATS.IServices
 
         Task<bool> DeleteAttendanceLogAsync(long id);
 
-        IEnumerable<GetTotalHours> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate);
+        IEnumerable<GetTotalHours> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate, string? reportType);
 
     }
 }
