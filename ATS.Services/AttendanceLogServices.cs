@@ -248,17 +248,19 @@ namespace ATS.Services
                 throw;
             }
         }
-        public IEnumerable<ATS.DTO.GetTotalHours> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate)
+        public IEnumerable<ATS.DTO.GetTotalHours> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate, string? reportType)
         {
             var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
-            var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : endDate;
+            var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date : endDate;
+            var report = reportType ?? "ALL-TIME";
 
             var startDateParameter = new SqlParameter("@StartDate", start);
             var endDateParameter = new SqlParameter("@EndDate", end);
+            var periodTypeParameter = new SqlParameter("@PeriodType", report);
 
             // Execute stored procedure and map results to the DTO
             var results = _dbContext.Set<ATS.Model.GetTotalHours>()
-                .FromSqlRaw("EXECUTE dbo.GetTotalHour_Employee @StartDate, @EndDate", startDateParameter, endDateParameter)
+                .FromSqlRaw("EXECUTE dbo.GetTotalHour_Employee_Report @StartDate, @EndDate, @PeriodType", startDateParameter, endDateParameter, periodTypeParameter)
                 .ToList();
 
             // Map the results to the DTO
@@ -267,9 +269,8 @@ namespace ATS.Services
                 model.ProfilePic,
                 model.FirstName,
                 model.LastName,
-                model.LogDate,
-                model.LastCheckInTime.TimeOfDay,
-                model.LastCheckoutTime.TimeOfDay,
+                model.PeriodStart,
+                model.PeriodEnd,
                 TimeSpan.Parse(model.TotalTimeSpanFormatted)
             ));
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ATS.API.Migrations
 {
     [DbContext(typeof(ATSDbContext))]
-    [Migration("20240806054950_RenamedLogs")]
-    partial class RenamedLogs
+    [Migration("20240814041121_Tables")]
+    partial class Tables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,9 +110,13 @@ namespace ATS.API.Migrations
                     b.Property<long>("DesignationId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("EmployeeId")
+                    b.Property<string>("EmployeeCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("FaceEncoding")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -146,7 +150,8 @@ namespace ATS.API.Migrations
 
                     b.HasIndex("GenderId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("EmployeeDetails");
                 });
@@ -195,6 +200,75 @@ namespace ATS.API.Migrations
                     b.ToTable("Genders");
                 });
 
+            modelBuilder.Entity("ATS.Model.GetTotalHours", b =>
+                {
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastCheckInTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastCheckoutTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("LogDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("ProfilePic")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TotalTimeSpanFormatted")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.ToTable((string)null);
+
+                    b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("ATS.Model.GetTotalInHours", b =>
+                {
+                    b.Property<DateTime>("InTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("OutTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TotalInHours")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable((string)null);
+
+                    b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("ATS.Model.GetTotalOutHours", b =>
+                {
+                    b.Property<DateTime>("InTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("OutTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TotalOutHours")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable((string)null);
+
+                    b.ToView(null, (string)null);
+                });
+
             modelBuilder.Entity("ATS.Model.User", b =>
                 {
                     b.Property<long>("Id")
@@ -203,8 +277,10 @@ namespace ATS.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ContactNo")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ContactNo")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -216,6 +292,12 @@ namespace ATS.API.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<long?>("EmployeeDetailsId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -262,8 +344,8 @@ namespace ATS.API.Migrations
                         .IsRequired();
 
                     b.HasOne("ATS.Model.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("EmployeeDetail")
+                        .HasForeignKey("ATS.Model.EmployeeDetail", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -272,6 +354,12 @@ namespace ATS.API.Migrations
                     b.Navigation("Gender");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ATS.Model.User", b =>
+                {
+                    b.Navigation("EmployeeDetail")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
