@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,5 +67,12 @@ namespace ATS.DTO
         TimeSpan LastCheckInTime,
         TimeSpan LastCheckOutTime,
         TimeSpan TotalHours
+    );
+
+    public record GetStatusOfAttendanceLogDto(
+        string FirstName,
+        string LastName,
+        string Status,
+        DateTime? InTime
     );
 }

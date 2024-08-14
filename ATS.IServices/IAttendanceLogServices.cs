@@ -22,13 +22,14 @@ namespace ATS.IServices
 
         Task<IEnumerable<GetOutActivityRecordDto>> GetOutActivityRecord(long? userId, DateTime? startDate, DateTime? endDate);
 
+        Task<IEnumerable<GetStatusOfAttendanceLogDto>> GetStatusOfAttendanceLog(string? FirstName);
+
         Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto attendanceLogDto);
 
         Task<GetAttendanceLogDto> UpdateAttendanceLogAsync(long id, UpdateAttendanceLogDto attendanceLogDto);
 
         Task<bool> DeleteAttendanceLogAsync(long id);
 
-        // Task<IEnumerable<GetTotalHours>> GetTotalHoursOfEmployee2(DateTime? startDate, DateTime? endDate);
         IEnumerable<GetTotalHours> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate);
 
     }

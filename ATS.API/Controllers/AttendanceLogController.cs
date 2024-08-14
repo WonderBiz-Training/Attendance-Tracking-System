@@ -124,20 +124,19 @@ namespace ATS.API.Controllers
             }
         }
 
-        /*// GET api/<AttendanceLogController>/report
-        [HttpGet("report")]
-        public async Task<ActionResult<GetAttendanceReportDto>> GetReport([FromQuery] DateTime date)
+        [HttpGet("status")]
+        public async Task<ActionResult<GetOutActivityRecordDto>> GetStatusOfEmployee([FromQuery] string? FirstName)
         {
             try
             {
-                var res = await _attendanceLogServices.GetAttendanceReport(date);
+                var res = await _attendanceLogServices.GetStatusOfAttendanceLog(FirstName);
                 return Ok(res);
             }
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
-        }*/
+        }
 
         // POST api/<AttendanceLogController>
         [HttpPost]

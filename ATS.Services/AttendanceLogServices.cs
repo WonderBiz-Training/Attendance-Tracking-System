@@ -308,5 +308,43 @@ namespace ATS.Services
                 throw;
             }
         }
+
+        public async Task<IEnumerable<GetStatusOfAttendanceLogDto>> GetStatusOfAttendanceLog(string? FirstName)
+        {
+            try
+            {
+                IEnumerable<GetStatusOfAttendanceLog> data;
+
+                var Name = FirstName ?? string.Empty;
+
+                if (string.IsNullOrEmpty(Name))
+                {
+                    data = await _dbContext.Set<GetStatusOfAttendanceLog>()
+                        .FromSqlRaw("EXECUTE dbo.GetEmployeeAttendanceSummary")
+                        .ToListAsync();
+                }
+                else
+                {
+                    var firstNameParameter = new SqlParameter("@FirstName", Name);
+                    data = await _dbContext.Set<GetStatusOfAttendanceLog>()
+                        .FromSqlRaw("EXECUTE dbo.GetPacificStatus @FirstName", firstNameParameter)
+                        .ToListAsync();
+                }
+
+                var dtoList = data.Select(model => new GetStatusOfAttendanceLogDto(
+                    model.FirstName,
+                    model.LastName,
+                    model.Status,
+                    model.InTime
+                ));
+
+                return dtoList;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
     }
 }
