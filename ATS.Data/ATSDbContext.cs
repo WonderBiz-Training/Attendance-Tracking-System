@@ -37,8 +37,8 @@ namespace ATS.Data
 
             modelBuilder.Entity<GetStatusOfAttendanceLog>(entity =>
             {
-                entity.HasNoKey(); // Indicate that this entity does not have a key
-                entity.ToView(null); // Optional: specify that this entity does not map to a database view
+                entity.HasNoKey(); 
+                entity.ToView(null); 
             });
         }
 
