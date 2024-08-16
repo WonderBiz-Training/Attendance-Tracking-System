@@ -17,13 +17,13 @@ namespace ATS.Services
     public class UserServices : IUserServices
     {
         private readonly IUserRepository _userRepository;
-        private readonly IEmployeeDetailRepository _employeeDetailRepository;
+        private readonly IEmployeeDetailServices _employeeDetailServices;
         private readonly IHubContext<AtsHubs> _hubContext;
 
-        public UserServices(IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository, IHubContext<AtsHubs> hubContext)
+        public UserServices(IUserRepository userRepository, IEmployeeDetailServices employeeDetailServices, IHubContext<AtsHubs> hubContext)
         {
             _userRepository = userRepository;
-            _employeeDetailRepository = employeeDetailRepository;
+            _employeeDetailServices = employeeDetailServices;
             _hubContext = hubContext;
         }
 
@@ -162,17 +162,17 @@ namespace ATS.Services
                 );
 
 
-                var employeeInfo = await _employeeDetailRepository.CreateAsync(new EmployeeDetail()
-                {
-                    UserId = createdUser.Id,
-                    FirstName = signUpDto.FirstName,
-                    LastName = signUpDto.LastName,
-                    ProfilePic = signUpDto.ProfilePic,
-                    CreatedBy = createdUser.Id,
-                    UpdatedBy = createdUser.Id,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
-                });
+                var employeeInfo = await _employeeDetailServices.CreateEmployeeDetailAsync(
+                    new CreateEmployeeDetailDto(
+                        UserId: createdUser.Id,
+                        EmployeeCode: signUpDto?.EmployeeCode,
+                        FirstName: signUpDto.FirstName,
+                        LastName: signUpDto.LastName,
+                        ProfilePic: signUpDto.ProfilePic,
+                        CreatedBy: createdUser.Id
+                    )
+                );
+
 
                 var createEmployee = new GetSignUpDto(
                         createdUser.Id,

@@ -18,7 +18,8 @@ namespace ATS.DTO
        [Required(ErrorMessage = "Email is required"), MaxLength(50), EmailAddress] string Email,
        [Required(ErrorMessage = "Contact Number is required")] string ContactNo,
        [Required(ErrorMessage = "Password is required"), MaxLength(50)] string Password,
-       [Required(ErrorMessage = "Profile Pic is required")] string ProfilePic
+       [Required(ErrorMessage = "Profile Pic is required")] string ProfilePic,
+       string? EmployeeCode
     );
 
     public record GetSignUpDto(
