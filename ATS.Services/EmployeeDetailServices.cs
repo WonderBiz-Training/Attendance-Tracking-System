@@ -31,9 +31,9 @@ namespace ATS.Services
                 var employeeInfo = await _employeeDetailRepository.CreateAsync(new EmployeeDetail()
                 {
                     UserId = createEmployeeDetailDto.UserId,
-                    GenderId = createEmployeeDetailDto.GenderId,
-                    DesignationId = createEmployeeDetailDto.DesignationId,
-                    EmployeeCode = createEmployeeDetailDto.EmployeeCode,
+                    //GenderId = createEmployeeDetailDto.GenderId,
+                    //DesignationId = createEmployeeDetailDto.DesignationId,
+                    EmployeeCode = createEmployeeDetailDto?.EmployeeCode,
                     FirstName = createEmployeeDetailDto.FirstName,
                     LastName = createEmployeeDetailDto.LastName,
                     ProfilePic = createEmployeeDetailDto.ProfilePic,
@@ -63,7 +63,8 @@ namespace ATS.Services
                         employeeInfo.EmployeeCode,
                         employeeInfo.FirstName,
                         employeeInfo.LastName,
-                        employeeInfo.ProfilePic
+                        employeeInfo.ProfilePic,
+                        employeeInfo.FaceEncoding
                     );
 
                     return createdEmployeeDetail;
@@ -119,7 +120,8 @@ namespace ATS.Services
                     employeeInfo.EmployeeCode,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
-                    employeeInfo.ProfilePic
+                    employeeInfo.ProfilePic,
+                    employeeInfo.FaceEncoding
                 );
 
                 return employeeInfoDto;
@@ -145,7 +147,8 @@ namespace ATS.Services
                     employeeInfo.EmployeeCode,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
-                    employeeInfo.ProfilePic
+                    employeeInfo.ProfilePic,
+                    employeeInfo.FaceEncoding
                 ));
 
                 return employeeInfoDtos;
@@ -170,7 +173,8 @@ namespace ATS.Services
                     employeeInfo.EmployeeCode,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
-                    employeeInfo.ProfilePic
+                    employeeInfo.ProfilePic,
+                    employeeInfo.FaceEncoding
                 ));
 
                 return employeeInfoDtos;
@@ -204,8 +208,8 @@ namespace ATS.Services
                     employeeInfo.EmployeeCode,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
-                    employeeInfo.ProfilePic
-                   
+                    employeeInfo.ProfilePic,
+                   employeeInfo.FaceEncoding
                 ));
 
 
@@ -235,7 +239,7 @@ namespace ATS.Services
                 oldemployeeInfo.UserId = updateEmployeeDetailDto.UserId;
                 oldemployeeInfo.GenderId = updateEmployeeDetailDto.GenderId;
                 oldemployeeInfo.DesignationId = updateEmployeeDetailDto.DesignationId;
-                oldemployeeInfo.EmployeeCode = updateEmployeeDetailDto.EmployeeCode;
+                oldemployeeInfo.EmployeeCode = updateEmployeeDetailDto?.EmployeeCode;
                 oldemployeeInfo.FirstName = updateEmployeeDetailDto.FirstName;
                 oldemployeeInfo.LastName = updateEmployeeDetailDto.LastName;
                 oldemployeeInfo.ProfilePic = updateEmployeeDetailDto.ProfilePic;
@@ -259,7 +263,8 @@ namespace ATS.Services
                         oldemployeeInfo.EmployeeCode,
                         oldemployeeInfo.FirstName,
                         oldemployeeInfo.LastName,
-                        oldemployeeInfo.ProfilePic
+                        oldemployeeInfo.ProfilePic,
+                        oldemployeeInfo.FaceEncoding
                     );
 
                     return updatedemployeeInfo;

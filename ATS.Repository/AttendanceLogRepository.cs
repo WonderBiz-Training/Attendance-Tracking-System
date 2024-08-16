@@ -76,7 +76,7 @@ namespace ATS.Repository
             try
             {
                 var attendanceLogs = await _dbContext.attendanceLogs
-                    .Include(li => li.User).ThenInclude(li => li.EmployeeDetail)
+                    .Include(log => log.User).ThenInclude(user => user.EmployeeDetail)
                     .ToListAsync();
 
                 return attendanceLogs;

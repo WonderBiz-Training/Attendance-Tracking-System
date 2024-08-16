@@ -113,7 +113,6 @@ namespace ATS.Services
         }
 
         public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetAllAttendanceLogsAsync()
-        public async Task<IEnumerable<GetAttendanceLogDto>> GetAllAttendanceLogsAsync()
         {
             try
             {
@@ -310,6 +309,7 @@ namespace ATS.Services
                 }
 
                 var dtoList = data.Select(model => new GetStatusOfAttendanceLogDto(
+                    model.ProfilePic,
                     model.FirstName,
                     model.LastName,
                     model.Status,

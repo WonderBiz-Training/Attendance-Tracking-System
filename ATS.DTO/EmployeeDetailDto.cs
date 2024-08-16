@@ -13,11 +13,11 @@ namespace ATS.DTO
 
     public record CreateEmployeeDetailDto(
         [Required(ErrorMessage = "User Id is Required")] long UserId,
-        [Required(ErrorMessage = "Gender Id is Required")] long GenderId,
-        [Required(ErrorMessage = "Designation Id is Required")] long DesignationId,
-        string EmployeeCode,
+        //long GenderId,
+        //long DesignationId,
+        string? EmployeeCode,
         [Required(ErrorMessage = "First Name is required"), MaxLength(50)] string FirstName,
-        [MaxLength(50)] string LastName,
+        [Required(ErrorMessage = "Last Name is required"), MaxLength(50)] string LastName,
         [Required(ErrorMessage = "Profile Pic is Required")] string ProfilePic,
         long CreatedBy
     );
@@ -26,7 +26,7 @@ namespace ATS.DTO
         long UserId,
         long GenderId,
         long DesignationId,
-        string EmployeeCode,
+        string? EmployeeCode,
         [MaxLength(50)] string FirstName,
         [MaxLength(50)] string LastName,
         byte?[] FaceEncoding,
@@ -43,7 +43,8 @@ namespace ATS.DTO
         string EmployeeCode,
         [MaxLength(50)] string FirstName,
         [MaxLength(50)] string LastName,
-        string ProfilePic
+        string ProfilePic,
+        byte[] FaceEncoding
     );
 
     public record GetSearchDto(

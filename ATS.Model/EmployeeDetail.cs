@@ -16,7 +16,7 @@ namespace ATS.Model
 
         [ForeignKey("Users"), Required(ErrorMessage = "User ID is required")]
         public long UserId { get; set; }
-        public string EmployeeCode { get; set; } = string.Empty;
+        public string? EmployeeCode { get; set; } = string.Empty;
 
         [Required(ErrorMessage ="First Name is Required"), MaxLength(50)]
         public string FirstName { get; set; } = string.Empty ;
