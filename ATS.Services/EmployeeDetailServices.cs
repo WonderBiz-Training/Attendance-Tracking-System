@@ -71,7 +71,7 @@ namespace ATS.Services
                         employeeInfo.FaceEncoding
                     );
 
-                    await _hubContext.Clients.All.SendAsync("ReceiveEmployeeUpdate", employeeInfo.UserId, employeeInfo.EmployeeCode, employeeInfo.FirstName, employeeInfo.LastName,employeeInfo.DesignationId, employeeInfo.GenderId, employeeInfo.ProfilePic);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveEmployeeUpdate", employeeInfo.UserId, employeeInfo.EmployeeCode, employeeInfo.FirstName, employeeInfo.LastName,employeeInfo.DesignationId, employeeInfo.GenderId, employeeInfo.ProfilePic);
 
                     return createdEmployeeDetail;
                 }
