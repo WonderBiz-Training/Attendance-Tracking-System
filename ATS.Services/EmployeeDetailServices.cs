@@ -1,7 +1,9 @@
 ﻿using ATS.DTO;
+using ATS.Hubs;
 using ATS.IRepository;
 using ATS.IServices;
 using ATS.Model;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +18,15 @@ namespace ATS.Services
         private readonly IUserRepository _userRepository;
         private readonly IGenderRepository _genderRepository;
         private readonly IDesignationRepository _designationRepository;
+        private readonly IHubContext<AtsHubs> _hubContext;
 
-        public EmployeeDetailServices(IEmployeeDetailRepository employeeDetailRepository, IUserRepository userRepository, IGenderRepository genderRepository, IDesignationRepository designationRepository)
+        public EmployeeDetailServices(IEmployeeDetailRepository employeeDetailRepository, IUserRepository userRepository, IGenderRepository genderRepository, IDesignationRepository designationRepository,IHubContext<AtsHubs> hubContext)
         {
             _employeeDetailRepository = employeeDetailRepository;
             _userRepository = userRepository;
             _genderRepository = genderRepository;
             _designationRepository = designationRepository;
+            _hubContext = hubContext;
         }
         public async Task<GetEmployeeDetailDto> CreateEmployeeDetailAsync(CreateEmployeeDetailDto createEmployeeDetailDto)
         {
@@ -66,6 +70,8 @@ namespace ATS.Services
                         employeeInfo.ProfilePic,
                         employeeInfo.FaceEncoding
                     );
+
+                    await _hubContext.Clients.All.SendAsync("ReceiveEmployeeUpdate", employeeInfo.UserId, employeeInfo.EmployeeCode, employeeInfo.FirstName, employeeInfo.LastName,employeeInfo.DesignationId, employeeInfo.GenderId, employeeInfo.ProfilePic);
 
                     return createdEmployeeDetail;
                 }

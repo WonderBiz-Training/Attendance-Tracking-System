@@ -1,7 +1,9 @@
 ﻿using ATS.DTO;
+using ATS.Hubs;
 using ATS.IRepository;
 using ATS.IServices;
 using ATS.Model;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,11 +18,13 @@ namespace ATS.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IEmployeeDetailServices _employeeDetailServices;
+        private readonly IHubContext<AtsHubs> _hubContext;
 
-        public UserServices(IUserRepository userRepository, IEmployeeDetailServices employeeDetailRepository)
+        public UserServices(IUserRepository userRepository, IEmployeeDetailServices employeeDetailServices, IHubContext<AtsHubs> hubContext)
         {
             _userRepository = userRepository;
-            _employeeDetailServices = employeeDetailRepository;
+            _employeeDetailServices = employeeDetailServices;
+            _hubContext = hubContext;
         }
 
         public async Task<GetUserDto> CreateUserAsync(CreateUserDto UserDto)
@@ -45,6 +49,8 @@ namespace ATS.Services
                     users.ContactNo,
                     users.IsActive
                 );
+
+                await _hubContext.Clients.All.SendAsync("ReceiveUserUpdate", users.Email, users.Password, users.ContactNo);
 
                 return createdUser;
             }
