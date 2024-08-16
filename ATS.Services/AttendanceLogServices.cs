@@ -116,7 +116,7 @@ namespace ATS.Services
         {
             try
             {
-                var attendanceLogs = await _attendanceLogRepository.GetAllAsync();
+                var attendanceLogs = await _attendanceLogRepository.GetAllAttendanceLogs();
 
                 var attendanceLogsDto = attendanceLogs.Select(attendanceLog => new GetAttendanceLogsWithDetailsDto(
                     attendanceLog.Id,
