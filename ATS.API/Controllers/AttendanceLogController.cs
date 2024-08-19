@@ -153,6 +153,21 @@ namespace ATS.API.Controllers
             }
         }
 
+        // POST api/<AttendanceLogController>
+        [HttpPost("multiple")]
+        public async Task<ActionResult<IEnumerable<GetAttendanceLogsWithDetailsDto>>> Post([FromBody] IEnumerable<CreateAttendanceLogDto> attendanceLogsDto)
+        {
+            try
+            {
+                var res = await _attendanceLogServices.CreateMultipleAttendanceLogsAsync(attendanceLogsDto);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         // PUT api/<AttendanceLogController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult<GetAttendanceLogDto>> Put(int id, [FromBody] UpdateAttendanceLogDto attendanceLogDto)

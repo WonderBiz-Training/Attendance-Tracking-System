@@ -68,6 +68,46 @@ namespace ATS.Services
                 throw;
             }
         }
+
+        public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> CreateMultipleAttendanceLogsAsync(IEnumerable<CreateAttendanceLogDto> attendanceLogsDto)
+        {
+            try
+            {
+                var attendanceLogs = attendanceLogsDto.Select(dto => new AttendanceLog()
+                {
+                    UserId = dto.UserId,
+                    AttendanceLogTime = dto.AttendanceLogTime,
+                    CheckType = dto.CheckType
+                }).ToList();
+
+                var res = await _attendanceLogRepository.CreateMultipleAsync(attendanceLogs);
+
+                var resDto = res.Select(log => {
+                    var employee = _employeeDetailRepository.GetEmployeeDetailByUserId(log.UserId);
+                    var user = _userRepository.GetAsync(log.UserId);
+
+                    return new GetAttendanceLogsWithDetailsDto(
+                        log.Id,
+                        log.UserId,
+                        employee.Result.First().User.Email,
+                        employee.Result.First().ProfilePic,
+                        employee.Result.First().FirstName,
+                        employee.Result.First().LastName,
+                        log.AttendanceLogTime,
+                        log.CheckType
+                    );
+                }).ToList();
+
+                //await _hubContext.Clients.All.SendAsync("ReceiveItemUpdate", log.UserId, log.AttendanceLogTime, log.CheckType);
+
+                return resDto;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<bool> DeleteAttendanceLogAsync(long id)
         {
             try
