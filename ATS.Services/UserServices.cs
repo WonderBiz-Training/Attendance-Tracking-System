@@ -31,10 +31,11 @@ namespace ATS.Services
         {
             try
             {
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(UserDto.Password);
                 var users = await _userRepository.CreateAsync(new User
                 {
                     Email = UserDto.Email,
-                    Password = UserDto.Password,
+                    Password = hashedPassword,
                     ContactNo = UserDto.ContactNo,
                     CreatedBy = UserDto.CreatedBy,
                     UpdatedBy = UserDto.CreatedBy,
@@ -204,8 +205,13 @@ namespace ATS.Services
                     throw new Exception($"No User Found for id : {id}");
                 }
 
+                if (!string.IsNullOrEmpty(UserDto.Password))
+                {
+                    oldUser.Password = BCrypt.Net.BCrypt.HashPassword(UserDto.Password);
+                }
+
                 oldUser.Email = UserDto.Email;
-                oldUser.Password = UserDto.Password;
+                //oldUser.Password = UserDto.Password;
                 oldUser.ContactNo = UserDto.ContactNo;
                 oldUser.IsActive = UserDto.IsActive;
                 oldUser.UpdatedBy = UserDto.UpdatedBy;
