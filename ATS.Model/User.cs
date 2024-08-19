@@ -17,7 +17,7 @@ namespace ATS.Model
         [Required(ErrorMessage = "Email is required"), MaxLength(50), EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; } = string.Empty;
 
-        [Required(ErrorMessage ="Password is Required"), MaxLength(50)]
+        [Required(ErrorMessage ="Password is Required"), MaxLength(100)]
         public string Password { get; set; } = string.Empty;
 
         [MaxLength(10), MinLength(10)]

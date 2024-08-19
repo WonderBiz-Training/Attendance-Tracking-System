@@ -40,6 +40,11 @@ namespace ATS.Data
                 entity.HasNoKey(); 
                 entity.ToView(null); 
             });
+
+            modelBuilder.Entity<User>()
+            .HasOne(u => u.EmployeeDetail)
+            .WithOne(e => e.User)
+            .HasForeignKey<EmployeeDetail>(e => e.UserId);
         }
 
         public DbSet<EmployeeDetail> employeeDetails { get; set; }

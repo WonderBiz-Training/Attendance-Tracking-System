@@ -76,16 +76,33 @@ namespace ATS.Repository
             try
             {
                 var attendanceLogs = await _dbContext.attendanceLogs
-                    .Include(log => log.User).ThenInclude(user => user.EmployeeDetail)
+                    .Include(log => log.User)
+                    .ThenInclude(user => user.EmployeeDetail)
                     .ToListAsync();
+
+                // Check if any logs have a null User or EmployeeDetail
+                foreach (var log in attendanceLogs)
+                {
+                    if (log.User == null)
+                    {
+                        Console.WriteLine($"User is null for AttendanceLog with ID: {log.Id}");
+                    }
+                    else if (log.User.EmployeeDetail == null)
+                    {
+                        Console.WriteLine($"EmployeeDetail is null for User with ID: {log.User.Id}");
+                    }
+                }
 
                 return attendanceLogs;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                // Log the exception message for troubleshooting
+                Console.WriteLine($"An error occurred: {ex.Message}");
                 throw;
             }
         }
+
 
         public async Task<IEnumerable<AttendanceLog>> GetAttendanceReport(DateTime date)
         {
