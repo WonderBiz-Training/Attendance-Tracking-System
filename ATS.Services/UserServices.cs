@@ -205,6 +205,39 @@ namespace ATS.Services
             }
         }
 
+        public async Task<GetUserDto> LogInUserAsync(LogInDto logInDto)
+        {
+            try
+            {
+                var user = await _userRepository.GetUserByEmailAsync( logInDto.Email );
+
+                if (user == null)
+                {
+                    throw new Exception($"No user found for email {logInDto.Email}");
+                }
+
+                if(!BCrypt.Net.BCrypt.Verify(logInDto.Password, user.Password))
+                {
+                    throw new Exception("Password does not match");
+                }
+
+
+                var userDto = new GetUserDto(
+                    user.Id,
+                    user.Email,
+                    user.Password,
+                    user.ContactNo,
+                    user.IsActive
+                );
+
+                return userDto;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<GetUserDto> UpdateUserAsync(long id, UpdateUserDto UserDto)
         {
             try

@@ -10,5 +10,6 @@ namespace ATS.IRepository
     public interface IUserRepository : IRepository<User>
     {
         Task<IEnumerable<User>> GetUserByEmployeeIdAsync(long employeeDetailId);
+        Task<User> GetUserByEmailAsync(string email);
     }
 }
