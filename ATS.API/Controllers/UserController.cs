@@ -109,6 +109,21 @@ namespace ATS.API.Controllers
             }
         }
 
+        // POST api/<UserController>/log-in
+        [HttpPost("log-in")]
+        public async Task<ActionResult<GetUserDto>> Post([FromBody] LogInDto logInDto)
+        {
+            try
+            {
+                var res = await _userServices.LogInUserAsync(logInDto);
+                return res;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
     }
 }

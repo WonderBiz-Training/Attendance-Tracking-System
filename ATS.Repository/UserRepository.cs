@@ -34,5 +34,19 @@ namespace ATS.Repository
                 throw;
             }
         }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            try
+            {
+                var user = await _dbContext.users.FirstOrDefaultAsync(u => u.Email == email);
+
+                return user;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

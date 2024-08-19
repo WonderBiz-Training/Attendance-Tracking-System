@@ -21,5 +21,7 @@ namespace ATS.IServices
 
         Task<GetSignUpDto> SignUpUserAsync(SignUpDto signUpDto);
 
+        Task<GetUserDto> LogInUserAsync(LogInDto logInDto);
+
     }
 }
