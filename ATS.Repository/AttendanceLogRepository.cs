@@ -103,7 +103,6 @@ namespace ATS.Repository
             }
         }
 
-
         public async Task<IEnumerable<AttendanceLog>> GetAttendanceReport(DateTime date)
         {
             try

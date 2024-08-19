@@ -11,6 +11,7 @@ namespace ATS.IRepository
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetAsync(long id);
         Task<T> CreateAsync(T entity);
+        Task<IEnumerable<T>> CreateMultipleAsync(IEnumerable<T> entities);
         Task<T> UpdateAsync(T entity);
         Task<bool> DeleteAsync(T entity);
     }
