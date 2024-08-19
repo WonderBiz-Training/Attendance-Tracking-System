@@ -37,6 +37,7 @@ namespace ATS.DTO
 
     public record GetEmployeeDetailDto(
         long Id,
+        long UserId,
         string Email,
         string GenderName,
         string DesignationName,

@@ -61,6 +61,7 @@ namespace ATS.Services
 
                     var createdEmployeeDetail = new GetEmployeeDetailDto(
                         employeeInfo.Id,
+                        employeeInfo.UserId,
                         user.Email,
                         gender.GenderName,
                         designation.DesignationName,
@@ -120,6 +121,7 @@ namespace ATS.Services
 
                 var employeeInfoDto = new GetEmployeeDetailDto(
                     employeeInfo.Id,
+                    employeeInfo.UserId,
                     employeeInfo.User.Email,
                     employeeInfo.Gender.GenderName,
                     employeeInfo.Designation.DesignationName,
@@ -147,6 +149,7 @@ namespace ATS.Services
 
                 var employeeInfoDtos = employeeInfos.Select(employeeInfo => new GetEmployeeDetailDto(
                     employeeInfo.Id,
+                    employeeInfo.UserId,
                     employeeInfo.User.Email,
                     employeeInfo.Gender.GenderName,
                     employeeInfo.Designation.DesignationName,
@@ -173,6 +176,7 @@ namespace ATS.Services
 
                 var employeeInfoDtos = employeeInfos.Select(employeeInfo => new GetEmployeeDetailDto(
                     employeeInfo.Id,
+                    employeeInfo.UserId,
                     employeeInfo.User.Email,
                     employeeInfo.Gender.GenderName,
                     employeeInfo.Designation.DesignationName,
@@ -208,6 +212,7 @@ namespace ATS.Services
 
                 var employeeInfoDtos = employeeInfos.Select(employeeInfo => new GetEmployeeDetailDto(
                     employeeInfo.Id,
+                    employeeInfo.UserId,
                     employeeInfo.User.Email,
                     employeeInfo.Gender.GenderName,
                     employeeInfo.Designation.DesignationName,
@@ -263,6 +268,7 @@ namespace ATS.Services
 
                     var updatedemployeeInfo = new GetEmployeeDetailDto(
                         oldemployeeInfo.Id,
+                        oldemployeeInfo.UserId,
                         user.Email,
                         gender.GenderName,
                         designation.DesignationName,

@@ -71,6 +71,12 @@ namespace ATS.Services
             {
                 throw;
             }
+
+            // Implement password verification during login or authentication
+            //public bool VerifyPassword(string plainTextPassword, string hashedPassword)
+            //{
+            //    return BCrypt.Net.BCrypt.Verify(plainTextPassword, hashedPassword);
+            //}
         }
 
         public async Task<bool> DeleteUserAsync(long id)
