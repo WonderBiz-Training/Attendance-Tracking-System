@@ -8,6 +8,7 @@ namespace ATS.Model
 {
     public class GetStatusOfAttendanceLog
     {
+        public long UserId;
         public string ProfilePic { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
