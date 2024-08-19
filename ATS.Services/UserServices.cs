@@ -1,4 +1,5 @@
-﻿using ATS.DTO;
+﻿using ATS.Data;
+using ATS.DTO;
 using ATS.Hubs;
 using ATS.IRepository;
 using ATS.IServices;
@@ -19,12 +20,14 @@ namespace ATS.Services
         private readonly IUserRepository _userRepository;
         private readonly IEmployeeDetailServices _employeeDetailServices;
         private readonly IHubContext<AtsHubs> _hubContext;
+        private readonly ATSDbContext _dbContext;
 
-        public UserServices(IUserRepository userRepository, IEmployeeDetailServices employeeDetailServices, IHubContext<AtsHubs> hubContext)
+        public UserServices(IUserRepository userRepository, IEmployeeDetailServices employeeDetailServices, IHubContext<AtsHubs> hubContext, ATSDbContext dbContext)
         {
             _userRepository = userRepository;
             _employeeDetailServices = employeeDetailServices;
             _hubContext = hubContext;
+            _dbContext = dbContext;
         }
 
         public async Task<GetUserDto> CreateUserAsync(CreateUserDto UserDto)
@@ -148,54 +151,55 @@ namespace ATS.Services
 
         public async Task<GetSignUpDto> SignUpUserAsync(SignUpDto signUpDto)
         {
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
             try
             {
-                var users = await _userRepository.CreateAsync(new User
+                var user = await _userRepository.CreateAsync(new User
                 {
                     Email = signUpDto.Email,
                     Password = signUpDto.Password,
-                    ContactNo = signUpDto.ContactNo, 
+                    ContactNo = signUpDto.ContactNo,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 });
 
-                var createdUser = new GetUserDto(
-                    users.Id,
-                    users.Email,
-                    users.Password,
-                    users.ContactNo,
-                    users.IsActive
-                );
-
-
                 var employeeInfo = await _employeeDetailServices.CreateEmployeeDetailAsync(
                     new CreateEmployeeDetailDto(
-                        UserId: createdUser.Id,
+                        UserId: user.Id,
                         EmployeeCode: signUpDto?.EmployeeCode,
                         FirstName: signUpDto.FirstName,
                         LastName: signUpDto.LastName,
                         ProfilePic: signUpDto.ProfilePic,
-                        CreatedBy: createdUser.Id
+                        CreatedBy: user.Id
                     )
                 );
 
+                await transaction.CommitAsync();
+
+                var createdUser = new GetUserDto(
+                    user.Id,
+                    user.Email,
+                    user.Password,
+                    user.ContactNo,
+                    user.IsActive
+                );
 
                 var createEmployee = new GetSignUpDto(
-                        createdUser.Id,
-                        employeeInfo.FirstName,
-                        employeeInfo.LastName,
-                        createdUser.Email,
-                        createdUser.ContactNo,
-                        createdUser.Password,
-                        employeeInfo.ProfilePic
-                    );
+                    createdUser.Id,
+                    employeeInfo.FirstName,
+                    employeeInfo.LastName,
+                    createdUser.Email,
+                    createdUser.ContactNo,
+                    createdUser.Password,
+                    employeeInfo.ProfilePic
+                );
 
                 return createEmployee;
             }
             catch (Exception)
             {
-
+                await transaction.RollbackAsync();
                 throw;
             }
         }
