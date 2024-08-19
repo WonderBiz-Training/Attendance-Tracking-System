@@ -149,10 +149,11 @@ namespace ATS.Services
 
             try
             {
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(signUpDto.Password);
                 var user = await _userRepository.CreateAsync(new User
                 {
                     Email = signUpDto.Email,
-                    Password = signUpDto.Password,
+                    Password = hashedPassword,
                     ContactNo = signUpDto.ContactNo,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
