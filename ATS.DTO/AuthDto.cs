@@ -31,4 +31,6 @@ namespace ATS.DTO
        string Password,
        string ProfilePic
     );
+
+
 }
