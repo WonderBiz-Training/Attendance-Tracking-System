@@ -22,6 +22,11 @@ namespace ATS.DTO
        string? EmployeeCode
     );
 
+    public record LogInDto(
+       [Required(ErrorMessage = "Email is required"), MaxLength(50), EmailAddress] string Email,
+       [Required(ErrorMessage = "Password is required"), MaxLength(50)] string Password
+    );
+
     public record GetSignUpDto(
        long UserId,
        string FirstName,
