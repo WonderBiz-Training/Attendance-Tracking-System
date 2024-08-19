@@ -35,6 +35,7 @@ namespace ATS.DTO
     public record GetAttendanceLogsWithDetailsDto(
         long Id,
         long UserId,
+        string Email,
         string ProfilePic,
         string FirstName,
         string LastName,

@@ -32,6 +32,20 @@ namespace ATS.Repository
             }
         }
 
+        public async Task<IEnumerable<T>> CreateMultipleAsync(IEnumerable<T> entities)
+        {
+            try
+            {
+                await _dbcontext.Set<T>().AddRangeAsync(entities);
+                await _dbcontext.SaveChangesAsync();
+                return entities.ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<bool> DeleteAsync(T entity)
         {
             try

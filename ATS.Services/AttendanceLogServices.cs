@@ -121,9 +121,10 @@ namespace ATS.Services
                 var attendanceLogsDto = attendanceLogs.Select(attendanceLog => new GetAttendanceLogsWithDetailsDto(
                     attendanceLog.Id,
                     attendanceLog.UserId,
-                    attendanceLog.User.EmployeeDetail.ProfilePic,
-                    attendanceLog.User.EmployeeDetail.FirstName,
-                    attendanceLog.User.EmployeeDetail.LastName,
+                    attendanceLog.User.Email,
+                    attendanceLog.User?.EmployeeDetail?.ProfilePic,
+                    attendanceLog.User?.EmployeeDetail?.FirstName,
+                    attendanceLog.User?.EmployeeDetail?.LastName,
                     attendanceLog.AttendanceLogTime,
                     attendanceLog.CheckType
                 ));
