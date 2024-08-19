@@ -68,7 +68,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> CreateMultipleAttendanceLogsAsync(IEnumerable<CreateAttendanceLogDto> attendanceLogsDto)
         {
             try
@@ -107,7 +106,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<bool> DeleteAttendanceLogAsync(long id)
         {
             try
@@ -151,7 +149,6 @@ namespace ATS.Services
             }
        
         }
-
         public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetAllAttendanceLogsAsync()
         {
             try
@@ -335,6 +332,7 @@ namespace ATS.Services
         public async Task<IEnumerable<GetStatusOfAttendanceLogDto>> GetStatusOfAttendanceLog(string? FirstName)
         {
             try
+            
             {
                 IEnumerable<GetStatusOfAttendanceLog> data;
 
@@ -350,7 +348,7 @@ namespace ATS.Services
                 }
 
                 var dtoList = data.Select(model => new GetStatusOfAttendanceLogDto(
-                    model.UserId,
+                    model.Id,
                     model.ProfilePic,
                     model.FirstName,
                     model.LastName,

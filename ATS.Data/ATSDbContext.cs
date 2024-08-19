@@ -35,11 +35,10 @@ namespace ATS.Data
                 entity.ToView(null); // Optional: specify that this entity does not map to a database view
             });
 
-            modelBuilder.Entity<GetStatusOfAttendanceLog>(entity =>
-            {
-                entity.HasNoKey(); 
-                entity.ToView(null); 
-            });
+            modelBuilder.Entity<GetStatusOfAttendanceLog>()
+                .Property(e => e.Id)
+                .HasColumnName("Id");
+
 
             modelBuilder.Entity<User>()
             .HasOne(u => u.EmployeeDetail)
