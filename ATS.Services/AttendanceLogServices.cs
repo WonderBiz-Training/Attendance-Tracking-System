@@ -310,6 +310,7 @@ namespace ATS.Services
                 }
 
                 var dtoList = data.Select(model => new GetStatusOfAttendanceLogDto(
+                    model.UserId,
                     model.ProfilePic,
                     model.FirstName,
                     model.LastName,
