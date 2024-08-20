@@ -81,6 +81,7 @@ namespace ATS.DTO
 
     public record GetStatusOfAttendanceLogDto(
         long Id,
+        long UserId,
         string ProfilePic,
         string FirstName,
         string LastName,

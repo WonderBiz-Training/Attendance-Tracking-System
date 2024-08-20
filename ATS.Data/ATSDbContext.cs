@@ -41,9 +41,14 @@ namespace ATS.Data
                 entity.ToView(null); // Optional: specify that this entity does not map to a database view
             });
 
-            modelBuilder.Entity<GetStatusOfAttendanceLog>()
-                .Property(e => e.Id)
-                .HasColumnName("Id");
+            modelBuilder.Entity<GetStatusOfAttendanceLog>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("Id");
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserId");
+            }); ;
+                
 
 
             modelBuilder.Entity<User>()

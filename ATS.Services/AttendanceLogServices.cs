@@ -349,6 +349,7 @@ namespace ATS.Services
 
                 var dtoList = sortedData.Select(model => new GetStatusOfAttendanceLogDto(
                     model.Id,
+                    model.UserId,
                     model.ProfilePic,
                     model.FirstName,
                     model.LastName,
