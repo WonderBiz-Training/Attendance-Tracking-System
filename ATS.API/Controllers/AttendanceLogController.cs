@@ -82,11 +82,11 @@ namespace ATS.API.Controllers
 
         // GET api/<AttendanceLogController>/totalhours
         [HttpGet("totalhours")]
-        public  ActionResult<ATS.DTO.GetTotalHours> GetUserTotalHour([FromQuery] DateTime? startDate, DateTime? endDate, string? reportType)
+        public  async Task<ActionResult<GetTotalHoursDto>> GetUserTotalHour([FromQuery] DateTime? startDate, DateTime? endDate, string? reportType)
         {
             try
             {
-                var res =  _attendanceLogServices.GetTotalHoursOfEmployee(startDate, endDate, reportType);
+                var res =  await _attendanceLogServices.GetTotalHoursOfEmployee(startDate, endDate, reportType);
                 return Ok(res);
             }
             catch (Exception ex)

@@ -91,7 +91,6 @@ namespace ATS.Repository
                 throw;
             }
         }
-
         public async Task<IEnumerable<AttendanceLog>> GetAttendanceReport(DateTime date)
         {
             try
@@ -109,7 +108,6 @@ namespace ATS.Repository
                 throw;
             }
         }
-
         public async Task<IEnumerable<AttendanceLog>> GetSummaryReport(DateTime startDate, DateTime endDate, string check)
         {
             try
@@ -127,7 +125,6 @@ namespace ATS.Repository
                 throw;
             }
         }
-
         public async Task<IEnumerable<AttendanceLog>> GetActivityReport(DateTime startDate, DateTime endDate)
         {
             try
@@ -210,8 +207,7 @@ namespace ATS.Repository
 
                 throw;
             }
-        }
-        
+        }       
         public async Task<IEnumerable<GetStatusOfAttendanceLog>> GetAllStatusOfAttendanceLog(DateTime Date)
         {
             try
@@ -227,6 +223,20 @@ namespace ATS.Repository
 
                 throw;
             }
+        }
+        public async Task<IEnumerable<GetTotalHours>> GetTotalHoursAsync(DateTime start,DateTime end, string report)
+        {
+          
+            var startDateParameter = new SqlParameter("@StartDate", start);
+            var endDateParameter = new SqlParameter("@EndDate", end);
+            var periodTypeParameter = new SqlParameter("@PeriodType", report);
+
+            // Execute stored procedure and map results to the DTO
+            var results = _dbContext.Set<ATS.Model.GetTotalHours>()
+                .FromSqlRaw("EXECUTE dbo.GetTotalHour_Employee_Report @StartDate, @EndDate, @PeriodType", startDateParameter, endDateParameter, periodTypeParameter)
+                .ToList();
+
+            return results;
         }
     }
 }

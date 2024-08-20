@@ -69,7 +69,7 @@ namespace ATS.DTO
         TimeSpan OutHours
     );
 
-    public record GetTotalHours(
+    public record GetTotalHoursDto(
         long UserId,
         string ProfilePic,
         string FirstName,
