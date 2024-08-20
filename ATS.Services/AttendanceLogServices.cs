@@ -152,8 +152,9 @@ namespace ATS.Services
             try
             {
                 var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
-                var cnt = count == null ? 100 : count;
-                var attendanceLogs = await _attendanceLogRepository.GetAllAttendanceLogs(cnt,start);
+                int cnt = count ?? 100;
+
+                var attendanceLogs = await _attendanceLogRepository.GetAllAttendanceLogs(start);
 
                 var attendanceLogsDto = attendanceLogs.Select(attendanceLog => new GetAttendanceLogsWithDetailsDto(
                     attendanceLog.Id,
@@ -164,7 +165,7 @@ namespace ATS.Services
                     attendanceLog.User?.EmployeeDetail?.LastName,
                     attendanceLog.AttendanceLogTime,
                     attendanceLog.CheckType
-                ));
+                )).OrderByDescending(attendanceLog => attendanceLog.AttendanceLogTime).Take(cnt);
 
                 return attendanceLogsDto.ToList();
             }
@@ -341,7 +342,12 @@ namespace ATS.Services
                     data = await _attendanceLogRepository.GetPacificStatusOfAttendanceLog(FirstName);
                 }
 
-                var dtoList = data.Select(model => new GetStatusOfAttendanceLogDto(
+                var sortedData = data
+                    .OrderByDescending(model => model.Status)
+                    .ThenBy(model => model.Status == "Absent" ? model.FirstName : string.Empty)
+                    .ThenByDescending(model => model.Status == "Present" ? model.InTime : (DateTime?)null);
+
+                var dtoList = sortedData.Select(model => new GetStatusOfAttendanceLogDto(
                     model.Id,
                     model.ProfilePic,
                     model.FirstName,
@@ -357,7 +363,9 @@ namespace ATS.Services
                 throw;
             }
         }
-        public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetCurrentStatusOfAttendanceLog(string type, int? count)
+
+        public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetCurrentStatusOfAttendanceLog(string type, DateTime? date, int? count)
+
         {
             try
             {
@@ -366,9 +374,11 @@ namespace ATS.Services
                     throw new Exception("type not specified");
                 }
 
+                DateTime date1 = date == DateTime.MinValue || date == null ? DateTime.Now.Date : (DateTime) date;
+
                 int cnt = count ?? 100;
 
-                var attendanceLogs = await _attendanceLogRepository.GetCurrentStatusOfAttendanceLog(type);
+                var attendanceLogs = await _attendanceLogRepository.GetCurrentStatusOfAttendanceLog(type, date1);
 
                 var attendanceLogsDto = attendanceLogs.Select(attendanceLog => new GetAttendanceLogsWithDetailsDto(
                     attendanceLog.Id,
