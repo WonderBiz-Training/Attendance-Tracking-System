@@ -145,7 +145,54 @@ namespace ATS.Services
             {
                 throw;
             }
-       
+        }
+        public async Task<IEnumerable<GetSumTotalHoursDto>> GetTotalInActivity(long? userId, DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
+                var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : endDate;
+
+                var results = await _attendanceLogRepository.GetSumTotalInHours(userId, start, end);
+
+                var dtoList = results.Select(li => new GetSumTotalHoursDto(
+                    li.UserId,
+                    li.ProfilePic,
+                    li.FirstName,
+                    li.LastName,
+                    TimeSpan.Parse(li.TotalHours)
+                ));
+
+                return dtoList;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<IEnumerable<GetSumTotalHoursDto>> GetTotalOutActivity(long? userId, DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
+                var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : endDate;
+
+                var results = await _attendanceLogRepository.GetSumTotalOutHours(userId, start, end);
+
+                var dtoList = results.Select(li => new GetSumTotalHoursDto(
+                    li.UserId,
+                    li.ProfilePic,
+                    li.FirstName,
+                    li.LastName,
+                    TimeSpan.Parse(li.TotalHours)
+                ));
+
+                return dtoList;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
         public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetAllAttendanceLogsAsync(int? count, DateTime? startDate)
         {

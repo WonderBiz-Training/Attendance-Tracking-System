@@ -111,6 +111,38 @@ namespace ATS.API.Controllers
             }
         }
 
+
+        // GET api/<AttendanceLogController>/total-hours/in
+        [HttpGet("total-hours/in")]
+        public async Task<ActionResult<GetInActivityRecordDto>> GetTotalInActivity([FromQuery] long? userId, DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                var res = await _attendanceLogServices.GetTotalInActivity(userId, startDate, endDate);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+
+        // GET api/<AttendanceLogController>/total-hours/out
+        [HttpGet("total-hours/out")]
+        public async Task<ActionResult<GetInActivityRecordDto>> GetTotalOutActivity([FromQuery] long? userId, DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                var res = await _attendanceLogServices.GetTotalOutActivity(userId, startDate, endDate);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         // GET api/<AttendanceLogController>/activity-record/out
         [HttpGet("activity-record/out")]
         public async Task<ActionResult<GetOutActivityRecordDto>> GetActivityRecordOutHour([FromQuery] long? userId, DateTime? startDate, DateTime? endDate)
