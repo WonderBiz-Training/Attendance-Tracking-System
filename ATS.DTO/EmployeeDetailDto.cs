@@ -23,16 +23,15 @@ namespace ATS.DTO
     );
 
     public record UpdateEmployeeDetailDto(
-        long UserId,
-        long GenderId,
-        long DesignationId,
+        //long GenderId,
+        //long DesignationId,
         string? EmployeeCode,
-        [MaxLength(50)] string FirstName,
-        [MaxLength(50)] string LastName,
-        byte?[] FaceEncoding,
-        string ProfilePic,
-        bool IsActive,
-        long UpdatedBy
+        [MaxLength(50)] string? FirstName,
+        [MaxLength(50)] string? LastName,
+        byte?[]? FaceEncoding,
+        string? ProfilePic,
+        bool? IsActive,
+        long? UpdatedBy
     );
 
     public record GetEmployeeDetailDto(

@@ -266,17 +266,17 @@ namespace ATS.Services
                 var oldemployeeInfo = await _employeeDetailRepository.GetAsync(id);
                 if (oldemployeeInfo == null)
                 {
-                    throw new Exception($"Employee Details found for id : {id}");
+                    throw new Exception($"Employee Details not found for id : {id}");
                 }
 
-                oldemployeeInfo.UserId = updateEmployeeDetailDto.UserId;
-                oldemployeeInfo.GenderId = updateEmployeeDetailDto.GenderId;
-                oldemployeeInfo.DesignationId = updateEmployeeDetailDto.DesignationId;
-                oldemployeeInfo.EmployeeCode = updateEmployeeDetailDto?.EmployeeCode;
-                oldemployeeInfo.FirstName = updateEmployeeDetailDto.FirstName;
-                oldemployeeInfo.LastName = updateEmployeeDetailDto.LastName;
-                oldemployeeInfo.ProfilePic = updateEmployeeDetailDto.ProfilePic;
-                oldemployeeInfo.UpdatedBy = updateEmployeeDetailDto.UpdatedBy;
+                oldemployeeInfo.EmployeeCode = updateEmployeeDetailDto.EmployeeCode ?? oldemployeeInfo.EmployeeCode;
+                oldemployeeInfo.FirstName = string.IsNullOrEmpty(updateEmployeeDetailDto.FirstName) ? oldemployeeInfo.FirstName : updateEmployeeDetailDto.FirstName;
+                oldemployeeInfo.LastName = string.IsNullOrEmpty(updateEmployeeDetailDto.LastName) ? oldemployeeInfo.LastName : updateEmployeeDetailDto.LastName;
+                oldemployeeInfo.ProfilePic = string.IsNullOrEmpty(updateEmployeeDetailDto.ProfilePic) ? oldemployeeInfo.ProfilePic : updateEmployeeDetailDto.ProfilePic;
+                oldemployeeInfo.FaceEncoding = updateEmployeeDetailDto.FaceEncoding != null && updateEmployeeDetailDto.FaceEncoding.Any()
+                        ? updateEmployeeDetailDto.FaceEncoding.Select(b => b ?? 0).ToArray()
+                        : oldemployeeInfo.FaceEncoding;
+                oldemployeeInfo.UpdatedBy = updateEmployeeDetailDto.UpdatedBy ?? 0;
                 oldemployeeInfo.UpdatedAt = DateTime.Now;
 
                 await _employeeDetailRepository.UpdateAsync(oldemployeeInfo);
@@ -287,7 +287,6 @@ namespace ATS.Services
 
                 if (gender != null && user != null && designation != null)
                 {
-
                     var updatedemployeeInfo = new GetEmployeeDetailDto(
                         oldemployeeInfo.Id,
                         oldemployeeInfo.UserId,
@@ -313,5 +312,6 @@ namespace ATS.Services
                 throw;
             }
         }
+
     }
 }

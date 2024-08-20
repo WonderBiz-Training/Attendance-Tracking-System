@@ -17,13 +17,10 @@ namespace ATS.Repository
     public class AttendanceLogRepository : Repository<AttendanceLog>, IAttendanceLogRepository
     {
         private readonly ATSDbContext _dbContext;
-
         public AttendanceLogRepository(ATSDbContext dbcontext) : base(dbcontext)
         {
             _dbContext = dbcontext;
         }
-
-
         public async Task<IEnumerable<GetStatusOfAttendanceLog>> GetPacificStatusOfAttendanceLog(string firstName)
         {
             try
@@ -56,7 +53,6 @@ namespace ATS.Repository
                 throw;
             }
         }
-
         public async Task<IEnumerable<AttendanceLog>> GetAllAttendanceLogs(DateTime? startDate)
         {
             try
@@ -188,7 +184,6 @@ namespace ATS.Repository
                 throw;
             }
         }
-
         public async Task<IEnumerable<AttendanceLogWithDetails>> GetCurrentStatusOfAttendanceLog(string type, DateTime date)
         {
             try
