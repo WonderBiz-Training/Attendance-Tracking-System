@@ -23,7 +23,6 @@ namespace ATS.Services
         private readonly IAttendanceLogRepository _attendanceLogRepository;
         private readonly IUserRepository _userRepository;
         private readonly IEmployeeDetailRepository _employeeDetailRepository;
-        private readonly ATSDbContext _dbContext;
         private readonly IHubContext<AtsHubs> _hubContext;
 
         public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository, IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository, IHubContext<AtsHubs> hubContext, ATSDbContext dbContext)
@@ -32,7 +31,6 @@ namespace ATS.Services
             _userRepository = userRepository;
             _employeeDetailRepository = employeeDetailRepository;
             _hubContext = hubContext;
-            _dbContext = dbContext;
         }
         public class TimePeriod
         {
@@ -281,23 +279,16 @@ namespace ATS.Services
                 throw;
             }
         }
-        public IEnumerable<ATS.DTO.GetTotalHours> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate, string? reportType)
+        public async Task<IEnumerable<GetTotalHoursDto>> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate, string? reportType)
         {
-            var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
-            var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date : endDate;
+            DateTime start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : (DateTime)startDate;
+            DateTime end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date : (DateTime)endDate;
             var report = reportType ?? "ALL-TIME";
 
-            var startDateParameter = new SqlParameter("@StartDate", start);
-            var endDateParameter = new SqlParameter("@EndDate", end);
-            var periodTypeParameter = new SqlParameter("@PeriodType", report);
-
-            // Execute stored procedure and map results to the DTO
-            var results = _dbContext.Set<ATS.Model.GetTotalHours>()
-                .FromSqlRaw("EXECUTE dbo.GetTotalHour_Employee_Report @StartDate, @EndDate, @PeriodType", startDateParameter, endDateParameter, periodTypeParameter)
-                .ToList();
+            var results = await _attendanceLogRepository.GetTotalHoursAsync(start, end, report);
 
             // Map the results to the DTO
-            var dtoList = results.Select(model => new ATS.DTO.GetTotalHours(
+            var dtoList = results.Select(model => new GetTotalHoursDto(
                 model.UserId,
                 model.ProfilePic,
                 model.FirstName,
@@ -366,7 +357,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetCurrentStatusOfAttendanceLog(string type, int? count)
         {
             try

@@ -19,6 +19,7 @@ namespace ATS.IRepository
         Task<IEnumerable<GetStatusOfAttendanceLog>> GetPacificStatusOfAttendanceLog(string firstName);
         Task<IEnumerable<GetTotalInHours>> GetTotalInHours(long? userId, DateTime? startDate, DateTime? endDate);
         Task<IEnumerable<GetTotalOutHours>> GetTotalOutHours(long? userId, DateTime? startDate, DateTime? endDate);
+        Task<IEnumerable<GetTotalHours>> GetTotalHoursAsync(DateTime startDate, DateTime endDate, string report);
 
     }
 }
