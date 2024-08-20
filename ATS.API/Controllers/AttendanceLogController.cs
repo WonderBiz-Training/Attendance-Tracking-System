@@ -22,11 +22,11 @@ namespace ATS.API.Controllers
 
         // GET: api/<AttendanceLogController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetAttendanceLogDto>>> Get()
+        public async Task<ActionResult<IEnumerable<GetAttendanceLogDto>>> Get([FromQuery] int? count, DateTime? startDate)
         {
             try
             {
-                var res = await _attendanceLogServices.GetAllAttendanceLogsAsync();
+                var res = await _attendanceLogServices.GetAllAttendanceLogsAsync(count,startDate);
                 return Ok(res);
             }
             catch (Exception ex)

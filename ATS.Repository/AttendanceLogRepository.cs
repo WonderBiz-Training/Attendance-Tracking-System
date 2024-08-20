@@ -71,16 +71,24 @@ namespace ATS.Repository
             }
         }
 
-        public async Task<IEnumerable<AttendanceLog>> GetAllAttendanceLogs()
+        public async Task<IEnumerable<AttendanceLog>> GetAllAttendanceLogs(int? count, DateTime? startDate)
         {
             try
             {
-                var attendanceLogs = await _dbContext.attendanceLogs
+                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
+                var cnt = count ?? 100;
+
+                var attendanceLogsQuery = _dbContext.attendanceLogs
                     .Include(log => log.User)
                     .ThenInclude(user => user.EmployeeDetail)
-                    .ToListAsync();
+                    .Where(log => log.AttendanceLogTime >= start);  // Filter by the start date
 
-                // Check if any logs have a null User or EmployeeDetail
+                // Apply the count limit if provided
+                attendanceLogsQuery = attendanceLogsQuery.Take(cnt);
+
+                var attendanceLogs = await attendanceLogsQuery.ToListAsync();
+
+                // Check for logs with null User or EmployeeDetail
                 foreach (var log in attendanceLogs)
                 {
                     if (log.User == null)
@@ -102,6 +110,8 @@ namespace ATS.Repository
                 throw;
             }
         }
+
+
 
         public async Task<IEnumerable<AttendanceLog>> GetAttendanceReport(DateTime date)
         {
