@@ -363,7 +363,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetCurrentStatusOfAttendanceLog(string type, DateTime? date, int? count)
 
         {

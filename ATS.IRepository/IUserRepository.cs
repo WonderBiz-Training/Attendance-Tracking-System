@@ -11,5 +11,12 @@ namespace ATS.IRepository
     {
         Task<IEnumerable<User>> GetUserByEmployeeIdAsync(long employeeDetailId);
         Task<User> GetUserByEmailAsync(string email);
+
+        Task BeginTransactionAsync();
+        Task CommitTransactionAsync();
+        Task RollbackTransactionAsync();
+
+        //Task DeleteTransactionAsync();
+
     }
 }

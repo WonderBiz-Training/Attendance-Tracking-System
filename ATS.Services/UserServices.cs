@@ -20,14 +20,12 @@ namespace ATS.Services
         private readonly IUserRepository _userRepository;
         private readonly IEmployeeDetailServices _employeeDetailServices;
         private readonly IHubContext<AtsHubs> _hubContext;
-        private readonly ATSDbContext _dbContext;
 
         public UserServices(IUserRepository userRepository, IEmployeeDetailServices employeeDetailServices, IHubContext<AtsHubs> hubContext, ATSDbContext dbContext)
         {
             _userRepository = userRepository;
             _employeeDetailServices = employeeDetailServices;
             _hubContext = hubContext;
-            _dbContext = dbContext;
         }
 
         public async Task<GetUserDto> CreateUserAsync(CreateUserDto UserDto)
@@ -72,11 +70,6 @@ namespace ATS.Services
                 throw;
             }
 
-            // Implement password verification during login or authentication
-            //public bool VerifyPassword(string plainTextPassword, string hashedPassword)
-            //{
-            //    return BCrypt.Net.BCrypt.Verify(plainTextPassword, hashedPassword);
-            //}
         }
 
         public async Task<bool> DeleteUserAsync(long id)
@@ -99,7 +92,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetUserDto>> GetAllUsersAsync()
         {
             try
@@ -121,7 +113,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<GetUserDto> GetUserAsync(long id)
         {
             try
@@ -151,7 +142,7 @@ namespace ATS.Services
 
         public async Task<GetSignUpDto> SignUpUserAsync(SignUpDto signUpDto)
         {
-            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            await _userRepository.BeginTransactionAsync();
 
             try
             {
@@ -176,7 +167,7 @@ namespace ATS.Services
                     )
                 );
 
-                await transaction.CommitAsync();
+                await _userRepository.CommitTransactionAsync();
 
                 var createdUser = new GetUserDto(
                     user.Id,
@@ -200,7 +191,7 @@ namespace ATS.Services
             }
             catch (Exception)
             {
-                await transaction.RollbackAsync();
+                await _userRepository.RollbackTransactionAsync();
                 throw;
             }
         }
