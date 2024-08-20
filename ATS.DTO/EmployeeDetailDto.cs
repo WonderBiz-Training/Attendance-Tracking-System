@@ -39,17 +39,24 @@ namespace ATS.DTO
         long Id,
         long UserId,
         string Email,
-        string GenderName,
-        string DesignationName,
-        string EmployeeCode,
+        //string GenderName,
+        //string DesignationName,
+        //string EmployeeCode,
         [MaxLength(50)] string FirstName,
         [MaxLength(50)] string LastName,
         string ProfilePic,
-        byte[] FaceEncoding
+        string ContactNo
     );
 
     public record GetSearchDto(
         int Count,
         IEnumerable<GetEmployeeDetailDto> Employees
+    );
+
+    public record GetFaceEncodingDto(
+        long Id,
+        long UserId,
+        string FirstName,
+        byte[] FaceEncoding
     );
 }

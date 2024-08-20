@@ -23,21 +23,7 @@ namespace ATS.Repository
             _dbContext = dbcontext;
         }
 
-        public async Task<IEnumerable<GetStatusOfAttendanceLog>> GetAllStatusOfAttendanceLog()
-        {
-            try
-            {
-                var data = await _dbContext.Set<GetStatusOfAttendanceLog>()
-                               .FromSqlRaw("EXECUTE dbo.GetEmployeeAttendanceSummary")
-                               .ToListAsync();
-                return data;
-            }
-            catch (Exception)
-            {
 
-                throw;
-            }
-        }
         public async Task<IEnumerable<GetStatusOfAttendanceLog>> GetPacificStatusOfAttendanceLog(string firstName)
         {
             try
@@ -110,8 +96,6 @@ namespace ATS.Repository
                 throw;
             }
         }
-
-
 
         public async Task<IEnumerable<AttendanceLog>> GetAttendanceReport(DateTime date)
         {
@@ -188,7 +172,6 @@ namespace ATS.Repository
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetTotalOutHours>> GetTotalOutHours(long? userId, DateTime? startDate, DateTime? endDate)
         {
             try
@@ -225,6 +208,23 @@ namespace ATS.Repository
                     .ToListAsync();
 
                 return results;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        
+        public async Task<IEnumerable<GetStatusOfAttendanceLog>> GetAllStatusOfAttendanceLog(DateTime Date)
+        {
+            try
+            {
+                var dateParameter = new SqlParameter("@Date", Date);
+                var data = await _dbContext.Set<GetStatusOfAttendanceLog>()
+                               .FromSqlRaw("EXECUTE dbo.GetEmployeeAttendanceSummary @Date", dateParameter)
+                               .ToListAsync();
+                return data;
             }
             catch (Exception)
             {

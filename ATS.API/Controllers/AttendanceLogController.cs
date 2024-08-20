@@ -128,11 +128,11 @@ namespace ATS.API.Controllers
 
         // GET api/<AttendanceLogController>/status
         [HttpGet("status")]
-        public async Task<ActionResult<GetOutActivityRecordDto>> GetStatusOfEmployee([FromQuery] string? FirstName)
+        public async Task<ActionResult<GetOutActivityRecordDto>> GetStatusOfEmployee([FromQuery] string? FirstName, DateTime? Date)
         {
             try
             {
-                var res = await _attendanceLogServices.GetStatusOfAttendanceLog(FirstName);
+                var res = await _attendanceLogServices.GetStatusOfAttendanceLog(FirstName, Date);
                 return Ok(res);
             }
             catch (Exception ex)
