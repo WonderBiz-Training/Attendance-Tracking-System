@@ -149,11 +149,13 @@ namespace ATS.Services
             }
        
         }
-        public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetAllAttendanceLogsAsync()
+        public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetAllAttendanceLogsAsync(int? count, DateTime? startDate)
         {
             try
             {
-                var attendanceLogs = await _attendanceLogRepository.GetAllAttendanceLogs();
+                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
+                var cnt = count == null ? 100 : count;
+                var attendanceLogs = await _attendanceLogRepository.GetAllAttendanceLogs(cnt,start);
 
                 var attendanceLogsDto = attendanceLogs.Select(attendanceLog => new GetAttendanceLogsWithDetailsDto(
                     attendanceLog.Id,
