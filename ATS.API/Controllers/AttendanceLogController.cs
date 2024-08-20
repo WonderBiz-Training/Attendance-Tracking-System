@@ -80,6 +80,7 @@ namespace ATS.API.Controllers
             }
         }
 
+        // GET api/<AttendanceLogController>/totalhours
         [HttpGet("totalhours")]
         public  ActionResult<ATS.DTO.GetTotalHours> GetUserTotalHour([FromQuery] DateTime? startDate, DateTime? endDate, string? reportType)
         {
@@ -95,7 +96,7 @@ namespace ATS.API.Controllers
         }
 
 
-        // GET api/<AttendanceLogController>/activity-record
+        // GET api/<AttendanceLogController>/activity-record/in
         [HttpGet("activity-record/in")]
         public async Task<ActionResult<GetInActivityRecordDto>> GetInActivityRecord([FromQuery] long? userId, DateTime? startDate, DateTime? endDate)
         {
@@ -110,6 +111,7 @@ namespace ATS.API.Controllers
             }
         }
 
+        // GET api/<AttendanceLogController>/activity-record/out
         [HttpGet("activity-record/out")]
         public async Task<ActionResult<GetOutActivityRecordDto>> GetActivityRecordOutHour([FromQuery] long? userId, DateTime? startDate, DateTime? endDate)
         {
@@ -124,12 +126,28 @@ namespace ATS.API.Controllers
             }
         }
 
+        // GET api/<AttendanceLogController>/status
         [HttpGet("status")]
         public async Task<ActionResult<GetOutActivityRecordDto>> GetStatusOfEmployee([FromQuery] string? FirstName)
         {
             try
             {
                 var res = await _attendanceLogServices.GetStatusOfAttendanceLog(FirstName);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        // GET api/<AttendanceLogController>/current-status
+        [HttpGet("current-status")]
+        public async Task<ActionResult<GetOutActivityRecordDto>> GetCurrentStatusOfEmployee([FromQuery] string? type, int? count)
+        {
+            try
+            {
+                var res = await _attendanceLogServices.GetCurrentStatusOfAttendanceLog(type, count);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -153,7 +171,7 @@ namespace ATS.API.Controllers
             }
         }
 
-        // POST api/<AttendanceLogController>
+        // POST api/<AttendanceLogController>/multiple
         [HttpPost("multiple")]
         public async Task<ActionResult<IEnumerable<GetAttendanceLogsWithDetailsDto>>> Post([FromBody] IEnumerable<CreateAttendanceLogDto> attendanceLogsDto)
         {

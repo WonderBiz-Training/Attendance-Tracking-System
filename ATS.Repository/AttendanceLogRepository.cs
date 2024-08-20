@@ -81,7 +81,7 @@ namespace ATS.Repository
                 var attendanceLogsQuery = _dbContext.attendanceLogs
                     .Include(log => log.User)
                     .ThenInclude(user => user.EmployeeDetail)
-                    .Where(log => log.AttendanceLogTime >= start);  // Filter by the start date
+                    .Where(log => log.AttendanceLogTime.Date == start);  // Filter by the start date
 
                 // Apply the count limit if provided
                 attendanceLogsQuery = attendanceLogsQuery.Take(cnt);
@@ -203,6 +203,25 @@ namespace ATS.Repository
 
                 var results = await _dbContext.Set<GetTotalOutHours>()
                     .FromSqlRaw("EXECUTE dbo.GetAttendanceOutTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
+                    .ToListAsync();
+
+                return results;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<AttendanceLogWithDetails>> GetCurrentStatusOfAttendanceLog(string type)
+        {
+            try
+            {
+                var typeParameter = new SqlParameter("@type", type);
+
+                var results = await _dbContext.Set<AttendanceLogWithDetails>()
+                    .FromSqlRaw("EXECUTE [dbo].[GetLastEntryOfAllUsers] @type", typeParameter)
                     .ToListAsync();
 
                 return results;

@@ -365,5 +365,37 @@ namespace ATS.Services
                 throw;
             }
         }
+
+        public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetCurrentStatusOfAttendanceLog(string type, int? count)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(type))
+                {
+                    throw new Exception("type not specified");
+                }
+
+                int cnt = count ?? 100;
+
+                var attendanceLogs = await _attendanceLogRepository.GetCurrentStatusOfAttendanceLog(type);
+
+                var attendanceLogsDto = attendanceLogs.Select(attendanceLog => new GetAttendanceLogsWithDetailsDto(
+                    attendanceLog.Id,
+                    attendanceLog.UserId,
+                    attendanceLog.Email,
+                    attendanceLog.ProfilePic,
+                    attendanceLog.FirstName,
+                    attendanceLog.LastName,
+                    attendanceLog.AttendanceLogTime,
+                    attendanceLog.CheckType
+                )).Take(cnt);
+
+                return attendanceLogsDto.ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
