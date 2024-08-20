@@ -63,13 +63,13 @@ namespace ATS.Services
                         employeeInfo.Id,
                         employeeInfo.UserId,
                         user.Email,
-                        gender.GenderName,
-                        designation.DesignationName,
-                        employeeInfo.EmployeeCode,
+                        //gender.GenderName,
+                        //designation.DesignationName,
+                        //employeeInfo.EmployeeCode,
                         employeeInfo.FirstName,
                         employeeInfo.LastName,
                         employeeInfo.ProfilePic,
-                        employeeInfo.FaceEncoding
+                        user.ContactNo
                     );
 
                     await _hubContext.Clients.All.SendAsync("ReceiveEmployeeUpdate", employeeInfo.UserId, employeeInfo.EmployeeCode, employeeInfo.FirstName, employeeInfo.LastName,employeeInfo.DesignationId, employeeInfo.GenderId, employeeInfo.ProfilePic);
@@ -123,13 +123,13 @@ namespace ATS.Services
                     employeeInfo.Id,
                     employeeInfo.UserId,
                     employeeInfo.User.Email,
-                    employeeInfo.Gender.GenderName,
-                    employeeInfo.Designation.DesignationName,
-                    employeeInfo.EmployeeCode,
+                    //employeeInfo.Gender.GenderName,
+                    //employeeInfo.Designation.DesignationName,
+                    //employeeInfo.EmployeeCode,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
                     employeeInfo.ProfilePic,
-                    employeeInfo.FaceEncoding
+                    employeeInfo.User.ContactNo
                 );
 
                 return employeeInfoDto;
@@ -151,13 +151,13 @@ namespace ATS.Services
                     employeeInfo.Id,
                     employeeInfo.UserId,
                     employeeInfo.User.Email,
-                    employeeInfo.Gender.GenderName,
-                    employeeInfo.Designation.DesignationName,
-                    employeeInfo.EmployeeCode,
+                    //employeeInfo.Gender.GenderName,
+                    //employeeInfo.Designation.DesignationName,
+                    //employeeInfo.EmployeeCode,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
                     employeeInfo.ProfilePic,
-                    employeeInfo.FaceEncoding
+                    employeeInfo.User.ContactNo
                 ));
 
                 return employeeInfoDtos;
@@ -178,13 +178,13 @@ namespace ATS.Services
                     employeeInfo.Id,
                     employeeInfo.UserId,
                     employeeInfo.User.Email,
-                    employeeInfo.Gender.GenderName,
-                    employeeInfo.Designation.DesignationName,
-                    employeeInfo.EmployeeCode,
+                    //employeeInfo.Gender.GenderName,
+                    //employeeInfo.Designation.DesignationName,
+                    //employeeInfo.EmployeeCode,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
                     employeeInfo.ProfilePic,
-                    employeeInfo.FaceEncoding
+                    employeeInfo.User.ContactNo
                 ));
 
                 return employeeInfoDtos;
@@ -214,13 +214,13 @@ namespace ATS.Services
                     employeeInfo.Id,
                     employeeInfo.UserId,
                     employeeInfo.User.Email,
-                    employeeInfo.Gender.GenderName,
-                    employeeInfo.Designation.DesignationName,
-                    employeeInfo.EmployeeCode,
+                    //employeeInfo.Gender.GenderName,
+                    //employeeInfo.Designation.DesignationName,
+                    //employeeInfo.EmployeeCode,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
                     employeeInfo.ProfilePic,
-                   employeeInfo.FaceEncoding
+                    employeeInfo.User.ContactNo
                 ));
 
 
@@ -230,6 +230,27 @@ namespace ATS.Services
                 );
 
                 return res;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<GetFaceEncodingDto>> GetFaceEncodingsAsync()
+        {
+            try
+            {
+                var employeeDetails = await _employeeDetailRepository.GetAllAsync();
+
+                var employeeInfoDtos = employeeDetails.Select(employeeInfo => new GetFaceEncodingDto(
+                    employeeInfo.Id,
+                    employeeInfo.UserId,
+                    employeeInfo.FaceEncoding
+
+                ));
+
+                return employeeInfoDtos;
             }
             catch (Exception)
             {
@@ -270,13 +291,13 @@ namespace ATS.Services
                         oldemployeeInfo.Id,
                         oldemployeeInfo.UserId,
                         user.Email,
-                        gender.GenderName,
-                        designation.DesignationName,
-                        oldemployeeInfo.EmployeeCode,
+                        //gender.GenderName,
+                        //designation.DesignationName,
+                        //oldemployeeInfo.EmployeeCode,
                         oldemployeeInfo.FirstName,
                         oldemployeeInfo.LastName,
                         oldemployeeInfo.ProfilePic,
-                        oldemployeeInfo.FaceEncoding
+                        user.ContactNo
                     );
 
                     return updatedemployeeInfo;

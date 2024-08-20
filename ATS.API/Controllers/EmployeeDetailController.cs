@@ -122,5 +122,19 @@ namespace ATS.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("face-encoding")]
+        public async Task<ActionResult<IEnumerable<GetFaceEncodingDto>>> GetFaceEncoding()
+        {
+            try
+            {
+                var employeeInfos = await _employeeDetailServices.GetFaceEncodingsAsync();
+                return Ok(employeeInfos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

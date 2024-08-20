@@ -16,5 +16,7 @@ namespace ATS.IServices
         Task<GetEmployeeDetailDto> UpdateEmployeeDetailAsync(long id, UpdateEmployeeDetailDto updateEmployeeDetailDto);
         Task<bool> DeleteEmployeeDetailAsync(long id);
         Task<IEnumerable<GetEmployeeDetailDto>> GetEmployeeDetailByUserId(long userId);
+        Task<IEnumerable<GetFaceEncodingDto>> GetFaceEncodingsAsync();
+
     }
 }
