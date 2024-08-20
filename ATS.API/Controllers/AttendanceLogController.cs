@@ -141,13 +141,13 @@ namespace ATS.API.Controllers
             }
         }
 
-        // GET api/<AttendanceLogController>/current-status
+        // GET api/<AttendanceLogController>/current-status?type=
         [HttpGet("current-status")]
-        public async Task<ActionResult<GetOutActivityRecordDto>> GetCurrentStatusOfEmployee([FromQuery] string? type, int? count)
+        public async Task<ActionResult<GetOutActivityRecordDto>> GetCurrentStatusOfEmployee([FromQuery] string? type, DateTime? date, int? count)
         {
             try
             {
-                var res = await _attendanceLogServices.GetCurrentStatusOfAttendanceLog(type, count);
+                var res = await _attendanceLogServices.GetCurrentStatusOfAttendanceLog(type, date, count);
                 return Ok(res);
             }
             catch (Exception ex)

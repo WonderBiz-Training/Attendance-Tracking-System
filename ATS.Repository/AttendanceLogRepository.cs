@@ -57,24 +57,19 @@ namespace ATS.Repository
             }
         }
 
-        public async Task<IEnumerable<AttendanceLog>> GetAllAttendanceLogs(int? count, DateTime? startDate)
+        public async Task<IEnumerable<AttendanceLog>> GetAllAttendanceLogs(DateTime? startDate)
         {
             try
             {
                 var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
-                var cnt = count ?? 100;
 
                 var attendanceLogsQuery = _dbContext.attendanceLogs
                     .Include(log => log.User)
                     .ThenInclude(user => user.EmployeeDetail)
-                    .Where(log => log.AttendanceLogTime.Date == start);  // Filter by the start date
-
-                // Apply the count limit if provided
-                attendanceLogsQuery = attendanceLogsQuery.Take(cnt);
+                    .Where(log => log.AttendanceLogTime.Date == start);
 
                 var attendanceLogs = await attendanceLogsQuery.ToListAsync();
 
-                // Check for logs with null User or EmployeeDetail
                 foreach (var log in attendanceLogs)
                 {
                     if (log.User == null)
@@ -197,14 +192,15 @@ namespace ATS.Repository
             }
         }
 
-        public async Task<IEnumerable<AttendanceLogWithDetails>> GetCurrentStatusOfAttendanceLog(string type)
+        public async Task<IEnumerable<AttendanceLogWithDetails>> GetCurrentStatusOfAttendanceLog(string type, DateTime date)
         {
             try
             {
                 var typeParameter = new SqlParameter("@type", type);
+                var dateParameter = new SqlParameter("@date", date);
 
                 var results = await _dbContext.Set<AttendanceLogWithDetails>()
-                    .FromSqlRaw("EXECUTE [dbo].[GetLastEntryOfAllUsers] @type", typeParameter)
+                    .FromSqlRaw("EXECUTE [dbo].[GetLastEntryOfAllUsers] @type, @date", typeParameter, dateParameter)
                     .ToListAsync();
 
                 return results;
