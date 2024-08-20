@@ -256,9 +256,9 @@ namespace ATS.Services
 
                 oldUser.Email = UserDto.Email;
                 //oldUser.Password = UserDto.Password;
-                oldUser.ContactNo = UserDto.ContactNo;
-                oldUser.IsActive = UserDto.IsActive;
-                oldUser.UpdatedBy = UserDto.UpdatedBy;
+                oldUser.ContactNo = string.IsNullOrEmpty(UserDto.ContactNo) ? oldUser.ContactNo : UserDto.ContactNo;
+                oldUser.IsActive = UserDto.IsActive ?? true;
+                oldUser.UpdatedBy = UserDto.UpdatedBy ?? 0;
                 oldUser.UpdatedAt = DateTime.Now;
 
                 var user = await _userRepository.UpdateAsync(oldUser);

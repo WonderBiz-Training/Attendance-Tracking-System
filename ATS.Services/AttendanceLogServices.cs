@@ -306,7 +306,7 @@ namespace ATS.Services
                 model.PeriodStart,
                 model.PeriodEnd,
                 TimeSpan.Parse(model.TotalTimeSpanFormatted)
-            ));
+            )).OrderByDescending(li => li.TotalHours);
 
             return dtoList;
         }
