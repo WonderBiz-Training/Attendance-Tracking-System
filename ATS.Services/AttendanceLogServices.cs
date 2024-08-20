@@ -331,7 +331,7 @@ namespace ATS.Services
                 throw;
             }
         }
-        public async Task<IEnumerable<GetStatusOfAttendanceLogDto>> GetStatusOfAttendanceLog(string? FirstName)
+        public async Task<IEnumerable<GetStatusOfAttendanceLogDto>> GetStatusOfAttendanceLog(string? FirstName, DateTime? Date)
         {
             try
             
@@ -339,10 +339,11 @@ namespace ATS.Services
                 IEnumerable<GetStatusOfAttendanceLog> data;
 
                 var Name = FirstName ?? string.Empty;
+                DateTime date = Date == DateTime.MinValue || Date == null ? DateTime.Now.Date : (DateTime)Date;
 
                 if (string.IsNullOrEmpty(Name))
                 {
-                    data = await _attendanceLogRepository.GetAllStatusOfAttendanceLog();
+                    data = await _attendanceLogRepository.GetAllStatusOfAttendanceLog(date);
                 }
                 else
                 {
@@ -365,5 +366,6 @@ namespace ATS.Services
                 throw;
             }
         }
+
     }
 }
