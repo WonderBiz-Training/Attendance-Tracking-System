@@ -79,6 +79,14 @@ namespace ATS.DTO
         TimeSpan TotalHours
     );
 
+    public record GetSumTotalHoursDto(
+        long UserId,
+        string ProfilePic,
+        string FirstName,
+        string LastName,
+        TimeSpan TotalHours
+    );
+
     public record GetStatusOfAttendanceLogDto(
         long Id,
         string ProfilePic,

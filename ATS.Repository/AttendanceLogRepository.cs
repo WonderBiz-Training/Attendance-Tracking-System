@@ -146,11 +146,11 @@ namespace ATS.Repository
 
                 var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
                 {
-                    Value = userId
+                    Value = userId.HasValue ? (object)userId.Value : DBNull.Value
                 };
 
                 var results = await _dbContext.Set<GetTotalInHours>()
-                            .FromSqlRaw("EXECUTE dbo.GetAttendanceInTimeDifferences @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
+                            .FromSqlRaw("EXECUTE dbo.GetAttendanceInTimeDifferences @userId, @startDate, @endDate", userIdParameter, startDateParameter, endDateParameter)
                             .ToListAsync();
                 return results;
             }
@@ -160,6 +160,31 @@ namespace ATS.Repository
                 throw;
             }
         }
+        public async Task<IEnumerable<GetSumTotalHours>> GetSumTotalInHours(long? userId, DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                var startDateParameter = new SqlParameter("@StartDate", startDate);
+                var endDateParameter = new SqlParameter("@EndDate", endDate);
+
+                var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
+                {
+                    Value = userId.HasValue ? (object)userId.Value : DBNull.Value
+                };
+
+                var results = await _dbContext.Set<GetSumTotalHours>()
+                            .FromSqlRaw("EXECUTE [dbo].[GetSumOfInTimeDifferences] @userId, @startDate, @endDate", userIdParameter, startDateParameter, endDateParameter)
+                            .ToListAsync();
+
+                return results;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<GetTotalOutHours>> GetTotalOutHours(long? userId, DateTime? startDate, DateTime? endDate)
         {
             try
@@ -169,7 +194,7 @@ namespace ATS.Repository
 
                 var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
                 {
-                    Value = userId
+                    Value = userId.HasValue ? (object)userId.Value : DBNull.Value
                 };
 
                 var results = await _dbContext.Set<GetTotalOutHours>()
@@ -184,6 +209,33 @@ namespace ATS.Repository
                 throw;
             }
         }
+
+        public async Task<IEnumerable<GetSumTotalHours>> GetSumTotalOutHours(long? userId, DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                var startDateParameter = new SqlParameter("@StartDate", startDate);
+                var endDateParameter = new SqlParameter("@EndDate", endDate);
+
+                var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
+                {
+                    Value = userId.HasValue ? (object)userId.Value : DBNull.Value
+                };
+
+                var results = await _dbContext.Set<GetSumTotalHours>()
+                    .FromSqlRaw("EXECUTE [dbo].[GetSumOfOutTimeDifferences] @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
+                    .ToListAsync();
+
+
+                return results;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        
         public async Task<IEnumerable<AttendanceLogWithDetails>> GetCurrentStatusOfAttendanceLog(string type, DateTime date)
         {
             try
