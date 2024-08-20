@@ -56,6 +56,7 @@ namespace ATS.DTO
     public record GetFaceEncodingDto(
         long Id,
         long UserId,
+        string FirstName,
         byte[] FaceEncoding
     );
 }
