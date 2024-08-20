@@ -22,9 +22,9 @@ namespace ATS.DTO
     public record UpdateUserDto(
         [MaxLength(50)] string Email,
         [MaxLength(50)] string Password,
-        string ContactNo,
-        bool IsActive,
-        long UpdatedBy
+        string? ContactNo,
+        bool? IsActive,
+        long? UpdatedBy
         );
 
     public record GetUserDto(
