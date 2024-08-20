@@ -246,6 +246,7 @@ namespace ATS.Services
                 var employeeInfoDtos = employeeDetails.Select(employeeInfo => new GetFaceEncodingDto(
                     employeeInfo.Id,
                     employeeInfo.UserId,
+                    employeeInfo.FirstName,
                     employeeInfo.FaceEncoding
 
                 ));
