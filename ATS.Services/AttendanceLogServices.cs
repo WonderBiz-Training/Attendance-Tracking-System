@@ -97,7 +97,7 @@ namespace ATS.Services
                     );
                 }).ToList();
 
-                //await _hubContext.Clients.All.SendAsync("ReceiveItemUpdate", log.UserId, log.AttendanceLogTime, log.CheckType);
+                await _hubContext.Clients.All.SendAsync("ReceiveItemUpdate", resDto);
 
                 return resDto;
             }
