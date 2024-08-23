@@ -268,7 +268,7 @@ namespace ATS.Repository
 
             // Execute stored procedure and map results to the DTO
             var results = _dbContext.Set<ATS.Model.GetTotalHours>()
-                .FromSqlRaw("EXECUTE dbo.GetTotalHour_Employee_Report @StartDate, @EndDate, @PeriodType", startDateParameter, endDateParameter, periodTypeParameter)
+                .FromSqlRaw("EXECUTE dbo.GetTotalHour_Employee_Report @StartDate, @EndDate", startDateParameter, endDateParameter)
                 .ToList();
 
             return results;
