@@ -48,7 +48,7 @@ namespace ATS.Data
                     .HasColumnName("Id");
                 entity.Property(e => e.UserId)
                     .HasColumnName("UserId");
-            }); ;
+            });
                 
             modelBuilder.Entity<GetSumTotalHours>(entity =>
             {

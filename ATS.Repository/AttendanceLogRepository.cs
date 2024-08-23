@@ -259,16 +259,21 @@ namespace ATS.Repository
                 throw;
             }
         }
-        public async Task<IEnumerable<GetTotalHours>> GetTotalHoursAsync(DateTime start,DateTime end, string report)
+        public async Task<IEnumerable<GetTotalHours>> GetTotalHoursAsync(long? userId, DateTime start,DateTime end, string report)
         {
           
             var startDateParameter = new SqlParameter("@StartDate", start);
             var endDateParameter = new SqlParameter("@EndDate", end);
             var periodTypeParameter = new SqlParameter("@PeriodType", report);
 
+            var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
+            {
+                Value = userId.HasValue ? (object)userId.Value : DBNull.Value
+            };
+
             // Execute stored procedure and map results to the DTO
             var results = _dbContext.Set<ATS.Model.GetTotalHours>()
-                .FromSqlRaw("EXECUTE dbo.GetTotalHour_Employee_Report @StartDate, @EndDate", startDateParameter, endDateParameter)
+                .FromSqlRaw("EXECUTE dbo.GetTotalHour_Employee_Report @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
                 .ToList();
 
             return results;
