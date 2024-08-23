@@ -13,7 +13,7 @@ namespace ATS.Model
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public DateTime PeriodStart { get; set; }
-        public DateTime PeriodEnd { get; set; }
+        public DateTime? PeriodEnd { get; set; }
         public string TotalTimeSpanFormatted { get; set; }
     }
 }

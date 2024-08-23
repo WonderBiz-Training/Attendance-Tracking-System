@@ -336,13 +336,13 @@ namespace ATS.Services
                 throw;
             }
         }
-        public async Task<IEnumerable<GetTotalHoursDto>> GetTotalHoursOfEmployee(DateTime? startDate, DateTime? endDate, string? reportType)
+        public async Task<IEnumerable<GetTotalHoursDto>> GetTotalHoursOfEmployee(long? userId, DateTime? startDate, DateTime? endDate, string? reportType)
         {
             DateTime start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : (DateTime)startDate;
-            DateTime end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date : (DateTime)endDate;
+            DateTime end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : (DateTime)endDate;
             var report = reportType ?? "ALL-TIME";
 
-            var results = await _attendanceLogRepository.GetTotalHoursAsync(start, end, report);
+            var results = await _attendanceLogRepository.GetTotalHoursAsync(userId, start, end, report);
 
             // Map the results to the DTO
             var dtoList = results.Select(model => new GetTotalHoursDto(
@@ -351,7 +351,7 @@ namespace ATS.Services
                 model.FirstName,
                 model.LastName,
                 Correction(model.PeriodStart.ToString("HH:mm:ss")),
-                Correction(model.PeriodEnd.ToString("HH:mm:ss")),
+                Correction(model.PeriodEnd?.ToString("HH:mm:ss")),
                 Correction(model.TotalTimeSpanFormatted)
             )).OrderByDescending(li => li.TotalHours);
 

@@ -21,6 +21,6 @@ namespace ATS.IRepository
         Task<IEnumerable<GetSumTotalHours>> GetSumTotalInHours(long? userId, DateTime startDate, DateTime endDate, string report);
         Task<IEnumerable<GetTotalOutHours>> GetTotalOutHours(long? userId, DateTime? startDate, DateTime? endDate);
         Task<IEnumerable<GetSumTotalHours>> GetSumTotalOutHours(long? userId, DateTime startDate, DateTime endDate, string report);
-        Task<IEnumerable<GetTotalHours>> GetTotalHoursAsync(DateTime startDate, DateTime endDate, string report);
+        Task<IEnumerable<GetTotalHours>> GetTotalHoursAsync(long? userId, DateTime startDate, DateTime endDate, string report);
     }
 }
