@@ -24,5 +24,10 @@ namespace ATS.Hubs
             await Clients.All.SendAsync("ReceiveEmployeeUpdate", userId, EmployeeCode, FirstName, LastName, DesignationId, GenderId, ProfilePic);
         }
 
+        public async Task UpdateEncoding(long Id, long userId, string FirstName, string LastName, string ProfilePic, byte[] FaceEncoding)
+        {
+            await Clients.All.SendAsync("UpdateEncoding", Id, userId, FirstName, LastName, ProfilePic, FaceEncoding);
+        }
+
     }
 }
