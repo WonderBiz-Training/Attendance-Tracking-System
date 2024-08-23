@@ -187,6 +187,8 @@ namespace ATS.Services
                     employeeInfo.ProfilePic
                 );
 
+                await _hubContext.Clients.All.SendAsync("ReceiveSignUpUpdate", createEmployee.FirstName, createEmployee.LastName, createEmployee.Email, createEmployee.ContactNo, createEmployee.Password, createEmployee.ProfilePic);
+
                 return createEmployee;
             }
             catch (Exception)
@@ -202,16 +204,10 @@ namespace ATS.Services
             {
                 var user = await _userRepository.GetUserByEmailAsync( logInDto.Email );
 
-                if (user == null)
+                if (user == null || !BCrypt.Net.BCrypt.Verify(logInDto.Password, user.Password))
                 {
-                    throw new Exception($"No user found for email {logInDto.Email}");
+                    throw new Exception("Invalid Credentials");
                 }
-
-                if(!BCrypt.Net.BCrypt.Verify(logInDto.Password, user.Password))
-                {
-                    throw new Exception("Password does not match");
-                }
-
 
                 var userDto = new GetUserDto(
                     user.Id,

@@ -32,12 +32,16 @@ namespace ATS.Services
             _employeeDetailRepository = employeeDetailRepository;
             _hubContext = hubContext;
         }
-        public class TimePeriod
+
+        TimeSpan Correction(string str)
         {
-            public DateTime InTime { get; set; }
-            public DateTime OutTime { get; set; }
-            public TimeSpan InHours { get; set; }
+            string[] values = str.Split(":");
+
+            int Day = Convert.ToInt32(values[0]) / 24;
+
+            return TimeSpan.Parse($"{Day}:{Convert.ToInt32(values[0]) - (Day * 24)}:{Convert.ToInt32(values[1])}:{Convert.ToInt32(values[2])}");
         }
+
         public async Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto attedanceLogDto)
         {
             try
@@ -134,8 +138,8 @@ namespace ATS.Services
                 var results = await _attendanceLogRepository.GetTotalInHours(userId, start, end);
 
                 var dtoList = results.Select(li => new GetInActivityRecordDto(
-                    li.InTime.TimeOfDay,
-                    li.OutTime.TimeOfDay,
+                    Correction(li.InTime.ToString("HH:mm:ss")),
+                    li.OutTime != null ? Correction(li.OutTime?.ToString("HH:mm:ss")) : null,
                     TimeSpan.Parse(li.TotalInHours)
                 ));
 
@@ -146,21 +150,23 @@ namespace ATS.Services
                 throw;
             }
         }
-        public async Task<IEnumerable<GetSumTotalHoursDto>> GetTotalInActivity(long? userId, DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<GetSumTotalHoursDto>> GetTotalInActivity(long? userId, DateTime? startDate, DateTime? endDate, string? reportType)
         {
             try
             {
-                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
-                var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : endDate;
+                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : (DateTime)startDate;
+                var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : (DateTime)endDate;
 
-                var results = await _attendanceLogRepository.GetSumTotalInHours(userId, start, end);
+                var report = string.IsNullOrEmpty(reportType) ? "Daily" : reportType;
+
+                var results = await _attendanceLogRepository.GetSumTotalInHours(userId, start, end, report);
 
                 var dtoList = results.Select(li => new GetSumTotalHoursDto(
                     li.UserId,
                     li.ProfilePic,
                     li.FirstName,
                     li.LastName,
-                    TimeSpan.Parse(li.TotalHours)
+                    Correction(li.TotalHours)
                 ));
 
                 return dtoList;
@@ -170,21 +176,23 @@ namespace ATS.Services
                 throw;
             }
         }
-        public async Task<IEnumerable<GetSumTotalHoursDto>> GetTotalOutActivity(long? userId, DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<GetSumTotalHoursDto>> GetTotalOutActivity(long? userId, DateTime? startDate, DateTime? endDate, string? reportType)
         {
             try
             {
-                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
-                var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : endDate;
+                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : (DateTime)startDate;
+                var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : (DateTime)endDate;
+                var report = string.IsNullOrEmpty(reportType) ? "Daily" : reportType;
 
-                var results = await _attendanceLogRepository.GetSumTotalOutHours(userId, start, end);
+                
+                var results = await _attendanceLogRepository.GetSumTotalOutHours(userId, start, end, report);
 
                 var dtoList = results.Select(li => new GetSumTotalHoursDto(
                     li.UserId,
                     li.ProfilePic,
                     li.FirstName,
                     li.LastName,
-                    TimeSpan.Parse(li.TotalHours)
+                    Correction(li.TotalHours)
                 ));
 
                 return dtoList;
@@ -198,10 +206,10 @@ namespace ATS.Services
         {
             try
             {
-                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
+                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : (DateTime)startDate;
                 int cnt = count ?? 100;
 
-                var attendanceLogs = await _attendanceLogRepository.GetAllAttendanceLogs(start);
+                var attendanceLogs = await _attendanceLogRepository.GetAllAttendanceLogs(cnt, start);
 
                 var attendanceLogsDto = attendanceLogs.Select(attendanceLog => new GetAttendanceLogsWithDetailsDto(
                     attendanceLog.Id,
@@ -212,7 +220,7 @@ namespace ATS.Services
                     attendanceLog.User?.EmployeeDetail?.LastName,
                     attendanceLog.AttendanceLogTime,
                     attendanceLog.CheckType
-                )).OrderByDescending(attendanceLog => attendanceLog.AttendanceLogTime).Take(cnt);
+                ));
 
                 return attendanceLogsDto.ToList();
             }
@@ -342,9 +350,9 @@ namespace ATS.Services
                 model.ProfilePic,
                 model.FirstName,
                 model.LastName,
-                model.PeriodStart,
-                model.PeriodEnd,
-                TimeSpan.Parse(model.TotalTimeSpanFormatted)
+                Correction(model.PeriodStart.ToString("HH:mm:ss")),
+                Correction(model.PeriodEnd.ToString("HH:mm:ss")),
+                Correction(model.TotalTimeSpanFormatted)
             )).OrderByDescending(li => li.TotalHours);
 
             return dtoList;
@@ -359,8 +367,8 @@ namespace ATS.Services
                var results = await _attendanceLogRepository.GetTotalOutHours(userId, start, end);
 
                 var dtoList = results.Select(model => new GetOutActivityRecordDto(
-                    model.InTime.TimeOfDay,
-                    model.OutTime.TimeOfDay,
+                    Correction(model.InTime.ToString("HH:mm:ss")),
+                    Correction(model.OutTime.ToString("HH:mm:ss")),
                     TimeSpan.Parse(model.TotalOutHours)
                 ));
 
@@ -402,7 +410,7 @@ namespace ATS.Services
                     model.FirstName,
                     model.LastName,
                     model.Status,
-                    model.InTime?.TimeOfDay
+                    (model.InTime != null ? Correction(model.InTime?.ToString("HH:mm:ss")) : null)
                 ));
 
                 return dtoList;
@@ -426,7 +434,7 @@ namespace ATS.Services
 
                 int cnt = count ?? 100;
 
-                var attendanceLogs = await _attendanceLogRepository.GetCurrentStatusOfAttendanceLog(type, date1);
+                var attendanceLogs = await _attendanceLogRepository.GetCurrentStatusOfAttendanceLog(type, date1, cnt);
 
                 var attendanceLogsDto = attendanceLogs.Select(attendanceLog => new GetAttendanceLogsWithDetailsDto(
                     attendanceLog.Id,
@@ -437,7 +445,7 @@ namespace ATS.Services
                     attendanceLog.LastName,
                     attendanceLog.AttendanceLogTime,
                     attendanceLog.CheckType
-                )).Take(cnt);
+                ));
 
                 return attendanceLogsDto.ToList();
             }

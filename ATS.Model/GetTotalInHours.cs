@@ -10,7 +10,7 @@ namespace ATS.Model
     public class GetTotalInHours
     {
         public DateTime InTime { get; set; }
-        public DateTime OutTime { get; set; }
+        public DateTime? OutTime { get; set; }
         public string TotalInHours { get; set; }
     }
 }

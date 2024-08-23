@@ -53,36 +53,21 @@ namespace ATS.Repository
                 throw;
             }
         }
-        public async Task<IEnumerable<AttendanceLog>> GetAllAttendanceLogs(DateTime? startDate)
+        public async Task<IEnumerable<AttendanceLog>> GetAllAttendanceLogs(int count, DateTime startDate)
         {
             try
             {
-                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
-
                 var attendanceLogsQuery = _dbContext.attendanceLogs
                     .Include(log => log.User)
                     .ThenInclude(user => user.EmployeeDetail)
-                    .Where(log => log.AttendanceLogTime.Date == start);
+                    .Where(log => log.AttendanceLogTime.Date == startDate);
 
-                var attendanceLogs = await attendanceLogsQuery.ToListAsync();
-
-                foreach (var log in attendanceLogs)
-                {
-                    if (log.User == null)
-                    {
-                        Console.WriteLine($"User is null for AttendanceLog with ID: {log.Id}");
-                    }
-                    else if (log.User.EmployeeDetail == null)
-                    {
-                        Console.WriteLine($"EmployeeDetail is null for User with ID: {log.User.Id}");
-                    }
-                }
+                var attendanceLogs = await attendanceLogsQuery.OrderByDescending(li => li.AttendanceLogTime).Take(count).ToListAsync();
 
                 return attendanceLogs;
             }
             catch (Exception ex)
             {
-                // Log the exception message for troubleshooting
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 throw;
             }
@@ -160,12 +145,13 @@ namespace ATS.Repository
                 throw;
             }
         }
-        public async Task<IEnumerable<GetSumTotalHours>> GetSumTotalInHours(long? userId, DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<GetSumTotalHours>> GetSumTotalInHours(long? userId, DateTime startDate, DateTime endDate, string report)
         {
             try
             {
                 var startDateParameter = new SqlParameter("@StartDate", startDate);
                 var endDateParameter = new SqlParameter("@EndDate", endDate);
+                var reportParameter = new SqlParameter("@PeriodType", report);
 
                 var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
                 {
@@ -173,10 +159,10 @@ namespace ATS.Repository
                 };
 
                 var results = await _dbContext.Set<GetSumTotalHours>()
-                            .FromSqlRaw("EXECUTE [dbo].[GetSumOfInTimeDifferences] @userId, @startDate, @endDate", userIdParameter, startDateParameter, endDateParameter)
+                            .FromSqlRaw("EXECUTE [dbo].[GetSumOfInTimeDifferences] @userId, @startDate, @endDate, @PeriodType", userIdParameter, startDateParameter, endDateParameter, reportParameter)
                             .ToListAsync();
 
-                return results;
+                return results.OrderByDescending(li => li.TotalHours);
             }
             catch (Exception)
             {
@@ -210,12 +196,13 @@ namespace ATS.Repository
             }
         }
 
-        public async Task<IEnumerable<GetSumTotalHours>> GetSumTotalOutHours(long? userId, DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<GetSumTotalHours>> GetSumTotalOutHours(long? userId, DateTime startDate, DateTime endDate, string report)
         {
             try
             {
                 var startDateParameter = new SqlParameter("@StartDate", startDate);
                 var endDateParameter = new SqlParameter("@EndDate", endDate);
+                var reportParameter = new SqlParameter("@PeriodType", report);
 
                 var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
                 {
@@ -223,11 +210,11 @@ namespace ATS.Repository
                 };
 
                 var results = await _dbContext.Set<GetSumTotalHours>()
-                    .FromSqlRaw("EXECUTE [dbo].[GetSumOfOutTimeDifferences] @UserId, @StartDate, @EndDate", userIdParameter, startDateParameter, endDateParameter)
+                    .FromSqlRaw("EXECUTE [dbo].[GetSumOfOutTimeDifferences] @UserId, @StartDate, @EndDate, @PeriodType", userIdParameter, startDateParameter, endDateParameter, reportParameter)
                     .ToListAsync();
 
 
-                return results;
+                return results.OrderByDescending(li => li.TotalHours);
             }
             catch (Exception)
             {
@@ -236,16 +223,17 @@ namespace ATS.Repository
             }
         }
         
-        public async Task<IEnumerable<AttendanceLogWithDetails>> GetCurrentStatusOfAttendanceLog(string type, DateTime date)
+        public async Task<IEnumerable<AttendanceLogWithDetails>> GetCurrentStatusOfAttendanceLog(string type, DateTime date, int count)
         {
             try
             {
                 var typeParameter = new SqlParameter("@type", type);
                 var dateParameter = new SqlParameter("@date", date);
 
-                var results = await _dbContext.Set<AttendanceLogWithDetails>()
-                    .FromSqlRaw("EXECUTE [dbo].[GetLastEntryOfAllUsers] @type, @date", typeParameter, dateParameter)
-                    .ToListAsync();
+                var resultsQuery = await _dbContext.Set<AttendanceLogWithDetails>()
+                    .FromSqlRaw("EXECUTE [dbo].[GetLastEntryOfAllUsers] @type, @date", typeParameter, dateParameter).ToListAsync();
+
+                var results = resultsQuery.OrderByDescending(li => li.AttendanceLogTime).Take(count).ToList();
 
                 return results;
             }
