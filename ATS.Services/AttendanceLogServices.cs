@@ -328,6 +328,7 @@ namespace ATS.Services
                     attendanceLog.CheckType
                 );
 
+      
                 return newAttendanceLogDto;
             }
             catch (Exception)
