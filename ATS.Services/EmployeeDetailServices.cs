@@ -300,7 +300,8 @@ namespace ATS.Services
                         user.ContactNo
                     );
 
-                    await _hubContext.Clients.All.SendAsync("ReceiveUpdateEncoding", updatedemployeeInfo.Id, updatedemployeeInfo.UserId ,updateEmployeeDetailDto.FirstName, updatedemployeeInfo.LastName, updateEmployeeDetailDto.ProfilePic, updateEmployeeDetailDto.FaceEncoding);
+                    await _hubContext.Clients.All.SendAsync("ReceiveUpdateEncoding", oldemployeeInfo.Id, oldemployeeInfo.UserId, oldemployeeInfo.FirstName, oldemployeeInfo.LastName, oldemployeeInfo.ProfilePic, oldemployeeInfo.FaceEncoding);
+
 
 
                     return updatedemployeeInfo;
