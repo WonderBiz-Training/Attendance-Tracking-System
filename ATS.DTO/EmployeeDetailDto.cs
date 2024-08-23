@@ -28,7 +28,7 @@ namespace ATS.DTO
         string? EmployeeCode,
         [MaxLength(50)] string? FirstName,
         [MaxLength(50)] string? LastName,
-        byte?[]? FaceEncoding,
+        string? FaceEncoding,
         string? ProfilePic,
         bool? IsActive,
         long? UpdatedBy

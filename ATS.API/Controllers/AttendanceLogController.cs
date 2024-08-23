@@ -114,11 +114,11 @@ namespace ATS.API.Controllers
 
         // GET api/<AttendanceLogController>/total-hours/in
         [HttpGet("total-hours/in")]
-        public async Task<ActionResult<GetInActivityRecordDto>> GetTotalInActivity([FromQuery] long? userId, DateTime? startDate, DateTime? endDate)
+        public async Task<ActionResult<GetInActivityRecordDto>> GetTotalInActivity([FromQuery] long? userId, DateTime? startDate, DateTime? endDate, string? reportType)
         {
             try
             {
-                var res = await _attendanceLogServices.GetTotalInActivity(userId, startDate, endDate);
+                var res = await _attendanceLogServices.GetTotalInActivity(userId, startDate, endDate, reportType);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -130,11 +130,11 @@ namespace ATS.API.Controllers
 
         // GET api/<AttendanceLogController>/total-hours/out
         [HttpGet("total-hours/out")]
-        public async Task<ActionResult<GetInActivityRecordDto>> GetTotalOutActivity([FromQuery] long? userId, DateTime? startDate, DateTime? endDate)
+        public async Task<ActionResult<GetInActivityRecordDto>> GetTotalOutActivity([FromQuery] long? userId, DateTime? startDate, DateTime? endDate, string? reportType)
         {
             try
             {
-                var res = await _attendanceLogServices.GetTotalOutActivity(userId, startDate, endDate);
+                var res = await _attendanceLogServices.GetTotalOutActivity(userId, startDate, endDate, reportType);
                 return Ok(res);
             }
             catch (Exception ex)

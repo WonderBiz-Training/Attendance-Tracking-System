@@ -24,5 +24,10 @@ namespace ATS.Hubs
             await Clients.All.SendAsync("ReceiveEmployeeUpdate", userId, EmployeeCode, FirstName, LastName, DesignationId, GenderId, ProfilePic);
         }
 
+        public async Task SendSignUpUpdate(string FirstName, string LastName, string Email, string ContactNo,string Password, string ProfilePic)
+        {
+            await Clients.All.SendAsync("ReceiveSignUpUpdate", FirstName, LastName, Email, ContactNo,Password, ProfilePic);
+        }
+
     }
 }
