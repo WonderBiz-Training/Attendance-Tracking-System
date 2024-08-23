@@ -12,8 +12,8 @@ namespace ATS.Model
         public string ProfilePic { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
-        public DateOnly PeriodStart { get; set; }
-        public DateOnly PeriodEnd { get; set; }
+        public DateTime PeriodStart { get; set; }
+        public DateTime PeriodEnd { get; set; }
         public string TotalTimeSpanFormatted { get; set; }
     }
 }

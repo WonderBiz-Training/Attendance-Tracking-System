@@ -274,8 +274,8 @@ namespace ATS.Services
                 oldemployeeInfo.LastName = string.IsNullOrEmpty(updateEmployeeDetailDto.LastName) ? oldemployeeInfo.LastName : updateEmployeeDetailDto.LastName;
                 oldemployeeInfo.ProfilePic = string.IsNullOrEmpty(updateEmployeeDetailDto.ProfilePic) ? oldemployeeInfo.ProfilePic : updateEmployeeDetailDto.ProfilePic;
                 oldemployeeInfo.FaceEncoding = updateEmployeeDetailDto.FaceEncoding != null && updateEmployeeDetailDto.FaceEncoding.Any()
-                        ? updateEmployeeDetailDto.FaceEncoding.Select(b => b ?? 0).ToArray()
-                        : oldemployeeInfo.FaceEncoding;
+                    ? Convert.FromBase64String(updateEmployeeDetailDto.FaceEncoding)
+                    : oldemployeeInfo.FaceEncoding;
                 oldemployeeInfo.UpdatedBy = updateEmployeeDetailDto.UpdatedBy ?? 0;
                 oldemployeeInfo.UpdatedAt = DateTime.Now;
 

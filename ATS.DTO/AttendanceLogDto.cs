@@ -59,7 +59,7 @@ namespace ATS.DTO
 
     public record GetInActivityRecordDto(
         TimeSpan InTime,
-        TimeSpan OutTime,
+        TimeSpan? OutTime,
         TimeSpan InHours
     );
 
@@ -74,8 +74,8 @@ namespace ATS.DTO
         string ProfilePic,
         string FirstName,
         string LastName,
-        DateOnly LastCheckInTime,
-        DateOnly LastCheckOutTime,
+        TimeSpan LastCheckInTime,
+        TimeSpan LastCheckOutTime,
         TimeSpan TotalHours
     );
 
