@@ -15,6 +15,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ATS.Services
 {
@@ -478,6 +479,38 @@ namespace ATS.Services
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetMisEntryOfUsers(long userId, DateTime? date)
+        {
+            try
+            {
+                var user = await _userRepository.GetAsync(userId);
+                if (user == null)
+                {
+                    throw new Exception($"No Attendance Log Found with UserId : {userId}");
+                }
+                DateTime Cdate = date == DateTime.MinValue || date == null ? DateTime.Now.Date : (DateTime)date;
+                var data = await _attendanceLogRepository.GetMisEntry(userId, Cdate);
+
+                var attendanceLogsDto = data.Select(attendanceLog => new GetAttendanceLogsWithDetailsDto(
+                        attendanceLog.Id,
+                        attendanceLog.UserId,
+                        attendanceLog.Email,
+                        attendanceLog.ProfilePic,
+                        attendanceLog.FirstName,
+                        attendanceLog.LastName,
+                        attendanceLog.AttendanceLogTime,
+                        attendanceLog.CheckType
+                    ));
+
+                return attendanceLogsDto.ToList();
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }

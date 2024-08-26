@@ -278,5 +278,25 @@ namespace ATS.Repository
 
             return results;
         }
+
+        public async Task<IEnumerable<AttendanceLogWithDetails>> GetMisEntry(long userId, DateTime date)
+        {
+            try
+            {
+                var userIdParameter = new SqlParameter("@userId", userId); 
+                var DateParameter = new SqlParameter("@date", date);
+
+                var data = await _dbContext.Set<AttendanceLogWithDetails>()
+                    .FromSqlRaw("EXECUTE dbo.GetMisEntryReport @userId, @date", userIdParameter, DateParameter)
+                    .ToListAsync();
+
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }
