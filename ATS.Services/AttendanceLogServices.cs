@@ -25,7 +25,7 @@ namespace ATS.Services
         private readonly IEmployeeDetailRepository _employeeDetailRepository;
         private readonly IHubContext<AtsHubs> _hubContext;
 
-        public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository, IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository, IHubContext<AtsHubs> hubContext, ATSDbContext dbContext)
+        public AttendanceLogServices(IAttendanceLogRepository attendanceLogRepository, IUserRepository userRepository, IEmployeeDetailRepository employeeDetailRepository, IHubContext<AtsHubs> hubContext)
         {
             _attendanceLogRepository = attendanceLogRepository;
             _userRepository = userRepository;
@@ -42,10 +42,23 @@ namespace ATS.Services
             return TimeSpan.Parse($"{Day}:{Convert.ToInt32(values[0]) - (Day * 24)}:{Convert.ToInt32(values[1])}:{Convert.ToInt32(values[2])}");
         }
 
+        public string DateException(DateTime startDate, DateTime endDate) { 
+            if(startDate > endDate)
+            {
+                throw new Exception("Start Date is should be less than End Date");
+            }
+
+            return string.Empty;
+        }
         public async Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto attedanceLogDto)
         {
             try
             {
+                var user = await _userRepository.GetAllAsync();
+                if (user == null) 
+                {
+                    throw new Exception("No User Found!");
+                }
                 var attendanceLog = await _attendanceLogRepository.CreateAsync(new AttendanceLog()
                 {
                     UserId = attedanceLogDto.UserId,
@@ -55,8 +68,7 @@ namespace ATS.Services
 
                 var res = new GetAttendanceLogDto(
                     attendanceLog.Id,
-                    attendanceLog.UserId,
-                 
+                    attendanceLog.UserId,            
                     attendanceLog.AttendanceLogTime,
                     attendanceLog.CheckType
                 );
@@ -132,8 +144,10 @@ namespace ATS.Services
         {
             try
             {
-                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
-                var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : endDate;
+                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : (DateTime)startDate;
+                var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : (DateTime)endDate;
+
+                DateException(start, end);
 
                 var results = await _attendanceLogRepository.GetTotalInHours(userId, start, end);
 
@@ -156,6 +170,8 @@ namespace ATS.Services
             {
                 var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : (DateTime)startDate;
                 var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : (DateTime)endDate;
+
+                DateException(start, end);
 
                 var report = string.IsNullOrEmpty(reportType) ? "Daily" : reportType;
 
@@ -259,6 +275,10 @@ namespace ATS.Services
             try
             {
                 var attendanceLog = await _attendanceLogRepository.GetAttendanceLogByUserId(userId);
+                if (attendanceLog == null)
+                {
+                    throw new Exception($"No Attendance Log Found with UserId : {userId}");
+                }
 
                 var attendanceLogDtos = attendanceLog.Select(attendanceLog => new GetAttendanceLogDto(
                     attendanceLog.Id,
@@ -280,6 +300,8 @@ namespace ATS.Services
             {
                 var start = startDate == null ? DateTime.Now.Date : (DateTime)startDate;
                 var end = endDate == null ? DateTime.Now.Date : (DateTime)endDate;
+
+                DateException(start, end);
 
                 IEnumerable<User> totalData = await _userRepository.GetAllAsync();
 
@@ -340,6 +362,9 @@ namespace ATS.Services
         {
             DateTime start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : (DateTime)startDate;
             DateTime end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : (DateTime)endDate;
+
+            DateException(start, end);
+
             var report = reportType ?? "ALL-TIME";
 
             var results = await _attendanceLogRepository.GetTotalHoursAsync(userId, start, end, report);
@@ -351,7 +376,7 @@ namespace ATS.Services
                 model.FirstName,
                 model.LastName,
                 Correction(model.PeriodStart.ToString("HH:mm:ss")),
-                Correction(model.PeriodEnd?.ToString("HH:mm:ss")),
+                model.PeriodEnd != null ?  Correction(model.PeriodEnd?.ToString("HH:mm:ss")) : null,
                 Correction(model.TotalTimeSpanFormatted)
             )).OrderByDescending(li => li.TotalHours);
 
@@ -361,10 +386,12 @@ namespace ATS.Services
         {
             try
             {
-                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : startDate;
-                var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : endDate;
+                var start = startDate == DateTime.MinValue || startDate == null ? DateTime.Now.Date : (DateTime)startDate;
+                var end = endDate == DateTime.MinValue || endDate == null ? DateTime.Now.Date.AddDays(1) : (DateTime)endDate;
 
-               var results = await _attendanceLogRepository.GetTotalOutHours(userId, start, end);
+                DateException(start, end);
+
+                var results = await _attendanceLogRepository.GetTotalOutHours(userId, start, end);
 
                 var dtoList = results.Select(model => new GetOutActivityRecordDto(
                     Correction(model.InTime.ToString("HH:mm:ss")),
