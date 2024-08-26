@@ -218,6 +218,21 @@ namespace ATS.API.Controllers
             }
         }
 
+        // POST api/<AttendanceLogController>/multiple
+        [HttpGet("misentry")]
+        public async Task<ActionResult<IEnumerable<GetAttendanceLogsWithDetailsDto>>> Get([FromQuery] long userId, DateTime? date)
+        {
+            try
+            {
+                var res = await _attendanceLogServices.GetMisEntryOfUsers(userId, date);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         // PUT api/<AttendanceLogController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult<GetAttendanceLogDto>> Put(int id, [FromBody] UpdateAttendanceLogDto attendanceLogDto)
