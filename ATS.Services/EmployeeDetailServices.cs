@@ -32,6 +32,15 @@ namespace ATS.Services
         {
             try
             {
+                var user = await _userRepository.GetAsync(createEmployeeDetailDto.UserId);
+                if (user == null)
+                {
+                    throw new Exception($"No user found for id {createEmployeeDetailDto.UserId}");
+                }
+
+                /*var gender = await _genderRepository.GetAsync(employeeInfo.GenderId);
+                var designation = await _designationRepository.GetAsync(employeeInfo.DesignationId);*/
+
                 var employeeInfo = await _employeeDetailRepository.CreateAsync(new EmployeeDetail()
                 {
                     UserId = createEmployeeDetailDto.UserId,
@@ -52,38 +61,26 @@ namespace ATS.Services
 
                 await _userRepository.UpdateAsync(userDetail);
 
-                var user = await _userRepository.GetAsync(employeeInfo.UserId);
-                var gender = await _genderRepository.GetAsync(employeeInfo.GenderId);
-                var designation = await _designationRepository.GetAsync(employeeInfo.DesignationId);
+                var createdEmployeeDetail = new GetEmployeeDetailDto(
+                    employeeInfo.Id,
+                    employeeInfo.UserId,
+                    user.Email,
+                    //gender.GenderName,
+                    //designation.DesignationName,
+                    //employeeInfo.EmployeeCode,
+                    employeeInfo.FirstName,
+                    employeeInfo.LastName,
+                    employeeInfo.ProfilePic,
+                    user.ContactNo
+                );
 
-                if (gender != null && user != null && designation != null)
-                {
+                await _hubContext.Clients.All.SendAsync("ReceiveEmployeeUpdate", employeeInfo.UserId, employeeInfo.EmployeeCode, employeeInfo.FirstName, employeeInfo.LastName, employeeInfo.DesignationId, employeeInfo.GenderId, employeeInfo.ProfilePic);
 
-                    var createdEmployeeDetail = new GetEmployeeDetailDto(
-                        employeeInfo.Id,
-                        employeeInfo.UserId,
-                        user.Email,
-                        //gender.GenderName,
-                        //designation.DesignationName,
-                        //employeeInfo.EmployeeCode,
-                        employeeInfo.FirstName,
-                        employeeInfo.LastName,
-                        employeeInfo.ProfilePic,
-                        user.ContactNo
-                    );
-
-                    await _hubContext.Clients.All.SendAsync("ReceiveEmployeeUpdate", employeeInfo.UserId, employeeInfo.EmployeeCode, employeeInfo.FirstName, employeeInfo.LastName,employeeInfo.DesignationId, employeeInfo.GenderId, employeeInfo.ProfilePic);
-
-                    return createdEmployeeDetail;
-                }
-                else
-                {
-                    throw new Exception("Invalid Employee");
-                }
+                return createdEmployeeDetail;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -94,16 +91,16 @@ namespace ATS.Services
                 var employeeInfo = await _employeeDetailRepository.GetAsync(id);
                 if (employeeInfo == null)
                 {
-                    throw new Exception($"Employee Details not found for id : {id}");
+                    throw new Exception($"No Employee Details found for id {id}");
                 }
 
                 var deleted = await _employeeDetailRepository.DeleteAsync(employeeInfo);
                 return deleted;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -116,7 +113,7 @@ namespace ATS.Services
 
                 if (employeeInfo == null)
                 {
-                    throw new Exception($"Employee Details not found for id : {id}");
+                    throw new Exception($"No Employee Details found for id {id}");
                 }
 
                 var employeeInfoDto = new GetEmployeeDetailDto(
@@ -135,9 +132,9 @@ namespace ATS.Services
                 return employeeInfoDto;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -189,9 +186,9 @@ namespace ATS.Services
 
                 return employeeInfoDtos;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -231,9 +228,9 @@ namespace ATS.Services
 
                 return res;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -253,9 +250,9 @@ namespace ATS.Services
 
                 return employeeInfoDtos;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -266,7 +263,7 @@ namespace ATS.Services
                 var oldemployeeInfo = await _employeeDetailRepository.GetAsync(id);
                 if (oldemployeeInfo == null)
                 {
-                    throw new Exception($"Employee Details not found for id : {id}");
+                    throw new Exception($"No Employee Details found for id {id}");
                 }
 
                 oldemployeeInfo.EmployeeCode = updateEmployeeDetailDto.EmployeeCode ?? oldemployeeInfo.EmployeeCode;
@@ -282,38 +279,29 @@ namespace ATS.Services
                 await _employeeDetailRepository.UpdateAsync(oldemployeeInfo);
 
                 var user = await _userRepository.GetAsync(oldemployeeInfo.UserId);
-                var gender = await _genderRepository.GetAsync(oldemployeeInfo.GenderId);
-                var designation = await _designationRepository.GetAsync(oldemployeeInfo.DesignationId);
+                /*var gender = await _genderRepository.GetAsync(oldemployeeInfo.GenderId);
+                var designation = await _designationRepository.GetAsync(oldemployeeInfo.DesignationId);*/
 
-                if (gender != null && user != null && designation != null)
-                {
-                    var updatedemployeeInfo = new GetEmployeeDetailDto(
-                        oldemployeeInfo.Id,
-                        oldemployeeInfo.UserId,
-                        user.Email,
-                        //gender.GenderName,
-                        //designation.DesignationName,
-                        //oldemployeeInfo.EmployeeCode,
-                        oldemployeeInfo.FirstName,
-                        oldemployeeInfo.LastName,
-                        oldemployeeInfo.ProfilePic,
-                        user.ContactNo
-                    );
+                var updatedemployeeInfo = new GetEmployeeDetailDto(
+                    oldemployeeInfo.Id,
+                    oldemployeeInfo.UserId,
+                    user.Email,
+                    //gender.GenderName,
+                    //designation.DesignationName,
+                    //oldemployeeInfo.EmployeeCode,
+                    oldemployeeInfo.FirstName,
+                    oldemployeeInfo.LastName,
+                    oldemployeeInfo.ProfilePic,
+                    user.ContactNo
+                );
 
-                    await _hubContext.Clients.All.SendAsync("ReceiveUpdateEncoding", oldemployeeInfo.Id, oldemployeeInfo.UserId, oldemployeeInfo.FirstName, oldemployeeInfo.LastName, oldemployeeInfo.ProfilePic, oldemployeeInfo.FaceEncoding);
+                await _hubContext.Clients.All.SendAsync("ReceiveUpdateEncoding", oldemployeeInfo.Id, oldemployeeInfo.UserId, oldemployeeInfo.FirstName, oldemployeeInfo.LastName, oldemployeeInfo.ProfilePic, oldemployeeInfo.FaceEncoding);
 
-
-
-                    return updatedemployeeInfo;
-                }
-                else
-                {
-                    throw new Exception("Invalid Employee");
-                }
+                return updatedemployeeInfo;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
