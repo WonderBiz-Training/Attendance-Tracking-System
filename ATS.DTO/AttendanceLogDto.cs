@@ -75,7 +75,7 @@ namespace ATS.DTO
         string FirstName,
         string LastName,
         TimeSpan LastCheckInTime,
-        TimeSpan LastCheckOutTime,
+        TimeSpan? LastCheckOutTime,
         TimeSpan TotalHours
     );
 

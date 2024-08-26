@@ -21,7 +21,7 @@ namespace ATS.Services
         private readonly IEmployeeDetailServices _employeeDetailServices;
         private readonly IHubContext<AtsHubs> _hubContext;
 
-        public UserServices(IUserRepository userRepository, IEmployeeDetailServices employeeDetailServices, IHubContext<AtsHubs> hubContext, ATSDbContext dbContext)
+        public UserServices(IUserRepository userRepository, IEmployeeDetailServices employeeDetailServices, IHubContext<AtsHubs> hubContext)
         {
             _userRepository = userRepository;
             _employeeDetailServices = employeeDetailServices;
@@ -71,7 +71,6 @@ namespace ATS.Services
             }
 
         }
-
         public async Task<bool> DeleteUserAsync(long id)
         {
             try
@@ -139,7 +138,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<GetSignUpDto> SignUpUserAsync(SignUpDto signUpDto)
         {
             await _userRepository.BeginTransactionAsync();
@@ -191,13 +189,21 @@ namespace ATS.Services
 
                 return createEmployee;
             }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("Cannot insert duplicate key row") == true ||
+                    ex.InnerException?.Message.Contains("UNIQUE constraint failed") == true)
+                {
+                    throw new Exception("This User already exists.");
+                }
+                throw;
+            }
             catch (Exception)
             {
                 await _userRepository.RollbackTransactionAsync();
                 throw;
             }
         }
-
         public async Task<GetUserDto> LogInUserAsync(LogInDto logInDto)
         {
             try
@@ -224,7 +230,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<GetUserDto> UpdateUserAsync(long id, UpdateUserDto UserDto)
         {
             try
