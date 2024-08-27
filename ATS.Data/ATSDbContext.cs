@@ -69,5 +69,6 @@ namespace ATS.Data
         public DbSet<User> users { get; set; }
         public DbSet<Role> roles { get; set; }
         public DbSet<Page> pages { get; set; }
+        public DbSet<AccessPage> accessPages { get; set; }
     }
 }
