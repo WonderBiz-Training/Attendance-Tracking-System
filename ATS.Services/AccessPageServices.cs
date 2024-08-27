@@ -34,13 +34,15 @@ namespace ATS.Services
                     UpdatedAt = DateTime.Now
                 });
 
+                var data = await _accessPageRepository.GetAsync(page.Id);
+
                 var res = new GetAccessPageDto(
-                    page.Id,
-                    page.RoleId,
-                    page.Role?.RoleName,
-                    page.PageId,
-                    page.Page?.PageTitle,
-                    page.IsActive
+                    data.Id,
+                    data.RoleId,
+                    data.Role?.RoleName,
+                    data.PageId,
+                    data.Page?.PageTitle,
+                    data.IsActive
                 );
 
                 return res;
