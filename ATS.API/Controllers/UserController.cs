@@ -111,7 +111,7 @@ namespace ATS.API.Controllers
 
         // POST api/<UserController>/log-in
         [HttpPost("log-in")]
-        public async Task<ActionResult<GetUserDto>> Post([FromBody] LogInDto logInDto)
+        public async Task<ActionResult<GetLogInDto>> Post([FromBody] LogInDto logInDto)
         {
             try
             {

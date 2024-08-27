@@ -8,6 +8,7 @@ namespace ATS.DTO
 {
     public class AccessPageDto
     {
+
     }
 
     public record CreateAccessPageDto(
@@ -38,5 +39,5 @@ namespace ATS.DTO
         long PageId,
         string PageTitle,
         bool IsActive
-        );
+    );
 }
