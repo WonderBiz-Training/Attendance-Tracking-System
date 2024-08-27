@@ -9,5 +9,6 @@ namespace ATS.IRepository
 {
     public interface IAccessPageRepository : IRepository<AccessPage>
     {
+        Task<IEnumerable<AccessPage>> GetAccessByRoleId(long roleId);
     }
 }

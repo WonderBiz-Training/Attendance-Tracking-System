@@ -48,6 +48,21 @@ namespace ATS.API.Controllers
             }
         }
 
+        // GET api/<AccessPageController>/role/5
+        [HttpGet("role/{roleId}")]
+        public async Task<ActionResult<GetAccessPageDto>> GetByRole(long roleId)
+        {
+            try
+            {
+                var res = await _accessPageServices.GetAccessPageByRoleId(roleId);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         // POST api/<AccessPageController>
         [HttpPost]
         public async Task<ActionResult<GetAccessPageDto>> Post([FromBody] CreateAccessPageDto accessPageDto)
