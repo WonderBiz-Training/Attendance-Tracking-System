@@ -16,6 +16,9 @@ builder.Services.AddDbContext<ATSDbContext>(option => option.UseSqlServer(connec
 
 builder.Services.AddSignalR();
 
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IRoleServices, RoleServices>();
+
 builder.Services.AddScoped<IDesignationRepository, DesignationRepository>();
 builder.Services.AddScoped<IDesignationServices, DesignationServices>();
 
@@ -30,6 +33,9 @@ builder.Services.AddScoped<IUserServices, UserServices>();
 
 builder.Services.AddScoped<IEmployeeDetailRepository, EmployeeDetailRepository>();
 builder.Services.AddScoped<IEmployeeDetailServices, EmployeeDetailServices>();
+
+builder.Services.AddScoped<IPageRepository, PageRepository>();
+builder.Services.AddScoped<IPageServices, PageServices>();
 
 // Configure CORS policy
 builder.Services.AddCors(options =>

@@ -9,7 +9,6 @@ namespace ATS.DTO
 {
     public class UserDto
     {
-
     }
 
     public record CreateUserDto(

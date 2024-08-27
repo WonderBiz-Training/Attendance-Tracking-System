@@ -28,5 +28,10 @@ namespace ATS.Model
 
         [ForeignKey("EmployeeDetails")]
         public long? EmployeeDetailsId { get; set; }
+
+        public virtual Role Role { get; set; }
+
+        [ForeignKey("Roles")]
+        public long? RoleId { get; set; }
     }
 }
