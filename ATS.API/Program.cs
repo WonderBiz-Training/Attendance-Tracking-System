@@ -46,10 +46,15 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "AllowMyAngularApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200").WithOrigins("http://192.168.29.191:4200").WithOrigins("http://localhost:62292").WithOrigins("http://localhost:58842") // Replace with your Angular app URL
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials(); // Allow credentials (cookies, authorization headers, etc.)
+            policy
+                .WithOrigins("http://localhost:4200")
+                .WithOrigins("http://192.168.29.191:4200")
+                .WithOrigins("http://192.168.29.207:4200")
+                .WithOrigins("http://localhost:62292")
+                .WithOrigins("http://localhost:58842") // Replace with your Angular app URL
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials(); // Allow credentials (cookies, authorization headers, etc.)
         });
 });
 
