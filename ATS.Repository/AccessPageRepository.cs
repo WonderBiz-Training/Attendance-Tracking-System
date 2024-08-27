@@ -51,5 +51,23 @@ namespace ATS.Repository
                 throw;
             }
         }
+
+        public async Task<IEnumerable<AccessPage>> GetAccessByRoleId(long roleId)
+        {
+            try
+            {
+                var accessPages = await _dbContext.accessPages
+                    .Include(li => li.Role)
+                    .Include(li => li.Page)
+                    .Where(li => li.RoleId == roleId)
+                    .ToListAsync();
+
+                return accessPages;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

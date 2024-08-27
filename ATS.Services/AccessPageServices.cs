@@ -111,6 +111,33 @@ namespace ATS.Services
             }
         }
 
+        public async Task<IEnumerable<GetAccessPageDto>> GetAccessPageByRoleId(long roleId)
+        {
+            try
+            {
+                var accessPage = await _accessPageRepository.GetAccessByRoleId(roleId);
+                if (accessPage == null)
+                {
+                    throw new Exception($"No Attendance Log Found with UserId : {roleId}");
+                }
+
+                var accessPageDtos = accessPage.Select(accessPage => new GetAccessPageDto(
+                    accessPage.Id,
+                    accessPage.RoleId,
+                    accessPage.Role?.RoleName,
+                    accessPage.PageId,
+                    accessPage.Page?.PageTitle,
+                    accessPage.IsActive
+                ));
+
+                return accessPageDtos;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<GetAccessPageDto>> GetAllAccessPagesAsync()
         {
             try
@@ -194,8 +221,8 @@ namespace ATS.Services
                         throw new Exception($"No Page Found for id : {accessPage.Id}");
                     }
 
-                    oldPage.RoleId = (long)accessPage.RoleId;
-                    oldPage.PageId = (long)accessPage.PageId;
+                    oldPage.RoleId = accessPage.RoleId != null ? (long)accessPage.RoleId : oldPage.RoleId;
+                    oldPage.PageId = accessPage.PageId != null ? (long)accessPage.PageId : oldPage.PageId;
                     oldPage.IsActive = accessPage.IsActive == 1 ? true : accessPage.IsActive == 0 ? false : oldPage.IsActive;
                     oldPage.UpdatedBy = accessPage.UpdatedBy ?? 0;
                     oldPage.UpdatedAt = DateTime.Now;

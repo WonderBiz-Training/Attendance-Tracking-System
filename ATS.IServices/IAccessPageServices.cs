@@ -13,6 +13,8 @@ namespace ATS.IServices
 
         Task<GetAccessPageDto> GetAccessPageAsync(long id);
 
+        Task<IEnumerable<GetAccessPageDto>> GetAccessPageByRoleId(long roleId);
+
         Task<GetAccessPageDto> CreateAccessPageAsync(CreateAccessPageDto accessPageDto);
 
         Task<GetAccessPageDto> UpdateAccessPageAsync(long id, UpdateAccessPageDto accessPageDto);
