@@ -19,13 +19,15 @@ namespace ATS.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IEmployeeDetailServices _employeeDetailServices;
+        private readonly IAccessPageRepository _accessPageRepository;
         private readonly IHubContext<AtsHubs> _hubContext;
 
-        public UserServices(IUserRepository userRepository, IEmployeeDetailServices employeeDetailServices, IHubContext<AtsHubs> hubContext)
+        public UserServices(IUserRepository userRepository, IEmployeeDetailServices employeeDetailServices, IHubContext<AtsHubs> hubContext, IAccessPageRepository accessPageRepository)
         {
             _userRepository = userRepository;
             _employeeDetailServices = employeeDetailServices;
             _hubContext = hubContext;
+            _accessPageRepository = accessPageRepository;
         }
 
         public async Task<GetUserDto> CreateUserAsync(CreateUserDto UserDto)
@@ -49,7 +51,8 @@ namespace ATS.Services
                     users.Email,
                     users.Password,
                     users.ContactNo,
-                    users.IsActive
+                    users.IsActive,
+                    users.Role.Id
                 );
 
                 await _hubContext.Clients.All.SendAsync("ReceiveUserUpdate", users.Email, users.Password, users.ContactNo);
@@ -107,7 +110,8 @@ namespace ATS.Services
                     users.Email,
                     users.Password,
                     users.ContactNo,
-                    users.IsActive
+                    users.IsActive,
+                    users.Role.Id
                 ));
 
                 return usersDto.ToList();
@@ -133,7 +137,8 @@ namespace ATS.Services
                     user.Email,
                     user.Password,
                     user.ContactNo,
-                    user.IsActive
+                    user.IsActive,
+                    user.Role.Id
                 );
 
                 return userDto;
@@ -177,7 +182,8 @@ namespace ATS.Services
                     user.Email,
                     user.Password,
                     user.ContactNo,
-                    user.IsActive
+                    user.IsActive,
+                    user.Role.Id
                 );
 
                 var createEmployee = new GetSignUpDto(
@@ -209,7 +215,7 @@ namespace ATS.Services
                 throw;
             }
         }
-        public async Task<GetUserDto> LogInUserAsync(LogInDto logInDto)
+        public async Task<GetLogInDto> LogInUserAsync(LogInDto logInDto)
         {
             try
             {
@@ -225,10 +231,29 @@ namespace ATS.Services
                     user.Email,
                     user.Password,
                     user.ContactNo,
-                    user.IsActive
+                    user.IsActive,
+                    user.RoleId
                 );
 
-                return userDto;
+                var data = await _accessPageRepository.GetAccessByRoleId(userDto.RoleId);
+
+                var accessPageDtos = data.Select(accessPage => new GetAccessPageDto(
+                    accessPage.Id,
+                    accessPage.RoleId,
+                    accessPage.Role?.RoleName,
+                    accessPage.PageId,
+                    accessPage.Page?.PageTitle,
+                    accessPage.IsActive
+                )).Where(ac => ac.IsActive==true);
+
+                var res = new GetLogInDto(
+                  userDto.Id,
+                  userDto.Email,
+                  userDto.Password,
+                  userDto.RoleId,
+                  accessPageDtos
+                );
+                return res;
             }
             catch (Exception)
             {
@@ -265,7 +290,8 @@ namespace ATS.Services
                     user.Email,
                     user.Password,
                     user.ContactNo,
-                    user.IsActive
+                    user.IsActive,
+                    user.Role.Id
                 );
 
                 return newUserDto;
