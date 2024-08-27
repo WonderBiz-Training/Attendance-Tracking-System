@@ -32,7 +32,7 @@ namespace ATS.DTO
         string Email,
         string Password,
         string ContactNo,
-        bool isActive,
+        bool IsActive,
         long RoleId
         );
 }

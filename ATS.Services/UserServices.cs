@@ -111,7 +111,7 @@ namespace ATS.Services
                     users.Password,
                     users.ContactNo,
                     users.IsActive,
-                    users.Role.Id
+                    users.RoleId
                 ));
 
                 return usersDto.ToList();
@@ -138,7 +138,7 @@ namespace ATS.Services
                     user.Password,
                     user.ContactNo,
                     user.IsActive,
-                    user.Role.Id
+                    user.RoleId
                 );
 
                 return userDto;
