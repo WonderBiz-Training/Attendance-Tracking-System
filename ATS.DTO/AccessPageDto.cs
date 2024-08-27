@@ -19,14 +19,12 @@ namespace ATS.DTO
     public record UpdateAccessPageDto(
         long? RoleId,
         long? PageId,
-        bool? IsActive,
         long? UpdatedBy
         );
 
     public record GetAccessPageDto(
         long Id,
         long RoleId,
-        long PageId,
-        bool isActive
+        long PageId
         );
 }
