@@ -146,7 +146,7 @@ namespace ATS.Services
                 oldPage.RoleId = (long)accessPageDto.RoleId;
                 oldPage.PageId = (long)accessPageDto.PageId;
                 oldPage.IsActive = accessPageDto.IsActive == 1 ? true : accessPageDto.IsActive == 0 ? false : oldPage.IsActive;
-                oldPage.UpdatedBy = (long)accessPageDto.UpdatedBy;
+                oldPage.UpdatedBy = accessPageDto.UpdatedBy ?? 0;
                 oldPage.UpdatedAt = DateTime.Now;
 
                 var page = await _accessPageRepository.UpdateAsync(oldPage);

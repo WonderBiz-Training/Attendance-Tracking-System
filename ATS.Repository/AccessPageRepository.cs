@@ -25,7 +25,7 @@ namespace ATS.Repository
                 var employeeInfo = await _dbContext.accessPages
                     .Include(li => li.Role)
                     .Include(li => li.Page)
-                    .FirstOrDefaultAsync(li => li.Id == id); ;
+                    .FirstOrDefaultAsync(li => li.Id == id);
 
                 return employeeInfo;
             }
