@@ -24,7 +24,7 @@ namespace ATS.DTO
 
     public record GetAccessPageDto(
         long Id,
-        long RoleId,
-        long PageId
+        string RoleName,
+        string PageTitle
         );
 }
