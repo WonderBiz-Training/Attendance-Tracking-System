@@ -37,6 +37,9 @@ builder.Services.AddScoped<IEmployeeDetailServices, EmployeeDetailServices>();
 builder.Services.AddScoped<IPageRepository, PageRepository>();
 builder.Services.AddScoped<IPageServices, PageServices>();
 
+builder.Services.AddScoped<IAccessPageRepository, AccessPageRepository>();
+builder.Services.AddScoped<IAccessPageServices, AccessPageServices>();
+
 // Configure CORS policy
 builder.Services.AddCors(options =>
 {
