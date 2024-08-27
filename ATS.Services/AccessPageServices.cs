@@ -36,8 +36,11 @@ namespace ATS.Services
 
                 var res = new GetAccessPageDto(
                     page.Id,
+                    page.RoleId,
                     page.Role.RoleName,
-                    page.Page.PageTitle
+                    page.PageId,
+                    page.Page.PageTitle,
+                    page.IsActive
                 );
 
                 return res;
@@ -91,8 +94,11 @@ namespace ATS.Services
 
                 var pageDto = new GetAccessPageDto(
                     page.Id,
+                    page.RoleId,
                     page.Role.RoleName,
-                    page.Page.PageTitle
+                    page.PageId,
+                    page.Page.PageTitle,
+                    page.IsActive
                 );
 
                 return pageDto;
@@ -111,8 +117,11 @@ namespace ATS.Services
 
                 var pagesDto = pages.Select(page => new GetAccessPageDto(
                     page.Id,
+                    page.RoleId,
                     page.Role.RoleName,
-                    page.Page.PageTitle
+                    page.PageId,
+                    page.Page.PageTitle,
+                    page.IsActive
                 ));
 
                 return pagesDto.ToList();
@@ -136,6 +145,7 @@ namespace ATS.Services
 
                 oldPage.RoleId = (long)accessPageDto.RoleId;
                 oldPage.PageId = (long)accessPageDto.PageId;
+                oldPage.IsActive = accessPageDto.IsActive == 1 ? true : accessPageDto.IsActive == 0 ? false : oldPage.IsActive;
                 oldPage.UpdatedBy = (long)accessPageDto.UpdatedBy;
                 oldPage.UpdatedAt = DateTime.Now;
 
@@ -143,8 +153,11 @@ namespace ATS.Services
 
                 var newPageDto = new GetAccessPageDto(
                     page.Id,
+                    page.RoleId,
                     page.Role.RoleName,
-                    page.Page.PageTitle
+                    page.PageId,
+                    page.Page.PageTitle,
+                    page.IsActive
                 );
 
                 return newPageDto;
