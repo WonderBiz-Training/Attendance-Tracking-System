@@ -271,9 +271,14 @@ namespace ATS.Services
                     throw new Exception($"No User Found for id : {id}");
                 }
 
-                if (!string.IsNullOrEmpty(UserDto.Password))
+                if(!BCrypt.Net.BCrypt.Verify(UserDto.OldPassword, oldUser.Password))
                 {
-                    oldUser.Password = BCrypt.Net.BCrypt.HashPassword(UserDto.Password);
+                    throw new Exception("Bad Credentials");
+                }
+
+                if (!string.IsNullOrEmpty(UserDto.NewPassword))
+                {
+                    oldUser.Password = BCrypt.Net.BCrypt.HashPassword(UserDto.NewPassword);
                 }
 
                 oldUser.Email = UserDto.Email;

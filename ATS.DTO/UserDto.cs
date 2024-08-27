@@ -20,7 +20,8 @@ namespace ATS.DTO
 
     public record UpdateUserDto(
         [MaxLength(50)] string Email,
-        [MaxLength(50)] string Password,
+        [MaxLength(50)] string OldPassword,
+        [MaxLength(50)] string NewPassword,
         string? ContactNo,
         bool? IsActive,
         long? UpdatedBy
