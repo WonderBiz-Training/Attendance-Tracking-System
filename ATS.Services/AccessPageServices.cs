@@ -36,8 +36,8 @@ namespace ATS.Services
 
                 var res = new GetAccessPageDto(
                     page.Id,
-                    page.RoleId,
-                    page.PageId
+                    page.Role.RoleName,
+                    page.Page.PageTitle
                 );
 
                 return res;
@@ -91,8 +91,8 @@ namespace ATS.Services
 
                 var pageDto = new GetAccessPageDto(
                     page.Id,
-                    page.RoleId,
-                    page.PageId
+                    page.Role.RoleName,
+                    page.Page.PageTitle
                 );
 
                 return pageDto;
@@ -111,8 +111,8 @@ namespace ATS.Services
 
                 var pagesDto = pages.Select(page => new GetAccessPageDto(
                     page.Id,
-                    page.RoleId,
-                    page.PageId
+                    page.Role.RoleName,
+                    page.Page.PageTitle
                 ));
 
                 return pagesDto.ToList();
@@ -143,8 +143,8 @@ namespace ATS.Services
 
                 var newPageDto = new GetAccessPageDto(
                     page.Id,
-                    page.RoleId,
-                    page.PageId
+                    page.Role.RoleName,
+                    page.Page.PageTitle
                 );
 
                 return newPageDto;
