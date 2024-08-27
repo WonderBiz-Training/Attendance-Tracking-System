@@ -67,5 +67,7 @@ namespace ATS.Data
         public DbSet<Designation> designations { get; set; }
         public DbSet<Gender> genders { get; set; }
         public DbSet<User> users { get; set; }
+        public DbSet<Role> roles { get; set; }
+        public DbSet<Page> pages { get; set; }
     }
 }
