@@ -20,7 +20,6 @@ namespace ATS.Model
 
         [ForeignKey("Pages"), Required(ErrorMessage = "Page ID is required")]
         public long PageId { get; set; }
-
         public bool IsActive { get; set; } = false;
 
     }

@@ -17,6 +17,8 @@ namespace ATS.IServices
 
         Task<GetAccessPageDto> UpdateAccessPageAsync(long id, UpdateAccessPageDto accessPageDto);
 
+        Task<IEnumerable<GetAccessPageDto>> UpdateMultipleAccessPageAsync(List<UpdateMulitpleAccessPageDto> accessPageDto);
+
         Task<bool> DeleteAccessPageAsync(long id);
     }
 }
