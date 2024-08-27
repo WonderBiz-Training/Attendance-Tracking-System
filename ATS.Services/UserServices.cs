@@ -84,6 +84,11 @@ namespace ATS.Services
 
                 bool row = await _userRepository.DeleteAsync(gender);
 
+                if (row)
+                {
+                    await _hubContext.Clients.All.SendAsync("DeleteUserUpdate", id);
+                }
+
                 return row;
             }
             catch (Exception)
