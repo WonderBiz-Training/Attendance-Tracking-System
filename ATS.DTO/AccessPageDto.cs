@@ -23,6 +23,14 @@ namespace ATS.DTO
         int? IsActive
         );
 
+    public record UpdateMulitpleAccessPageDto(
+        long Id,
+        long? RoleId,
+        long? PageId,
+        long? UpdatedBy,
+        int? IsActive
+        );
+
     public record GetAccessPageDto(
         long Id,
         long RoleId,

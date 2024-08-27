@@ -78,6 +78,20 @@ namespace ATS.API.Controllers
             }
         }
 
+        [HttpPut("multiple")]
+        public async Task<ActionResult<GetAccessPageDto>> Put([FromBody] List<UpdateMulitpleAccessPageDto> accessPageDto)
+        {
+            try
+            {
+                var res = await _accessPageServices.UpdateMultipleAccessPageAsync(accessPageDto);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
 
         // DELETE api/<AccessPageController>/5
         [HttpDelete("{id}")]
