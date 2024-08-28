@@ -52,7 +52,7 @@ namespace ATS.Services
                     users.Password,
                     users.ContactNo,
                     users.IsActive,
-                    users.Role.Id
+                    users.RoleId
                 );
 
                 await _hubContext.Clients.All.SendAsync("ReceiveUserUpdate", users.Email, users.Password, users.ContactNo);
@@ -183,7 +183,7 @@ namespace ATS.Services
                     user.Password,
                     user.ContactNo,
                     user.IsActive,
-                    user.Role.Id
+                    user.RoleId
                 );
 
                 var createEmployee = new GetSignUpDto(
@@ -296,7 +296,7 @@ namespace ATS.Services
                     user.Password,
                     user.ContactNo,
                     user.IsActive,
-                    user.Role.Id
+                    user.RoleId
                 );
 
                 return newUserDto;
