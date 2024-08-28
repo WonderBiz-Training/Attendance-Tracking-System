@@ -19,6 +19,7 @@ namespace ATS.DTO
        [Required(ErrorMessage = "Contact Number is required")] string ContactNo,
        [Required(ErrorMessage = "Password is required"), MaxLength(50)] string Password,
        [Required(ErrorMessage = "Profile Pic is required")] string ProfilePic,
+       long? RoleId,
        string? EmployeeCode
     );
 
@@ -43,7 +44,8 @@ namespace ATS.DTO
        string Email,
        string ContactNo,
        string Password,
-       string ProfilePic
+       string ProfilePic,
+       long? RoleId
     );
 
 

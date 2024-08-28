@@ -170,7 +170,6 @@ namespace ATS.Repository
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetTotalOutHours>> GetTotalOutHours(long? userId, DateTime? startDate, DateTime? endDate)
         {
             try
@@ -195,7 +194,6 @@ namespace ATS.Repository
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetSumTotalHours>> GetSumTotalOutHours(long? userId, DateTime startDate, DateTime endDate, string report)
         {
             try
@@ -222,7 +220,6 @@ namespace ATS.Repository
                 throw;
             }
         }
-        
         public async Task<IEnumerable<AttendanceLogWithDetails>> GetCurrentStatusOfAttendanceLog(string type, DateTime date, int count)
         {
             try
@@ -278,7 +275,6 @@ namespace ATS.Repository
 
             return results;
         }
-
         public async Task<IEnumerable<AttendanceLogWithDetails>> GetMisEntry(long userId, DateTime date)
         {
             try

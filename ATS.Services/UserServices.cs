@@ -160,6 +160,7 @@ namespace ATS.Services
                     Email = signUpDto.Email,
                     Password = hashedPassword,
                     ContactNo = signUpDto.ContactNo,
+                    RoleId = signUpDto.RoleId ?? 3,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 });
@@ -193,7 +194,8 @@ namespace ATS.Services
                     createdUser.Email,
                     createdUser.ContactNo,
                     createdUser.Password,
-                    employeeInfo.ProfilePic
+                    employeeInfo.ProfilePic,
+                    createdUser.RoleId
                 );
 
                 await _hubContext.Clients.All.SendAsync("ReceiveSignUpUpdate", createEmployee.FirstName, createEmployee.LastName, createEmployee.Email, createEmployee.ContactNo, createEmployee.Password, createEmployee.ProfilePic);

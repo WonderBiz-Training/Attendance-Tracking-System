@@ -15,7 +15,6 @@ namespace ATS.Model
     {
         [Required(ErrorMessage = "Role Name is required"), MaxLength(50)]
         public string RoleName { get; set; } = string.Empty;
-
         public bool IsActive { get; set; } = true;
     }
 }
