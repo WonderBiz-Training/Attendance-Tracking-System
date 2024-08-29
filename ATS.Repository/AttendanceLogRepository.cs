@@ -25,9 +25,9 @@ namespace ATS.Repository
         {
             try
             {
-                var firstNameParameter = new SqlParameter("@FirstName", firstName);
+                var firstNameParameter = new SqlParameter("@UserIds", firstName);
                 var data = await _dbContext.Set<GetStatusOfAttendanceLog>()
-                    .FromSqlRaw("EXECUTE dbo.GetPacificStatus @FirstName", firstNameParameter)
+                    .FromSqlRaw("EXECUTE dbo.GetPacificStatusTemp @UserIds", firstNameParameter)
                     .ToListAsync();
                 return data;
             }
