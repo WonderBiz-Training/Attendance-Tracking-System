@@ -52,11 +52,11 @@ namespace ATS.API.Controllers
 
         // GET api/<AttendanceLogController>/user/5
         [HttpGet("user/{userId}")]
-        public async Task<ActionResult<GetAttendanceLogDto>> GetByUserId(long userId)
+        public async Task<ActionResult<GetAttendanceLogDto>> GetByUserId(long userId, [FromQuery] DateTime? date)
         {
             try
             {
-                var res = await _attendanceLogServices.GetAttendanceLogByUserId(userId);
+                var res = await _attendanceLogServices.GetAttendanceLogByUserId(userId, date);
                 return Ok(res);
             }
             catch (Exception ex)

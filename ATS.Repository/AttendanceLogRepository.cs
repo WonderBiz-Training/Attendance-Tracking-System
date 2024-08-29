@@ -37,13 +37,14 @@ namespace ATS.Repository
                 throw;
             }
         }
-        public async Task<IEnumerable<AttendanceLog>> GetAttendanceLogByUserId(long userId)
+        public async Task<IEnumerable<AttendanceLog>> GetAttendanceLogByUserId(long userId, DateTime date)
         {
             try
             {
                 var attendanceLogs = await _dbContext.attendanceLogs
                     .Include(li => li.User)
                     .Where(li => li.UserId == userId)
+                    .Where(li => li.AttendanceLogTime.Date == date)
                     .ToListAsync();
 
                 return attendanceLogs;
