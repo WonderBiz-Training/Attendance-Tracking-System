@@ -218,13 +218,28 @@ namespace ATS.API.Controllers
             }
         }
 
-        // POST api/<AttendanceLogController>/multiple
+        // POST api/<AttendanceLogController>/misentry
         [HttpGet("misentry")]
         public async Task<ActionResult<IEnumerable<GetAttendanceLogsWithDetailsDto>>> Get([FromQuery] long userId, DateTime? date)
         {
             try
             {
                 var res = await _attendanceLogServices.GetMisEntryOfUsers(userId, date);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // POST api/<AttendanceLogController>/misentry
+        [HttpGet("misentry/summary")]
+        public async Task<ActionResult<IEnumerable<GetMisEntrySummaryDto>>> MisEntrySummary([FromQuery] long? userId, DateTime? date)
+        {
+            try
+            {
+                var res = await _attendanceLogServices.GetMisEntrySummary(userId, date);
                 return Ok(res);
             }
             catch (Exception ex)
