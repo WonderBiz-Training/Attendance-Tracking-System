@@ -19,15 +19,17 @@ namespace ATS.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IEmployeeDetailServices _employeeDetailServices;
+        private readonly IEmployeeDetailRepository _employeeDetailRepository;
         private readonly IAccessPageRepository _accessPageRepository;
         private readonly IHubContext<AtsHubs> _hubContext;
 
-        public UserServices(IUserRepository userRepository, IEmployeeDetailServices employeeDetailServices, IHubContext<AtsHubs> hubContext, IAccessPageRepository accessPageRepository)
+        public UserServices(IUserRepository userRepository, IEmployeeDetailServices employeeDetailServices, IHubContext<AtsHubs> hubContext, IAccessPageRepository accessPageRepository, IEmployeeDetailRepository employeeDetailRepository)
         {
             _userRepository = userRepository;
             _employeeDetailServices = employeeDetailServices;
             _hubContext = hubContext;
             _accessPageRepository = accessPageRepository;
+            _employeeDetailRepository = employeeDetailRepository;
         }
 
         public async Task<GetUserDto> CreateUserAsync(CreateUserDto UserDto)
@@ -187,8 +189,11 @@ namespace ATS.Services
                     user.RoleId
                 );
 
+
+
                 var createEmployee = new GetSignUpDto(
                     createdUser.Id,
+                    employeeInfo.Id,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
                     createdUser.Email,
@@ -237,6 +242,8 @@ namespace ATS.Services
                     user.RoleId
                 );
 
+                var employee = await _employeeDetailRepository.GetEmployeeDetailByUserId(user.Id);
+
                 var data = await _accessPageRepository.GetAccessByRoleId(userDto.RoleId);
 
                 var accessPageDtos = data.Select(accessPage => new GetAccessPageDto(
@@ -250,6 +257,10 @@ namespace ATS.Services
 
                 var res = new GetLogInDto(
                   userDto.Id,
+                  employee.First().Id,
+                  employee.First().ProfilePic,
+                  employee.First().FirstName,
+                  employee.First().LastName,
                   userDto.Email,
                   userDto.Password,
                   userDto.RoleId,
