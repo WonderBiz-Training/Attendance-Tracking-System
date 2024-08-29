@@ -271,7 +271,7 @@ namespace ATS.Services
                 throw;
             }
         }
-        public async Task<IEnumerable<GetAttendanceLogDto>> GetAttendanceLogByUserId(long userId, DateTime? date)
+        public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetAttendanceLogByUserId(long userId, DateTime? date)
         {
             try
             {
@@ -283,9 +283,13 @@ namespace ATS.Services
                     throw new Exception($"No Attendance Log Found with UserId : {userId}");
                 }
 
-                var attendanceLogDtos = attendanceLog.Select(attendanceLog => new GetAttendanceLogDto(
+                var attendanceLogDtos = attendanceLog.Select(attendanceLog => new GetAttendanceLogsWithDetailsDto(
                     attendanceLog.Id,
                     attendanceLog.UserId,
+                    attendanceLog.User.Email,
+                    attendanceLog.User.EmployeeDetail.ProfilePic,
+                    attendanceLog.User.EmployeeDetail.FirstName,
+                    attendanceLog.User.EmployeeDetail.LastName,
                     attendanceLog.AttendanceLogTime,
                     attendanceLog.CheckType
                 ));
