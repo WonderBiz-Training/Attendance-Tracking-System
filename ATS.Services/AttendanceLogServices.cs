@@ -271,11 +271,13 @@ namespace ATS.Services
                 throw;
             }
         }
-        public async Task<IEnumerable<GetAttendanceLogDto>> GetAttendanceLogByUserId(long userId)
+        public async Task<IEnumerable<GetAttendanceLogDto>> GetAttendanceLogByUserId(long userId, DateTime? date)
         {
             try
             {
-                var attendanceLog = await _attendanceLogRepository.GetAttendanceLogByUserId(userId);
+                DateTime datefilter = date == DateTime.MinValue || date == null ? DateTime.Now.Date : (DateTime)date;
+
+                var attendanceLog = await _attendanceLogRepository.GetAttendanceLogByUserId(userId, datefilter);
                 if (attendanceLog == null)
                 {
                     throw new Exception($"No Attendance Log Found with UserId : {userId}");

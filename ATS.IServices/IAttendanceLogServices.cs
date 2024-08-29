@@ -8,7 +8,7 @@ namespace ATS.IServices
 
         Task<GetAttendanceLogDto> GetAttendanceLogAsync(long id);
 
-        Task<IEnumerable<GetAttendanceLogDto>> GetAttendanceLogByUserId(long userId);
+        Task<IEnumerable<GetAttendanceLogDto>> GetAttendanceLogByUserId(long userId, DateTime? date);
 
         Task<GetAttendanceLogSummaryDto> GetAttendanceLogSummary(DateTime? startDate, DateTime? endDate);
 

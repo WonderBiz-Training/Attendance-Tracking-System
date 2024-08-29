@@ -9,7 +9,7 @@ namespace ATS.IRepository
 {
     public interface IAttendanceLogRepository : IRepository<AttendanceLog>
     {
-        Task<IEnumerable<AttendanceLog>> GetAttendanceLogByUserId(long userId);
+        Task<IEnumerable<AttendanceLog>> GetAttendanceLogByUserId(long userId, DateTime date);
         Task<IEnumerable<AttendanceLog>> GetSummaryReport(DateTime startDate, DateTime endDate, string check);
         Task<IEnumerable<AttendanceLog>> GetActivityReport(DateTime startDate, DateTime endDate);
         Task<IEnumerable<AttendanceLog>> GetAttendanceReport(DateTime date);
