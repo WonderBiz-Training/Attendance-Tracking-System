@@ -25,9 +25,9 @@ namespace ATS.Repository
         {
             try
             {
-                var firstNameParameter = new SqlParameter("@FirstName", firstName);
+                var firstNameParameter = new SqlParameter("@Names", firstName);
                 var data = await _dbContext.Set<GetStatusOfAttendanceLog>()
-                    .FromSqlRaw("EXECUTE dbo.GetPacificStatus @FirstName", firstNameParameter)
+                    .FromSqlRaw("EXECUTE dbo.GetPacificStatus @Names", firstNameParameter)
                     .ToListAsync();
                 return data;
             }
@@ -291,6 +291,28 @@ namespace ATS.Repository
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<MisEntrySummary>> GetMisEntrySummary(long? userId, DateTime date)
+        {
+            try
+            {
+                var userIdParameter = new SqlParameter("@UserId", SqlDbType.BigInt)
+                {
+                    Value = userId.HasValue ? (object)userId.Value : DBNull.Value
+                };
+                var DateParameter = new SqlParameter("@date", date);
+
+                var data = await _dbContext.Set<MisEntrySummary>()
+                    .FromSqlRaw("EXECUTE dbo.GetMisEntrySummary @userId, @date", userIdParameter, DateParameter)
+                    .ToListAsync();
+
+                return data;
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }

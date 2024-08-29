@@ -96,4 +96,14 @@ namespace ATS.DTO
         string Status,
         TimeSpan? InTime
     );
+
+
+    public record GetMisEntrySummaryDto(
+        long UserId,
+        string Email,
+        string ProfilePic,
+        string FirstName,
+        string LastName,
+        int TotalCount
+    );
 }
