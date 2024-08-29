@@ -52,7 +52,7 @@ namespace ATS.API.Controllers
 
         // GET api/<AttendanceLogController>/user/5
         [HttpGet("user/{userId}")]
-        public async Task<ActionResult<GetAttendanceLogDto>> GetByUserId(long userId, [FromQuery] DateTime? date)
+        public async Task<ActionResult<GetAttendanceLogsWithDetailsDto>> GetByUserId(long userId, [FromQuery] DateTime? date)
         {
             try
             {

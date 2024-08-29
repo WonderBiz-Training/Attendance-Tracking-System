@@ -43,6 +43,7 @@ namespace ATS.Repository
             {
                 var attendanceLogs = await _dbContext.attendanceLogs
                     .Include(li => li.User)
+                    .ThenInclude(li => li.EmployeeDetail)
                     .Where(li => li.UserId == userId)
                     .Where(li => li.AttendanceLogTime.Date == date)
                     .ToListAsync();
