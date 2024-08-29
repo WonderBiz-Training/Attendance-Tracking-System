@@ -50,6 +50,7 @@ builder.Services.AddCors(options =>
                 .WithOrigins("http://localhost:4200")
                 .WithOrigins("http://192.168.29.191:4200")
                 .WithOrigins("http://192.168.29.207:4200")
+                .WithOrigins("http://192.168.29.242:4200")
                 .WithOrigins("http://localhost:62292")
                 .WithOrigins("http://localhost:58842") // Replace with your Angular app URL
                 .AllowAnyHeader()
