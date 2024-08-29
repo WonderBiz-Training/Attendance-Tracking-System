@@ -41,6 +41,11 @@ namespace ATS.Data
                 entity.ToView(null); // Optional: specify that this entity does not map to a database view
             });
 
+            modelBuilder.Entity<MisEntrySummary>(entity =>
+            {
+                entity.HasNoKey(); // Indicate that this entity does not have a key
+                entity.ToView(null); // Optional: specify that this entity does not map to a database view
+            });
 
             modelBuilder.Entity<GetStatusOfAttendanceLog>(entity =>
             {

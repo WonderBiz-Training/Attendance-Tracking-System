@@ -26,6 +26,8 @@ namespace ATS.IServices
 
         Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetMisEntryOfUsers(long userId, DateTime? date);
 
+        Task<IEnumerable<GetMisEntrySummaryDto>> GetMisEntrySummary(long? userId, DateTime? date);
+
         Task<GetAttendanceLogDto> CreateAttendanceLogAsync(CreateAttendanceLogDto attendanceLogDto);
 
         Task<GetAttendanceLogDto> UpdateAttendanceLogAsync(long id, UpdateAttendanceLogDto attendanceLogDto);

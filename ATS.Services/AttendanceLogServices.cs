@@ -482,7 +482,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetAttendanceLogsWithDetailsDto>> GetMisEntryOfUsers(long userId, DateTime? date)
         {
             try
@@ -504,6 +503,32 @@ namespace ATS.Services
                         attendanceLog.LastName,
                         attendanceLog.AttendanceLogTime,
                         attendanceLog.CheckType
+                    ));
+
+                return attendanceLogsDto.ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<GetMisEntrySummaryDto>> GetMisEntrySummary(long? userId, DateTime? date)
+        {
+            try
+            {
+                DateTime Cdate = date == DateTime.MinValue || date == null ? DateTime.Now.Date : (DateTime)date;
+
+                var data = await _attendanceLogRepository.GetMisEntrySummary(userId, Cdate);
+
+                var attendanceLogsDto = data.Select(attendanceLog => new GetMisEntrySummaryDto(
+                        attendanceLog.UserId,
+                        attendanceLog.Email,
+                        attendanceLog.ProfilePic,
+                        attendanceLog.FirstName,
+                        attendanceLog.LastName,
+                        attendanceLog.TotalCount
                     ));
 
                 return attendanceLogsDto.ToList();
