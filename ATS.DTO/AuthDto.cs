@@ -31,6 +31,10 @@ namespace ATS.DTO
 
     public record GetLogInDto(
        long Id,
+       long EmployeeId,
+       string ProfilePic,
+       string FirstName,
+       string LastName,
        string Email,
        string Password,
        long RoleId,
@@ -39,6 +43,7 @@ namespace ATS.DTO
 
     public record GetSignUpDto(
        long UserId,
+       long EmployeeDetailId,
        string FirstName,
        string LastName,
        string Email,

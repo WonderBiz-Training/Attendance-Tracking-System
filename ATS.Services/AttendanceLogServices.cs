@@ -519,7 +519,6 @@ namespace ATS.Services
                 throw;
             }
         }
-
         public async Task<IEnumerable<GetMisEntrySummaryDto>> GetMisEntrySummary(long? userId, DateTime? date)
         {
             try
