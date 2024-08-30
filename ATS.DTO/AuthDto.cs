@@ -29,29 +29,15 @@ namespace ATS.DTO
        [Required(ErrorMessage = "Password is required"), MaxLength(50)] string Password
     );
 
-    public record GetLogInDto(
-       long Id,
-       long EmployeeId,
-       string ProfilePic,
-       string FirstName,
-       string LastName,
-       string Email,
-       string Password,
-       long RoleId,
-       IEnumerable<GetAccessPageDto> PageList
-    );
-
-    public record GetSignUpDto(
+    public record GetAuthDto(
        long UserId,
        long EmployeeDetailId,
+       string ProfilePic,
        string FirstName,
        string LastName,
        string Email,
        string ContactNo,
-       string Password,
-       string ProfilePic,
-       long? RoleId
+       long RoleId,
+       IEnumerable<GetAccessPageDto>? PageList
     );
-
-
 }
