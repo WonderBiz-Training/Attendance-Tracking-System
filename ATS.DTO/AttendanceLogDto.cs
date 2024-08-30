@@ -74,6 +74,7 @@ namespace ATS.DTO
         string ProfilePic,
         string FirstName,
         string LastName,
+        DateOnly CurrentDate,
         TimeSpan LastCheckInTime,
         TimeSpan? LastCheckOutTime,
         TimeSpan TotalHours
