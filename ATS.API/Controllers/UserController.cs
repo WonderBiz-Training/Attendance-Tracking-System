@@ -96,7 +96,7 @@ namespace ATS.API.Controllers
 
         // POST api/<UserController>
         [HttpPost("signup")]
-        public async Task<ActionResult<GetSignUpDto>> Post([FromBody] SignUpDto signUpDto)
+        public async Task<ActionResult<GetAuthDto>> Post([FromBody] SignUpDto signUpDto)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace ATS.API.Controllers
 
         // POST api/<UserController>/log-in
         [HttpPost("log-in")]
-        public async Task<ActionResult<GetLogInDto>> Post([FromBody] LogInDto logInDto)
+        public async Task<ActionResult<GetAuthDto>> Post([FromBody] LogInDto logInDto)
         {
             try
             {

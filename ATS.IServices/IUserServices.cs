@@ -19,9 +19,9 @@ namespace ATS.IServices
 
         Task<bool> DeleteUserAsync(long id);
 
-        Task<GetSignUpDto> SignUpUserAsync(SignUpDto signUpDto);
+        Task<GetAuthDto> SignUpUserAsync(SignUpDto signUpDto);
 
-        Task<GetLogInDto> LogInUserAsync(LogInDto logInDto);
+        Task<GetAuthDto> LogInUserAsync(LogInDto logInDto);
 
     }
 }

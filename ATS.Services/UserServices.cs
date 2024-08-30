@@ -150,7 +150,7 @@ namespace ATS.Services
                 throw;
             }
         }
-        public async Task<GetSignUpDto> SignUpUserAsync(SignUpDto signUpDto)
+        public async Task<GetAuthDto> SignUpUserAsync(SignUpDto signUpDto)
         {
             await _userRepository.BeginTransactionAsync();
 
@@ -189,21 +189,21 @@ namespace ATS.Services
                     user.RoleId
                 );
 
+                IEnumerable<GetAccessPageDto> accessPageDtos = new List<GetAccessPageDto>();
 
-
-                var createEmployee = new GetSignUpDto(
+                var createEmployee = new GetAuthDto(
                     createdUser.Id,
                     employeeInfo.Id,
+                    employeeInfo.ProfilePic,
                     employeeInfo.FirstName,
                     employeeInfo.LastName,
                     createdUser.Email,
                     createdUser.ContactNo,
-                    createdUser.Password,
-                    employeeInfo.ProfilePic,
-                    createdUser.RoleId
+                    createdUser.RoleId,
+                    accessPageDtos
                 );
 
-                await _hubContext.Clients.All.SendAsync("ReceiveSignUpUpdate", createEmployee.FirstName, createEmployee.LastName, createEmployee.Email, createEmployee.ContactNo, createEmployee.Password, createEmployee.ProfilePic);
+                await _hubContext.Clients.All.SendAsync("ReceiveSignUpUpdate", createEmployee.FirstName, createEmployee.LastName, createEmployee.Email, createEmployee.ContactNo, createEmployee.ProfilePic);
 
                 return createEmployee;
             }
@@ -222,7 +222,7 @@ namespace ATS.Services
                 throw;
             }
         }
-        public async Task<GetLogInDto> LogInUserAsync(LogInDto logInDto)
+        public async Task<GetAuthDto> LogInUserAsync(LogInDto logInDto)
         {
             try
             {
@@ -255,7 +255,7 @@ namespace ATS.Services
                     accessPage.IsActive
                 )).Where(ac => ac.IsActive==true);
 
-                var res = new GetLogInDto(
+                var res = new GetAuthDto(
                   userDto.Id,
                   employee.First().Id,
                   employee.First().ProfilePic,
